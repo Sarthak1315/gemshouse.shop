@@ -15,7 +15,7 @@ interface Product {
   price: string;
 }
 
-const newArrivals: Product[] = [
+const initialNewArrivals: Product[] = [
   {
     id: "prod-1",
     title: "Vivid Green Muzo Emerald",
@@ -92,9 +92,43 @@ const newArrivals: Product[] = [
 
 export default function ArrivalsSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [newArrivals, setNewArrivals] = useState<Product[]>(initialNewArrivals);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function loadArrivals() {
+      try {
+        const res = await fetch("/api/products?featured=true&limit=6");
+        if (res.ok) {
+          const data = await res.json();
+          const fetchedProducts = data.products || data;
+          if (fetchedProducts && fetchedProducts.length > 0) {
+            const mapped = fetchedProducts.map((dbProduct: any) => {
+              const primaryImage = dbProduct.images?.find((img: any) => img.isPrimary) || dbProduct.images?.[0];
+              return {
+                id: dbProduct.id,
+                title: dbProduct.title,
+                category: dbProduct.category?.name || "Gemstone",
+                carat: `${dbProduct.carat} ct`,
+                cut: dbProduct.cut || "N/A",
+                origin: dbProduct.origin || "Unknown",
+                clarity: dbProduct.clarity || "N/A",
+                certificate: dbProduct.certification || "GIA",
+                imageUrl: primaryImage?.url || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
+                price: dbProduct.price ? `$${Number(dbProduct.price).toLocaleString()}` : "Price on Application",
+              };
+            });
+            setNewArrivals(mapped);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load arrivals from API", err);
+      }
+    }
+    loadArrivals();
+  }, []);
 
   const updateScrollStatus = () => {
     if (containerRef.current) {
@@ -190,8 +224,9 @@ export default function ArrivalsSlider() {
         }}
       >
         {newArrivals.map((product) => (
-          <div
+          <a
             key={product.id}
+            href={`/gemstones/${product.id}`}
             className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] max-w-[380px] flex-none snap-start group bg-surface-container-lowest border border-outline-variant/30 transition-all duration-500 hover:border-champagne-gold/60 hover:shadow-xl relative flex flex-col justify-between"
           >
             {/* Image Box */}
@@ -255,7 +290,7 @@ export default function ArrivalsSlider() {
                 </button>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
 

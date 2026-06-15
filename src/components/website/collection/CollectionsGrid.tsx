@@ -2,11 +2,54 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import { gemstones } from "@/lib/data/gemstones";
 
 const ITEMS_PER_PAGE = 6;
 
 export default function CollectionsGrid() {
+  const [productsList, setProductsList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/products?limit=100");
+        if (res.ok) {
+          const data = await res.json();
+          const mapped = (data.products || []).map((dbProduct: any) => {
+            const primaryImage = dbProduct.images?.find((img: any) => img.isPrimary) || dbProduct.images?.[0];
+            return {
+              id: dbProduct.id,
+              title: dbProduct.title,
+              category: dbProduct.category?.name || "Gemstone",
+              carat: dbProduct.carat,
+              cut: dbProduct.cut || "N/A",
+              origin: dbProduct.origin || "Unknown",
+              clarity: dbProduct.clarity || "N/A",
+              certificate: dbProduct.certification || "GIA",
+              imageUrl: primaryImage?.url || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
+              price: Number(dbProduct.price),
+              badge: dbProduct.featured ? "Investment Grade" : (dbProduct.inStock ? "In Stock" : "Reserved"),
+              images: dbProduct.images?.map((img: any) => img.url) || [],
+              dimensions: "N/A",
+              depth: "N/A",
+              table: "N/A",
+              culet: "N/A",
+              fluorescence: "N/A",
+              extendedDescription: dbProduct.description,
+              reportNumber: dbProduct.certNumber || "N/A",
+            };
+          });
+          setProductsList(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to load products from API", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState<string>(" sapphire"); // Default search to Ceylon Sapphire for initial visual impact
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
@@ -55,7 +98,7 @@ export default function CollectionsGrid() {
 
   // Filtered and Sorted Products
   const filteredProducts = useMemo(() => {
-    return gemstones
+    return productsList
       .filter((product) => {
         // Search filter
         const matchesSearch =
@@ -202,7 +245,17 @@ export default function CollectionsGrid() {
           </button>
 
           {/* Catalog Cards Grid */}
-          {paginatedProducts.length > 0 ? (
+          {isLoading ? (
+            <div className="py-24 text-center">
+              <div className="relative w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                <div className="absolute inset-0 rounded-full border-2 border-champagne-gold/20 animate-ping"></div>
+                <div className="absolute w-8 h-8 rounded-full border-2 border-t-emerald-deep border-r-emerald-deep border-b-champagne-gold border-l-champagne-gold animate-spin"></div>
+              </div>
+              <p className="font-label-caps text-xs text-champagne-gold tracking-widest uppercase">
+                Opening secure vault
+              </p>
+            </div>
+          ) : paginatedProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
               {paginatedProducts.map((product, idx) => (
                 <ScrollReveal

@@ -62,6 +62,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   };
 
+  const handleViewStorefront = () => {
+    const isLocalhost = window.location.hostname.includes("localhost") || window.location.hostname.includes("127.0.0.1");
+    const mainUrl = isLocalhost 
+      ? `http://localhost:${window.location.port || "3000"}` 
+      : "https://gemshouse.shop";
+    window.open(mainUrl, "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-background text-on-background flex flex-col font-body-md antialiased">
       {/* SideNavbar for Desktop */}
@@ -69,11 +77,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Header */}
         <div className="px-6 py-6 flex flex-col items-center border-b border-outline-variant/10 mb-4">
           <div className="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center mb-3 border border-champagne-gold/30">
-            <span className="material-symbols-outlined text-2xl text-emerald-deep select-none">
+            <span className="material-symbols-outlined text-2xl text-emerald-deep dark:text-champagne-gold select-none">
               diamond
             </span>
           </div>
-          <h1 className="font-headline-sm text-lg text-emerald-deep tracking-wider uppercase">
+          <h1 className="font-headline-sm text-lg text-emerald-deep dark:text-linen-white tracking-wider uppercase">
             GEMSHOUSE
           </h1>
           <p className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest mt-1">
@@ -92,7 +100,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className={`flex items-center px-4 py-3 rounded transition-all duration-200 group cursor-pointer ${
                   isActive
                     ? "bg-emerald-deep text-linen-white"
-                    : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep"
+                    : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
                 }`}
               >
                 <span
@@ -113,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Footer */}
         <div className="px-4 pb-4 pt-4 border-t border-outline-variant/10">
           <button
-            onClick={() => window.open("/", "_blank")}
+            onClick={handleViewStorefront}
             className="w-full mb-3 bg-emerald-deep text-linen-white font-label-caps text-[10px] uppercase tracking-widest py-3 hover:bg-emerald-deep/90 transition-colors flex items-center justify-center gap-2 rounded-none border border-champagne-gold/30 cursor-pointer"
           >
             <span className="material-symbols-outlined text-sm select-none">open_in_new</span>
@@ -150,12 +158,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           <div>
             <div className="flex justify-between items-center mb-6 pb-2 border-b border-outline-variant/20">
-              <span className="font-headline-sm text-base text-emerald-deep tracking-wider">
+              <span className="font-headline-sm text-base text-emerald-deep dark:text-linen-white tracking-wider">
                 GEMSHOUSE
               </span>
               <button
                 onClick={() => setIsMobileOpen(false)}
-                className="text-on-surface-variant hover:text-emerald-deep p-1 cursor-pointer"
+                className="text-on-surface-variant hover:text-emerald-deep dark:hover:text-champagne-gold p-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined select-none">close</span>
               </button>
@@ -172,7 +180,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     className={`flex items-center px-4 py-2.5 rounded transition-all duration-200 group cursor-pointer ${
                       isActive
                         ? "bg-emerald-deep text-linen-white"
-                        : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep"
+                        : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
                     }`}
                   >
                     <span
@@ -195,7 +203,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               onClick={() => {
                 setIsMobileOpen(false);
-                window.open("/", "_blank");
+                handleViewStorefront();
               }}
               className="w-full bg-emerald-deep text-linen-white font-label-caps text-[10px] uppercase tracking-widest py-3 flex items-center justify-center gap-2 border border-champagne-gold/30 cursor-pointer"
             >
@@ -225,13 +233,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Mobile hamburger */}
           <button
             onClick={() => setIsMobileOpen(true)}
-            className="md:hidden text-emerald-deep p-2 cursor-pointer"
+            className="md:hidden text-emerald-deep dark:text-linen-white p-2 cursor-pointer"
           >
             <span className="material-symbols-outlined select-none">menu</span>
           </button>
 
           {/* Mobile title */}
-          <div className="md:hidden font-headline-sm text-base tracking-widest text-emerald-deep text-center flex-1">
+          <div className="md:hidden font-headline-sm text-base tracking-widest text-emerald-deep dark:text-linen-white text-center flex-1">
             GEMSHOUSE
           </div>
 
@@ -240,7 +248,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="font-label-caps text-[9px] tracking-widest text-champagne-gold uppercase block mb-0.5">
               Secure Operations
             </span>
-            <h2 className="font-headline-sm text-lg text-emerald-deep font-semibold tracking-wide">
+            <h2 className="font-headline-sm text-lg text-emerald-deep dark:text-linen-white font-semibold tracking-wide">
               Management Portal
             </h2>
           </div>

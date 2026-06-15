@@ -339,8 +339,9 @@ async function main() {
     { label: "Loose Diamonds", href: "/collections?gemType=Diamond", order: 1 },
     { label: "Gemstones", href: "/collections", order: 2 },
     { label: "Wholesale", href: "/wholesale", order: 3 },
-    { label: "About Us", href: "/about", order: 4 },
-    { label: "Contact Us", href: "/contact", order: 5 },
+    { label: "Journal", href: "/blogs", order: 4 },
+    { label: "About Us", href: "/about", order: 5 },
+    { label: "Contact Us", href: "/contact", order: 6 },
   ];
 
   for (const item of menuItems) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Review {
   author: string;
@@ -107,22 +107,86 @@ const defaultReviews: Review[] = [
 
 interface ProductReviewsProps {
   category: string;
+  productId?: string;
 }
 
-export default function ProductReviews({ category }: ProductReviewsProps) {
-  const reviews = reviewsByCategory[category] || defaultReviews;
+export default function ProductReviews({ category, productId }: ProductReviewsProps) {
+  const [activeReviews, setActiveReviews] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", rating: 5, title: "", comment: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    async function loadReviews() {
+      try {
+        let url = "/api/reviews?approved=true";
+        if (productId) {
+          url += `&productId=${productId}`;
+        }
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setActiveReviews(data.map((r: any) => ({
+              author: r.author,
+              location: r.location || "Verified Acquisition",
+              rating: r.rating,
+              date: new Date(r.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              title: r.title,
+              comment: r.comment,
+            })));
+          } else {
+            setActiveReviews(reviewsByCategory[category] || defaultReviews);
+          }
+        } else {
+          setActiveReviews(reviewsByCategory[category] || defaultReviews);
+        }
+      } catch (err) {
+        console.error("Failed to load reviews", err);
+        setActiveReviews(reviewsByCategory[category] || defaultReviews);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadReviews();
+  }, [category, productId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setShowReviewModal(false);
-      setFormData({ name: "", email: "", rating: 5, title: "", comment: "" });
-    }, 2000);
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          author: formData.name,
+          email: formData.email,
+          rating: Number(formData.rating),
+          title: formData.title,
+          comment: formData.comment,
+          location: "Collector Vault",
+          productId: productId || null,
+        }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setShowReviewModal(false);
+          setFormData({ name: "", email: "", rating: 5, title: "", comment: "" });
+        }, 2000);
+      } else {
+        alert("Failed to submit feedback. Please check your inputs.");
+      }
+    } catch (err) {
+      console.error("Error submitting review", err);
+      alert("An error occurred. Please try again.");
+    }
   };
 
   return (
@@ -147,7 +211,7 @@ export default function ProductReviews({ category }: ProductReviewsProps) {
       </div>
 
       <div className="flex flex-col gap-6">
-        {reviews.map((review, idx) => (
+        {activeReviews.map((review, idx) => (
           <div
             key={idx}
             className="p-6 border border-outline-variant/20 bg-surface-container-lowest flex flex-col gap-3 transition-all duration-300 hover:border-champagne-gold/40 hover:shadow-md sharp-clip-path"

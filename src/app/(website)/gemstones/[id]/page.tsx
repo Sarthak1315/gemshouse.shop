@@ -6,7 +6,8 @@ import GemstoneDetailPanel from "@/components/website/product/GemstoneDetailPane
 import ProductReviews from "@/components/website/product/ProductReviews";
 import ProductFAQ from "@/components/website/product/ProductFAQ";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import { gemstones } from "@/lib/data/gemstones";
+import Footer from "@/components/website/footer/Footer";
+import prisma from "@/lib/prisma";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -14,15 +15,20 @@ interface Props {
 
 // Pre-render static pages for all gemstone routes at build time
 export async function generateStaticParams() {
-  return gemstones.map((stone) => ({
-    id: stone.id,
+  const products = await prisma.product.findMany({
+    select: { id: true },
+  });
+  return products.map((product) => ({
+    id: product.id,
   }));
 }
 
 // Generate dynamic browser tab titles and metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const stone = gemstones.find((g) => g.id === id);
+  const stone = await prisma.product.findUnique({
+    where: { id },
+  });
 
   if (!stone) {
     return {
@@ -32,20 +38,77 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${stone.carat} Carat ${stone.title} | Gemshouse Sourcing`,
-    description: `Inspect this rare, certified ${stone.carat} ct ${stone.cut} ${stone.title}. Sourced from ${stone.origin}, graded as ${stone.clarity} by ${stone.certificate}. View grading certificate and request pricing quote.`,
+    description: `Inspect this rare, certified ${stone.carat} ct ${stone.cut || ""} ${stone.title}. Sourced from ${stone.origin || ""}, graded as ${stone.clarity || ""} by ${stone.certification || ""}. View grading certificate and request pricing quote.`,
   };
 }
 
 export default async function GemstoneDetailsPage({ params }: Props) {
   const { id } = await params;
-  const stone = gemstones.find((g) => g.id === id);
+  const dbProduct = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      category: true,
+      images: {
+        orderBy: {
+          isPrimary: "desc"
+        }
+      }
+    }
+  });
 
-  if (!stone) {
+  if (!dbProduct) {
     notFound();
   }
 
-  // Related alternatives (excluding the current stone)
-  const alternatives = gemstones.filter((g) => g.id !== stone.id).slice(0, 4);
+  const primaryImage = dbProduct.images.find((img) => img.isPrimary) || dbProduct.images[0];
+  const stone = {
+    id: dbProduct.id,
+    title: dbProduct.title,
+    category: dbProduct.category.name,
+    carat: dbProduct.carat,
+    cut: dbProduct.cut || "N/A",
+    origin: dbProduct.origin || "Unknown",
+    clarity: dbProduct.clarity || "N/A",
+    certificate: dbProduct.certification || "N/A",
+    imageUrl: primaryImage?.url || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
+    price: Number(dbProduct.price),
+    badge: dbProduct.featured ? "Investment Grade" : (dbProduct.inStock ? "In Stock" : "Reserved"),
+    images: dbProduct.images.map((img) => img.url),
+    dimensions: "N/A",
+    depth: "N/A",
+    table: "N/A",
+    culet: "None",
+    fluorescence: "None",
+    extendedDescription: dbProduct.description,
+    reportNumber: dbProduct.certNumber || "N/A",
+  };
+
+  const dbAlternatives = await prisma.product.findMany({
+    where: {
+      id: { not: dbProduct.id },
+    },
+    take: 4,
+    include: {
+      images: {
+        orderBy: {
+          isPrimary: "desc"
+        }
+      }
+    }
+  });
+
+  const alternatives = dbAlternatives.map((alt) => {
+    const primaryImg = alt.images.find((img) => img.isPrimary) || alt.images[0];
+    return {
+      id: alt.id,
+      title: alt.title,
+      carat: alt.carat,
+      cut: alt.cut || "N/A",
+      clarity: alt.clarity || "N/A",
+      imageUrl: primaryImg?.url || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
+      price: Number(alt.price),
+    };
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -68,12 +131,12 @@ export default async function GemstoneDetailsPage({ params }: Props) {
               <ProductFAQ />
             </ScrollReveal>
           </div>
-          {/* Reviews (right column) */}
-          <div className="lg:col-span-6">
-            <ScrollReveal direction="up" delay={150}>
-              <ProductReviews category={stone.category} />
-            </ScrollReveal>
-          </div>
+            {/* Reviews (right column) */}
+            <div className="lg:col-span-6">
+              <ScrollReveal direction="up" delay={150}>
+                <ProductReviews category={stone.category} productId={stone.id} />
+              </ScrollReveal>
+            </div>
         </div>
       </section>
 
@@ -147,76 +210,7 @@ export default async function GemstoneDetailsPage({ params }: Props) {
       </section>
 
       {/* Editorial Footer */}
-      <footer className="bg-charcoal pt-20 pb-10 border-t border-outline/10 text-surface-variant mt-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16">
-          <div className="md:col-span-4 flex flex-col gap-6">
-            <div className="font-headline-md text-2xl md:text-headline-sm text-linen-white tracking-widest uppercase">
-              Gemshouse
-            </div>
-            <p className="font-body-md text-body-md text-surface-variant/60 max-w-xs leading-relaxed">
-              Purveyors of fine natural gemstones and investment-grade diamonds.
-            </p>
-          </div>
-          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Locations
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                London Office
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                New York Atelier
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Geneva Vault
-              </a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Client Services
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Contact Concierge
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Certification FAQ
-              </a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Legal
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Privacy Policy
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-8 border-t border-surface-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-label-caps text-label-caps text-surface-variant/40">
-            © 2024 Gemshouse Editorial. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

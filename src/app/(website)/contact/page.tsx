@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/website/navbar/Navbar";
 import ScrollReveal from "@/components/shared/ScrollReveal";
+import Footer from "@/components/website/footer/Footer";
 
 export default function ContactPage() {
   const [formState, setFormState] = useState<"idle" | "submitting" | "success">("idle");
@@ -14,12 +15,72 @@ export default function ContactPage() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [settings, setSettings] = useState({
+    phone: "+44 (0) 20 7946 0192",
+    suratPhone: "+91 261 555 0192",
+    genevaPhone: "+41 22 345 6789",
+    email: "info@gemshouse.shop",
+    whatsapp: "912615550192",
+    instagram: "https://www.instagram.com/gemshouse",
+    facebook: "https://www.facebook.com/gemshouse",
+    linkedin: "https://www.linkedin.com/company/gemshouse",
+  });
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          const sMap: any = {};
+          data.forEach((item: any) => {
+            sMap[item.key] = item.value;
+          });
+          setSettings((prev) => ({
+            ...prev,
+            phone: sMap["CONTACT_PHONE"] || prev.phone,
+            email: sMap["CONTACT_EMAIL"] || prev.email,
+            whatsapp: sMap["WHATSAPP_NUMBER"] || prev.whatsapp,
+            instagram: sMap["INSTAGRAM_URL"] || prev.instagram,
+            facebook: sMap["FACEBOOK_URL"] || prev.facebook,
+            linkedin: sMap["LINKEDIN_URL"] || prev.linkedin,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to load settings", err);
+      }
+    }
+    loadSettings();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("submitting");
-    setTimeout(() => {
-      setFormState("success");
-    }, 2000);
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          message: formData.message,
+          productId: null,
+          status: "PENDING",
+        }),
+      });
+
+      if (res.ok) {
+        setFormState("success");
+      } else {
+        alert("Failed to submit inquiry. Please check your inputs.");
+        setFormState("idle");
+      }
+    } catch (err) {
+      console.error("Error submitting inquiry", err);
+      alert("An error occurred. Please try again.");
+      setFormState("idle");
+    }
   };
 
   const resetForm = () => {
@@ -72,19 +133,19 @@ export default function ContactPage() {
             <ul className="space-y-3 font-body-md text-xs text-on-surface-variant/80 leading-relaxed">
               <li className="flex justify-between border-b border-outline-variant/15 pb-2">
                 <span>London Office</span>
-                <span className="font-semibold text-emerald-deep">+44 (0) 20 7946 0192</span>
+                <span className="font-semibold text-emerald-deep">{settings.phone}</span>
               </li>
               <li className="flex justify-between border-b border-outline-variant/15 pb-2">
                 <span>Surat Atelier</span>
-                <span className="font-semibold text-emerald-deep">+91 261 555 0192</span>
+                <span className="font-semibold text-emerald-deep">{settings.suratPhone}</span>
               </li>
               <li className="flex justify-between border-b border-outline-variant/15 pb-2">
                 <span>Email</span>
-                <span className="font-semibold text-emerald-deep">info@gemshouse.shop</span>
+                <span className="font-semibold text-emerald-deep">{settings.email}</span>
               </li>
               <li className="flex justify-between">
                 <span>Geneva Office</span>
-                <span className="font-semibold text-emerald-deep">+41 22 345 6789</span>
+                <span className="font-semibold text-emerald-deep">{settings.genevaPhone}</span>
               </li>
             </ul>
           </ScrollReveal>
@@ -92,7 +153,7 @@ export default function ContactPage() {
           {/* WhatsApp Direct Message CTA */}
           <ScrollReveal direction="up" delay={350} className="w-full">
             <a
-              href="https://wa.me/912615550192?text=Hi%20Gemshouse%2C%20I%27d%20like%20to%20inquire%20about%20your%20gemstones."
+              href={`https://wa.me/${settings.whatsapp}?text=Hi%20Gemshouse%2C%20I%27d%20like%20to%20inquire%20about%20your%20gemstones.`}
               target="_blank"
               rel="noopener noreferrer"
               className="shimmer-hover flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white font-label-caps text-xs uppercase tracking-widest hover:bg-[#1ebe57] transition-all duration-400 sharp-clip-path cursor-pointer"
@@ -112,7 +173,7 @@ export default function ContactPage() {
             <div className="h-[0.5px] flex-grow bg-outline-variant/30"></div>
             <div className="flex items-center gap-3">
               <a
-                href="https://www.instagram.com/gemshouse"
+                href={settings.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -123,7 +184,7 @@ export default function ContactPage() {
                 </svg>
               </a>
               <a
-                href="https://www.facebook.com/gemshouse"
+                href={settings.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -134,7 +195,7 @@ export default function ContactPage() {
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com/company/gemshouse"
+                href={settings.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
@@ -145,7 +206,7 @@ export default function ContactPage() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/912615550192"
+                href={`https://wa.me/${settings.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
@@ -329,47 +390,7 @@ export default function ContactPage() {
       </main>
 
       {/* Editorial Footer */}
-      <footer className="bg-charcoal pt-20 pb-10 border-t border-outline/10 text-surface-variant mt-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16">
-          <div className="md:col-span-4 flex flex-col gap-6">
-            <div className="font-headline-md text-2xl md:text-headline-sm text-linen-white tracking-widest uppercase">
-              Gemshouse
-            </div>
-            <p className="font-body-md text-body-md text-surface-variant/60 max-w-xs leading-relaxed">
-              Purveyors of fine natural gemstones and investment-grade diamonds.
-            </p>
-          </div>
-          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Locations
-              </h4>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="#">London Office</a>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="#">New York Atelier</a>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="#">Geneva Vault</a>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="#">Surat Bourse</a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Quick Links
-              </h4>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="/contact">Contact Us</a>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="/about">About Us</a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Legal
-              </h4>
-              <a className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300" href="#">Privacy Policy</a>
-            </div>
-          </div>
-        </div>
-        <div className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-8 border-t border-surface-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-label-caps text-label-caps text-surface-variant/40">
-            © 2024 Gemshouse Editorial. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import ArrivalsSlider from "@/components/website/collection/ArrivalsSlider";
 import GemstoneExplorer from "@/components/website/collection/GemstoneExplorer";
 import ProvenanceTimeline from "@/components/website/collection/ProvenanceTimeline";
 import AteliersNetwork from "@/components/website/collection/AteliersNetwork";
+import Footer from "@/components/website/footer/Footer";
 
 export default function HomePage() {
   return (
@@ -188,76 +189,7 @@ export default function HomePage() {
       </main>
 
       {/* Editorial Footer */}
-      <footer className="bg-charcoal pt-20 pb-10 border-t border-outline/10 text-surface-variant mt-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16">
-          <div className="md:col-span-4 flex flex-col gap-6">
-            <div className="font-headline-md text-2xl md:text-headline-sm text-linen-white tracking-widest uppercase">
-              Gemshouse
-            </div>
-            <p className="font-body-md text-body-md text-surface-variant/60 max-w-xs leading-relaxed">
-              Purveyors of fine natural gemstones and investment-grade diamonds.
-            </p>
-          </div>
-          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Locations
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                London Office
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                New York Atelier
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Geneva Vault
-              </a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Client Services
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Contact Concierge
-              </a>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Certification FAQ
-              </a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-label-caps text-label-caps text-champagne-gold uppercase tracking-wider">
-                Legal
-              </h4>
-              <a
-                className="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors duration-300"
-                href="#"
-              >
-                Privacy Policy
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-8 border-t border-surface-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-label-caps text-label-caps text-surface-variant/40">
-            © 2024 Gemshouse Editorial. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
