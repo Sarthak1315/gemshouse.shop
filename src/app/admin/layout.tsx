@@ -259,10 +259,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {adminUser && (
               <div className="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
                 <div className="text-right hidden sm:block">
-                  <p className="font-label-caps text-[10px] text-on-surface font-semibold uppercase tracking-wider">
+                  <p className="font-label-caps text-[10px] text-emerald-deep dark:text-linen-white font-semibold uppercase tracking-wider">
                     {adminUser.name || "Administrator"}
                   </p>
-                  <p className="text-[8px] text-on-surface-variant font-label-caps uppercase tracking-widest">
+                  <p className="text-[8px] text-on-surface-variant dark:text-champagne-gold font-label-caps uppercase tracking-widest">
                     {adminUser.role || "ADMIN"}
                   </p>
                 </div>
