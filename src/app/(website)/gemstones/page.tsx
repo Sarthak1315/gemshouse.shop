@@ -1,0 +1,1 @@
+export default function GemstonesPage() { return <div>Loose Gemstones</div>; }

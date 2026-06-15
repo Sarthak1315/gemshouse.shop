@@ -1,0 +1,1 @@
+export function useInventory() { return { items: [], loading: false }; }

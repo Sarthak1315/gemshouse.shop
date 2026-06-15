@@ -1,0 +1,1 @@
+export default function InquiryManagement() { return <div>Inquiry Pipeline</div>; }

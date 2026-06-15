@@ -1,0 +1,1 @@
+export function useInquiry() { return { inquiries: [], loading: false }; }

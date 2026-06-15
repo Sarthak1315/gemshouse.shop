@@ -1,0 +1,1 @@
+export default function WholesalePage() { return <div>B2B & Wholesale Partner Portal</div>; }

@@ -1,0 +1,1 @@
+export function checkPermission(user: any, permission: string) { return true; }

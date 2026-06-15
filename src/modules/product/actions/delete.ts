@@ -1,0 +1,1 @@
+export async function deleteProductAction(id: string) { 'use server'; return { success: true }; }

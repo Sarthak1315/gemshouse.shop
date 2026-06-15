@@ -1,0 +1,1 @@
+export async function POST() { return Response.json({ uploaded: true }); }

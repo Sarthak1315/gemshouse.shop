@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact Us - Gemshouse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed": "#241a00",
+                        "outline-variant": "#c0c9c0",
+                        "surface-container": "#f0eded",
+                        "tertiary-container": "#713437",
+                        "on-secondary-container": "#745c00",
+                        "on-primary-fixed": "#002111",
+                        "on-tertiary-container": "#f29fa1",
+                        "champagne-gold": "#D4AF37",
+                        "charcoal": "#1A1A1A",
+                        "background": "#fcf9f8",
+                        "on-secondary-fixed-variant": "#574500",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dcd9d9",
+                        "on-surface-variant": "#404942",
+                        "linen-white": "#FDFDFD",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#3a090f",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "secondary-fixed": "#ffe088",
+                        "surface-container-low": "#f6f3f2",
+                        "on-background": "#1c1b1b",
+                        "tertiary": "#551e22",
+                        "on-primary-container": "#84c39b",
+                        "on-primary-fixed-variant": "#0f5132",
+                        "primary-fixed": "#b0f1c7",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#0f5132",
+                        "surface": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#95d4ac",
+                        "emerald-deep": "#0F5132",
+                        "secondary": "#735c00",
+                        "surface-container-high": "#eae7e7",
+                        "surface-tint": "#2d6a48",
+                        "secondary-fixed-dim": "#e9c349",
+                        "primary": "#003820",
+                        "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                        "inverse-on-surface": "#f3f0ef",
+                        "secondary-container": "#fed65b",
+                        "surface-bright": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#707971",
+                        "surface-container-highest": "#e5e2e1",
+                        "inverse-primary": "#95d4ac",
+                        "tertiary-fixed": "#ffdad9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#713437",
+                        "on-surface": "#1c1b1b",
+                        "inverse-surface": "#313030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "32px",
+                        "container-max": "1440px",
+                        "margin-desktop": "80px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "label-caps": ["Montserrat"],
+                        "body-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(252, 249, 248, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(212, 175, 55, 0.3);
+        }
+        .luxury-input {
+            border: none;
+            border-bottom: 1px solid #c0c9c0;
+            background: transparent;
+            border-radius: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .luxury-input:focus {
+            outline: none;
+            box-shadow: none;
+            border-bottom-color: #0F5132;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col pt-32">
+<!-- TopNavBar (From JSON) -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b-[0.5px] border-champagne-gold/30">
+<div class="flex flex-col items-center w-full px-margin-mobile md:px-margin-desktop h-auto py-4 max-w-container-max mx-auto">
+<!-- Search / Left -->
+<div class="flex justify-between items-center w-full mb-4 relative">
+<div class="flex items-center gap-4 text-emerald-deep">
+<button class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full opacity-80 scale-[0.99] transition-transform">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md tracking-widest text-emerald-deep uppercase absolute left-1/2 -translate-x-1/2 text-center" href="#">
+                Gemshouse
+            </a>
+<!-- Right Icons -->
+<div class="flex items-center gap-4 text-emerald-deep">
+<button class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+<button class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+<!-- Desktop Navigation Links -->
+<div class="hidden md:flex justify-center items-center gap-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Loose Diamonds</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Gemstones</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Fine Jewelry</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Investment Grade</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Wholesale</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">About</a>
+<a class="font-label-caps text-label-caps text-emerald-deep border-b-2 border-champagne-gold pb-1" href="#">Contact Concierge</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-12 md:py-20">
+<!-- Page Header -->
+<header class="text-center mb-20 max-w-2xl mx-auto">
+<h1 class="font-display-lg-mobile md:font-display-lg text-emerald-deep mb-6">Private Concierge</h1>
+<p class="font-body-lg text-on-surface-variant">Experience unparalleled service. Our gemologists and private client advisors are available to assist you with sourcing, bespoke design, and investment portfolio curation.</p>
+</header>
+<!-- Bento Grid Layout for Contact Options -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-24">
+<!-- Left Column: Form & CTA -->
+<div class="col-span-1 md:col-span-7 space-y-gutter">
+<!-- Contact Form Card -->
+<div class="bg-surface-container-lowest p-8 md:p-12 border border-outline-variant rounded-none relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-champagne-gold"></div>
+<h2 class="font-headline-md text-emerald-deep mb-8">Direct Inquiry</h2>
+<form class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="firstName">First Name</label>
+<input class="luxury-input w-full font-body-md text-on-surface py-2" id="firstName" placeholder="Enter your first name" type="text"/>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="lastName">Last Name</label>
+<input class="luxury-input w-full font-body-md text-on-surface py-2" id="lastName" placeholder="Enter your last name" type="text"/>
+</div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="email">Email Address</label>
+<input class="luxury-input w-full font-body-md text-on-surface py-2" id="email" placeholder="Enter your email address" type="email"/>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="interest">Area of Interest</label>
+<select class="luxury-input w-full font-body-md text-on-surface py-2 appearance-none bg-transparent" id="interest">
+<option value="">Select an option</option>
+<option value="sourcing">Diamond Sourcing</option>
+<option value="bespoke">Bespoke Jewelry</option>
+<option value="investment">Investment Portfolio</option>
+<option value="other">Other</option>
+</select>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2" for="message">Message</label>
+<textarea class="luxury-input w-full font-body-md text-on-surface py-2" id="message" placeholder="How may we assist you?" rows="4"></textarea>
+</div>
+<button class="w-full md:w-auto px-8 py-4 bg-emerald-deep text-on-primary font-label-caps text-label-caps uppercase tracking-widest hover:bg-surface-tint transition-colors relative overflow-hidden group" type="submit">
+<span class="relative z-10">Submit Inquiry</span>
+<div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+</button>
+</form>
+</div>
+<!-- WhatsApp & Calendar Mini-Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- WhatsApp -->
+<div class="bg-surface-container p-8 flex flex-col items-center justify-center text-center border-[0.5px] border-champagne-gold/30 hover:bg-gold-glimmer transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-champagne-gold mb-4 group-hover:scale-110 transition-transform" data-icon="forum">forum</span>
+<h3 class="font-headline-sm text-emerald-deep mb-2">Instant Consultation</h3>
+<p class="font-body-md text-on-surface-variant mb-6 text-sm">Connect with a senior advisor immediately via WhatsApp.</p>
+<a class="font-label-caps text-label-caps text-champagne-gold border border-champagne-gold px-6 py-2 uppercase hover:bg-champagne-gold hover:text-white transition-colors" href="#">Start Chat</a>
+</div>
+<!-- Calendar -->
+<div class="bg-surface-container p-8 flex flex-col items-center justify-center text-center border-[0.5px] border-champagne-gold/30 hover:bg-gold-glimmer transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-champagne-gold mb-4 group-hover:scale-110 transition-transform" data-icon="calendar_month">calendar_month</span>
+<h3 class="font-headline-sm text-emerald-deep mb-2">Private Viewing</h3>
+<p class="font-body-md text-on-surface-variant mb-6 text-sm">Schedule an in-person or virtual consultation.</p>
+<a class="font-label-caps text-label-caps text-emerald-deep border border-emerald-deep px-6 py-2 uppercase hover:bg-emerald-deep hover:text-white transition-colors" href="#">Book Now</a>
+</div>
+</div>
+</div>
+<!-- Right Column: Locations & Map -->
+<div class="col-span-1 md:col-span-5 space-y-gutter flex flex-col">
+<!-- Global Offices -->
+<div class="bg-surface-container-low p-8 border-[0.5px] border-outline-variant h-full flex flex-col">
+<h2 class="font-headline-md text-emerald-deep mb-8 border-b border-champagne-gold/30 pb-4">Global Ateliers</h2>
+<div class="space-y-8 flex-grow">
+<!-- London -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-sm text-on-surface group-hover:text-champagne-gold transition-colors">London</h3>
+<span class="material-symbols-outlined text-champagne-gold opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">15 New Bond Street<br/>Mayfair, London W1S 3ST<br/>+44 20 7123 4567</p>
+</div>
+<!-- New York -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-sm text-on-surface group-hover:text-champagne-gold transition-colors">New York</h3>
+<span class="material-symbols-outlined text-champagne-gold opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">Fifth Avenue<br/>New York, NY 10022<br/>+1 212 555 0198</p>
+</div>
+<!-- Geneva -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-sm text-on-surface group-hover:text-champagne-gold transition-colors">Geneva</h3>
+<span class="material-symbols-outlined text-champagne-gold opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">Rue du Rhône<br/>1204 Genève, Switzerland<br/>+41 22 765 4321</p>
+</div>
+</div>
+<!-- Map Placeholder -->
+<div class="mt-8 h-48 bg-surface-variant relative overflow-hidden border-[0.5px] border-champagne-gold/30">
+<img alt="Map" class="w-full h-full object-cover grayscale opacity-50" data-alt="A minimalist, monochromatic map of a high-end luxury district in London. The streets are depicted in precise, clean lines against a soft, light-mode background. Subtle champagne gold accents highlight key locations. The aesthetic is highly architectural, modern, and perfectly suited for an editorial-style digital publication." data-location="London" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaBGrlBCKaEUMl4Jy7dBdI8dip3dmA1fFYfiMR8aq5gEcBSJ-mHxwga6f_CGbqwOOk8vcNVTbKQ_fJXb_kd9myjB3-a-W5phmpHs8Zal7MiITme6qaBNClGrzxlDtOlyK7nCUm7IymMiN4L09W_Njvt6pE_wB3GBYfmudOQ3hUnSGTsFX9ErsPor0mfQBwfTGxeGKpX04gli3r1rzVoLI7Zi0wmr_uXmWeFiDLefuwWzVWSz55syNTTBmrmMN6JqOwj2QyJadds3Zf"/>
+<div class="absolute inset-0 bg-emerald-deep/5 mix-blend-multiply"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-label-caps text-label-caps tracking-widest text-emerald-deep bg-white/80 backdrop-blur-sm px-4 py-2 border border-champagne-gold/50">View Map</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAQ Section -->
+<div class="max-w-3xl mx-auto mb-20">
+<h2 class="font-headline-md text-emerald-deep text-center mb-12">Client Services FAQ</h2>
+<div class="space-y-4">
+<!-- FAQ Item 1 -->
+<div class="border-b border-outline-variant">
+<button class="w-full py-4 flex justify-between items-center text-left focus:outline-none" onclick="toggleAccordion('faq1')">
+<span class="font-headline-sm text-on-surface text-lg">What certifications accompany your diamonds?</span>
+<span class="material-symbols-outlined text-champagne-gold transition-transform duration-300" data-icon="add" id="icon-faq1">add</span>
+</button>
+<div class="accordion-content" id="faq1">
+<p class="font-body-md text-on-surface-variant pb-6">Every loose diamond and important gemstone sourced through Gemshouse is accompanied by an original grading report from the Gemological Institute of America (GIA) or the Gübelin Gem Lab. We ensure uncompromising transparency regarding origin, treatment, and quality characteristics.</p>
+</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="border-b border-outline-variant">
+<button class="w-full py-4 flex justify-between items-center text-left focus:outline-none" onclick="toggleAccordion('faq2')">
+<span class="font-headline-sm text-on-surface text-lg">How is secure shipping handled globally?</span>
+<span class="material-symbols-outlined text-champagne-gold transition-transform duration-300" data-icon="add" id="icon-faq2">add</span>
+</button>
+<div class="accordion-content" id="faq2">
+<p class="font-body-md text-on-surface-variant pb-6">We utilize specialized, fully insured armored courier services (such as Malca-Amit or Brinks) for all international transit. Your acquisition remains under comprehensive insurance coverage until the moment of signed delivery at your designated location or secure vault facility.</p>
+</div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="border-b border-outline-variant">
+<button class="w-full py-4 flex justify-between items-center text-left focus:outline-none" onclick="toggleAccordion('faq3')">
+<span class="font-headline-sm text-on-surface text-lg">Can I view a stone before purchasing?</span>
+<span class="material-symbols-outlined text-champagne-gold transition-transform duration-300" data-icon="add" id="icon-faq3">add</span>
+</button>
+<div class="accordion-content" id="faq3">
+<p class="font-body-md text-on-surface-variant pb-6">Absolutely. We offer private viewings at our ateliers in London, New York, and Geneva. For clients unable to travel, we provide high-fidelity virtual viewings using specialized macro-videography, or we can arrange secure viewing protocols at vetted facilities in major global financial centers.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (From JSON) -->
+<footer class="bg-charcoal text-champagne-gold font-body-md text-body-md w-full pt-20 pb-10 border-t border-on-tertiary-fixed-variant mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand & Copyright -->
+<div class="col-span-1 md:col-span-4 flex flex-col justify-between mb-8 md:mb-0">
+<div class="font-headline-md text-headline-md text-linen-white mb-8">
+                    Gemshouse
+                </div>
+<p class="text-surface-variant/60 text-sm">
+                    © 2024 Gemshouse Editorial. All Rights Reserved.
+                </p>
+</div>
+<!-- Links Column 1 -->
+<div class="col-span-1 md:col-span-4">
+<h4 class="font-label-caps text-label-caps text-linen-white mb-6 uppercase tracking-widest">Ateliers</h4>
+<ul class="space-y-4">
+<li><a class="text-surface-variant/60 hover:text-champagne-gold transition-colors" href="#">London Office</a></li>
+<li><a class="text-surface-variant/60 hover:text-champagne-gold transition-colors" href="#">New York Atelier</a></li>
+<li><a class="text-surface-variant/60 hover:text-champagne-gold transition-colors" href="#">Geneva Vault</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div class="col-span-1 md:col-span-4">
+<h4 class="font-label-caps text-label-caps text-linen-white mb-6 uppercase tracking-widest">Client Services</h4>
+<ul class="space-y-4">
+<!-- Active state logic applied to 'Contact Concierge' based on page intent -->
+<li><a class="text-linen-white underline hover:text-champagne-gold transition-colors" href="#">Contact Concierge</a></li>
+<li><a class="text-surface-variant/60 hover:text-champagne-gold transition-colors" href="#">Certification FAQ</a></li>
+<li><a class="text-surface-variant/60 hover:text-champagne-gold transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.textContent = 'add';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close others
+                document.querySelectorAll('.accordion-content').forEach(el => {
+                    el.classList.remove('open');
+                });
+                document.querySelectorAll('[id^="icon-faq"]').forEach(el => {
+                    el.textContent = 'add';
+                    el.style.transform = 'rotate(0deg)';
+                });
+                
+                // Open clicked
+                content.classList.add('open');
+                icon.textContent = 'remove';
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body></html>

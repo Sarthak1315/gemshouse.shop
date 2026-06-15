@@ -1,0 +1,1 @@
+export default function AdminSettings() { return <div>Platform Settings</div>; }

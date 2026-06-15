@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gemshouse - Natural Gemstones &amp; Fancy Diamonds Direct From Source</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shimmer-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.75s ease;
+        }
+        .shimmer-hover:hover::after {
+            left: 200%;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed": "#241a00",
+                        "outline-variant": "#c0c9c0",
+                        "surface-container": "#f0eded",
+                        "tertiary-container": "#713437",
+                        "on-secondary-container": "#745c00",
+                        "on-primary-fixed": "#002111",
+                        "on-tertiary-container": "#f29fa1",
+                        "champagne-gold": "#D4AF37",
+                        "charcoal": "#1A1A1A",
+                        "background": "#fcf9f8",
+                        "on-secondary-fixed-variant": "#574500",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dcd9d9",
+                        "on-surface-variant": "#404942",
+                        "linen-white": "#FDFDFD",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#3a090f",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "secondary-fixed": "#ffe088",
+                        "surface-container-low": "#f6f3f2",
+                        "on-background": "#1c1b1b",
+                        "tertiary": "#551e22",
+                        "on-primary-container": "#84c39b",
+                        "on-primary-fixed-variant": "#0f5132",
+                        "primary-fixed": "#b0f1c7",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#0f5132",
+                        "surface": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#95d4ac",
+                        "emerald-deep": "#0F5132",
+                        "secondary": "#735c00",
+                        "surface-container-high": "#eae7e7",
+                        "surface-tint": "#2d6a48",
+                        "secondary-fixed-dim": "#e9c349",
+                        "primary": "#003820",
+                        "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                        "inverse-on-surface": "#f3f0ef",
+                        "secondary-container": "#fed65b",
+                        "surface-bright": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#707971",
+                        "surface-container-highest": "#e5e2e1",
+                        "inverse-primary": "#95d4ac",
+                        "tertiary-fixed": "#ffdad9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#713437",
+                        "on-surface": "#1c1b1b",
+                        "inverse-surface": "#313030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "32px",
+                        "container-max": "1440px",
+                        "margin-desktop": "80px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "label-caps": ["Montserrat"],
+                        "body-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden selection:bg-champagne-gold selection:text-charcoal">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-xl border-b-[0.5px] border-champagne-gold/30">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full max-w-container-max mx-auto">
+<!-- Search / Left -->
+<div class="flex items-center gap-4 text-emerald-deep">
+<button aria-label="Search" class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full opacity-80 scale-[0.99] transition-transform">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md tracking-widest text-emerald-deep uppercase absolute left-1/2 -translate-x-1/2" href="#">
+    Gemshouse
+</a>
+<!-- Right Icons -->
+<div class="flex items-center gap-4 text-emerald-deep">
+<button aria-label="Favorite" class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button aria-label="Mail" class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+<button aria-label="Person" class="hover:bg-gold-glimmer transition-all duration-300 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+<!-- Desktop Navigation Links -->
+<div class="hidden md:flex justify-center items-center gap-8 pb-4">
+<a class="font-label-caps text-label-caps text-emerald-deep border-b-2 border-champagne-gold pb-1" href="#">Loose Diamonds</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Gemstones</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Fine Jewelry</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Investment Grade</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Wholesale</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">About</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-emerald-deep transition-colors" href="#">Contact Concierge</a>
+</div>
+</nav>
+<main class="pt-32">
+<!-- Hero Section -->
+<section class="relative w-full min-h-[90vh] flex items-center justify-center bg-charcoal overflow-hidden">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Hero background" class="w-full h-full object-cover opacity-60" data-alt="A high-end editorial photography shot of a pristine, vivid green emerald and a flawless, radiant cut diamond resting on dark, textured velvet. The lighting is dramatic, highlighting the facets and internal fire of the gems against a deep, moody background, establishing a modern luxury and gallery-like aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRF4Cca5I5N9aNG_CxkpcmRo3xRwGlq5fiEgUG4nf4pNX7DPWg2Nlq1sKSRyVN3HTqvwAJE9bb1vSQhBva_DDuQKclfg_YtTOEKNeAg2mSHH_3La3mApCMLDnmZI4dfPR8kyeItbTY3vWcnMPd2HPrPdEuVzC-Y9008crgF8EjwxhfrkUyj4j2gyQiW2VvCuWGb8HjKuCvbOqb4j1fGkhCvDvBsyDT6vu9onuqKX2riI_2vxQ893ktC8mcEaFgbiTfLbN2x-hYc8--"/>
+</div>
+<!-- Shader Overlay -->
+
+<div class="relative z-20 text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto flex flex-col items-center gap-8">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-linen-white drop-shadow-lg">
+                    Natural Gemstones &amp; Fancy Diamonds Direct From Source
+                </h1>
+<p class="font-body-lg text-body-lg text-surface-variant max-w-2xl drop-shadow-md">
+                    Trusted by Jewelers, Wholesalers &amp; Collectors Worldwide
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 mt-8">
+<button class="shimmer-hover bg-emerald-deep text-on-primary px-8 py-4 font-label-caps text-label-caps uppercase tracking-widest hover:opacity-90 transition-opacity">
+                        Explore Collection
+                    </button>
+<button class="shimmer-hover bg-transparent border border-champagne-gold text-champagne-gold px-8 py-4 font-label-caps text-label-caps uppercase tracking-widest hover:bg-gold-glimmer transition-colors">
+                        Request Inventory
+                    </button>
+</div>
+</div>
+</section>
+<!-- Featured Categories (Bento Grid) -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-md text-headline-md text-emerald-deep mb-4">Curated Selections</h2>
+<div class="w-16 h-0.5 bg-champagne-gold mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Large Feature -->
+<div class="md:col-span-8 group relative overflow-hidden bg-surface-container-low border border-outline-variant/30 transition-all hover:border-champagne-gold/50 cursor-pointer">
+<div class="aspect-[16/9] w-full overflow-hidden">
+<img alt="Sapphire Collection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro close-up of a royal blue sapphire, perfectly faceted, reflecting light with deep blue tones. White background, high-end commercial photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsIBXog5Vz8Z8GS0xOhDj2rkHSKBB2k3JtBA5OoRjF8qmNtgjwYlQKLr_8tmVFUtMqjI0K4jxIBYAsf1kmLBsbecJtj9Tb2JrQHSI-bkeTHkist9NUYSLAgzZPBYwTYRIGxygZzbhvMLL547VhMKZJLkyJSdGSBzDuZIieLxKXoZaCfy5qSrcIYoHG9OHI6RYNtkqNspK3M5WSllFWLAM_lf61ibO0VWalQ5RmrXhYQxiU9J6D8R_sdRC0u8XuDnkQHkym_QDTf2jH"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent p-8 flex flex-col justify-end">
+<span class="inline-block bg-emerald-deep text-champagne-gold font-label-caps text-label-caps px-3 py-1 mb-3 self-start">Investment Grade</span>
+<h3 class="font-headline-sm text-headline-sm text-linen-white">Ceylon Sapphires</h3>
+<p class="font-body-md text-body-md text-surface-variant mt-2">Unheated, pristine clarity.</p>
+</div>
+</div>
+<!-- Small Features -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="flex-1 group relative overflow-hidden bg-surface-container-low border border-outline-variant/30 transition-all hover:border-champagne-gold/50 cursor-pointer">
+<div class="absolute inset-0 z-0">
+<img alt="Ruby Collection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro close-up of a vivid pigeon blood ruby, glowing with internal fire. White background, high-end commercial photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKhsHXSE1e1-v_t1QXjB33P9bCcmXIcdV-lcfAHQFNyhn9-1xxh5YGSfxW5YDfMn8_tyhzmfOBa_GMT0ZsOq3E7Oly5_hgiex2QW5NCB4Za23TZIufc1M4LTMaynEQ0V0UUaUCyI7xn0juKS1FOJDJd4V7B4Tp7r0W_zkQZlEsfAkHK1CwaCXqC9iQjc5fImy4lmOl1EYVJa_Krofqa1RICx59lOa3aWcj_BW-yz1ZEHG7hEjiRqP3g6C69DXoBpwQGRcfPjcOaS4G"/>
+</div>
+<div class="relative z-10 h-full bg-gradient-to-t from-charcoal/80 to-transparent p-6 flex flex-col justify-end">
+<h3 class="font-headline-sm text-headline-sm text-linen-white">Burmese Rubies</h3>
+</div>
+</div>
+<div class="flex-1 group relative overflow-hidden bg-surface-container-low border border-outline-variant/30 transition-all hover:border-champagne-gold/50 cursor-pointer">
+<div class="absolute inset-0 z-0">
+<img alt="Fancy Diamonds" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro close-up of a fancy yellow diamond, radiant cut, sparkling with brilliance. White background, high-end commercial photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3SoUOa3N3pLiBylikbr7TjBlxahWLQvbgIbqvy4gMA7L5igXjYYkFahBoT2O_PTMCBZn_JovsOyNg68iQckfn1M5EyPp1nlwniH7stMC6eLh7FEVv9KC_t1D_jjZgO2NUSBPpZsZraDAJhJb4CaPdduY5PykPFkZSuwpq7iEv7O-B__krjWPYxadiEAjDBj-6b4yuScWv9u3DoajQRl2PEALHaZCQB-SkMLGgEqx3dZEU87k7qlqYJ6xbNMAy18DoXl3b8EPI7Jqs"/>
+</div>
+<div class="relative z-10 h-full bg-gradient-to-t from-charcoal/80 to-transparent p-6 flex flex-col justify-end">
+<h3 class="font-headline-sm text-headline-sm text-linen-white">Fancy Color Diamonds</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Info Section -->
+<section class="py-24 bg-surface-container-low border-y border-outline-variant/20">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
+<div class="order-2 md:order-1 p-12 bg-surface border border-outline-variant/30 relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-champagne-gold to-transparent opacity-50"></div>
+<h2 class="font-headline-md text-headline-md text-emerald-deep mb-6">The Provenance Journey</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">
+                        We trace every stone from its origin, ensuring ethical sourcing and masterful cutting before certification. Our transparent timeline guarantees the integrity of your investment.
+                    </p>
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-champagne-gold text-2xl" data-icon="explore">explore</span>
+<div>
+<h4 class="font-label-caps text-label-caps text-emerald-deep uppercase">Source</h4>
+<p class="text-sm text-on-surface-variant">Ethical mining partnerships.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-champagne-gold text-2xl" data-icon="diamond">diamond</span>
+<div>
+<h4 class="font-label-caps text-label-caps text-emerald-deep uppercase">Cut &amp; Polish</h4>
+<p class="text-sm text-on-surface-variant">Master artisans at work.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-champagne-gold text-2xl" data-icon="verified">verified</span>
+<div>
+<h4 class="font-label-caps text-label-caps text-emerald-deep uppercase">Certification</h4>
+<p class="text-sm text-on-surface-variant">Independent lab verification.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 md:order-2 aspect-square md:aspect-auto md:h-full bg-charcoal relative flex items-center justify-center p-8">
+<!-- Placeholder for Interactive Map or abstract representation -->
+<div class="text-center">
+<span class="material-symbols-outlined text-champagne-gold text-6xl mb-4" data-icon="public">public</span>
+<h3 class="font-headline-sm text-headline-sm text-linen-white">Global Reach</h3>
+<p class="font-body-md text-body-md text-surface-variant mt-2 max-w-sm mx-auto">Connecting international collectors with the world's finest uneartherd treasures.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-charcoal pt-20 pb-10 border-t border-on-tertiary-fixed-variant">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16">
+<div class="md:col-span-4">
+<div class="font-headline-md text-headline-md text-linen-white tracking-widest uppercase mb-6">Gemshouse</div>
+<p class="font-body-md text-body-md text-surface-variant/60 max-w-xs">Purveyors of fine natural gemstones and investment-grade diamonds.</p>
+</div>
+<div class="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
+<div class="flex flex-col gap-4">
+<h4 class="font-label-caps text-label-caps text-champagne-gold uppercase">Locations</h4>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">London Office</a>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">New York Atelier</a>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">Geneva Vault</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-caps text-label-caps text-champagne-gold uppercase">Client Services</h4>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">Contact Concierge</a>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">Certification FAQ</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-caps text-label-caps text-champagne-gold uppercase">Legal</h4>
+<a class="font-body-md text-body-md text-surface-variant/60 hover:text-linen-white transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-8 border-t border-surface-variant/20 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-caps text-label-caps text-surface-variant/40">© 2024 Gemshouse Editorial. All Rights Reserved.</p>
+</div>
+</footer>
+</body></html>

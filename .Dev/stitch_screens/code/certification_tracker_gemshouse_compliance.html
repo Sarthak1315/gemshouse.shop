@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AESTHETICA - Certification Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#707971",
+                        "on-tertiary-fixed": "#3a090f",
+                        "on-primary-container": "#84c39b",
+                        "on-primary-fixed-variant": "#0f5132",
+                        "surface-container": "#f0eded",
+                        "primary-fixed-dim": "#95d4ac",
+                        "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                        "tertiary-fixed": "#ffdad9",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "primary-fixed": "#b0f1c7",
+                        "on-primary-fixed": "#002111",
+                        "linen-white": "#FDFDFD",
+                        "primary": "#003820",
+                        "tertiary-container": "#713437",
+                        "tertiary": "#551e22",
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed": "#241a00",
+                        "secondary-container": "#fed65b",
+                        "inverse-primary": "#95d4ac",
+                        "background": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#713437",
+                        "emerald-deep": "#0F5132",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f6f3f2",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#745c00",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "champagne-gold": "#D4AF37",
+                        "secondary-fixed": "#ffe088",
+                        "inverse-surface": "#313030",
+                        "on-surface-variant": "#404942",
+                        "on-surface": "#1c1b1b",
+                        "primary-container": "#0f5132",
+                        "outline-variant": "#c0c9c0",
+                        "on-tertiary-container": "#f29fa1",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-bright": "#fcf9f8",
+                        "surface": "#fcf9f8",
+                        "secondary": "#735c00",
+                        "charcoal": "#1A1A1A",
+                        "surface-muted": "#F6F3F2",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#2d6a48"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "unit": "8px",
+                        "section-padding": "96px",
+                        "gutter": "32px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "label-caps": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Shimmer Effect for Primary Buttons */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 40%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0.1) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg) translate(-100%, -100%);
+            transition: transform 0.6s ease-in-out;
+            pointer-events: none;
+        }
+        .btn-shimmer:hover::after {
+            transform: rotate(30deg) translate(100%, 100%);
+        }
+
+        /* Ambient Shadows */
+        .ambient-shadow {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Ultra thin border utility */
+        .border-hairline {
+            border-width: 0.5px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased overflow-x-hidden flex h-screen">
+<!-- SideNavBar (from JSON) -->
+<nav class="hidden md:flex flex-col bg-surface-container-lowest border-r border-outline-variant/20 docked left-0 h-screen w-64 fixed py-unit gap-2 z-40 transition-all duration-300">
+<div class="px-6 py-8 flex flex-col items-center justify-center text-center border-b border-outline-variant/20 mb-4">
+<img alt="Brand Insignia" class="w-16 h-16 rounded-full mb-4 object-cover border border-champagne-gold/30 p-1" data-alt="A minimalist, high-end logo insignia for a luxury jewelry brand. The design features geometric lines in a subtle champagne gold hue on a pristine white background. The aesthetic is clean, modern, and editorial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx_obvKbk-7Bjyz2fUxoVKyw69S1DXYqOYyBTIoalzxEjP85sNnC6LMbccQAGZF2WTfe1NEz_p8kbaJq6AoEb0_a9kSVQ6h3pDnUEJa0Yfz8JdxoM1tfOHBfQArQubtXPW0hqlorcPAugQIaPCpjlMFZFtCRxeMVsmapAdi9KctG7ccnTd4x32sMcyCUQIBeJeRK4XZzTxqJ_qdeuWoE-d8_P_HWtR_KXTVYdAWnGsNMonaeMD27L6ou3FIRoty3fZut8zIlGDjaEO"/>
+<h1 class="font-headline-sm text-headline-sm text-emerald-deep tracking-wider uppercase">AESTHETICA</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-2 tracking-widest text-[10px]">Enterprise Suite</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-1 scrollbar-hide">
+<!-- Tabs from JSON -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">atm</span>
+<span class="font-label-caps text-label-caps mt-1">Inventory</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">edit_note</span>
+<span class="font-label-caps text-label-caps mt-1">Product CMS</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">person_search</span>
+<span class="font-label-caps text-label-caps mt-1">Leads</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">contact_support</span>
+<span class="font-label-caps text-label-caps mt-1">Inquiries</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">handshake</span>
+<span class="font-label-caps text-label-caps mt-1">Dealers</span>
+</a>
+<!-- Active State Navigation -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold transition-all duration-200 scale-98" href="#">
+<span class="material-symbols-outlined icon-filled">verified</span>
+<span class="font-label-caps text-label-caps mt-1">Certifications</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">shopping_bag</span>
+<span class="font-label-caps text-label-caps mt-1">Orders</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">leaderboard</span>
+<span class="font-label-caps text-label-caps mt-1">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 scale-98 hover:text-emerald-deep group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-emerald-deep transition-colors">group</span>
+<span class="font-label-caps text-label-caps mt-1">Team</span>
+</a>
+</div>
+<div class="px-4 py-4 border-t border-outline-variant/20 mt-auto">
+<button class="w-full mb-4 py-3 px-4 border border-champagne-gold/50 text-emerald-deep rounded-lg font-label-caps text-label-caps hover:bg-champagne-gold/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+                Concierge Support
+            </button>
+<div class="space-y-1">
+<a class="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 text-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+<span class="font-label-caps text-label-caps mt-1">Security</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 text-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span class="font-label-caps text-label-caps mt-1">Log Out</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-64 w-full min-h-screen">
+<!-- TopNavBar (Mobile Only Fallback) -->
+<header class="md:hidden flex justify-between items-center h-20 px-margin-mobile w-full z-50 bg-linen-white/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0">
+<div class="font-display-lg-mobile text-headline-sm tracking-widest text-emerald-deep">AESTHETICA</div>
+<button class="text-emerald-deep">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-emerald-deep mb-2">Certification Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                        Verify, track, and manage gemological reports from global grading laboratories. Monitor expiration dates and maintain provenance records.
+                    </p>
+</div>
+<div class="flex gap-4">
+<button class="py-3 px-6 border border-champagne-gold text-emerald-deep rounded font-label-caps text-label-caps hover:bg-champagne-gold/5 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                        Search DB
+                    </button>
+<button class="btn-shimmer py-3 px-6 bg-emerald-deep text-on-primary rounded font-label-caps text-label-caps shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                        Bulk Upload
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-12">
+<!-- Status Overview Card (Spans 8 columns) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 ambient-shadow relative overflow-hidden flex flex-col justify-between min-h-[300px]">
+<div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px] text-emerald-deep">workspace_premium</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-emerald-deep mb-6 border-b border-outline-variant/20 pb-4 inline-block pr-12">Verification Status Overview</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Total Reports</p>
+<p class="font-display-lg text-[48px] text-emerald-deep leading-none">1,248</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Verified Active</p>
+<p class="font-display-lg text-[48px] text-primary-container leading-none">1,102</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Pending Review</p>
+<p class="font-display-lg text-[48px] text-secondary-container leading-none">86</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Flagged</p>
+<p class="font-display-lg text-[48px] text-tertiary-container leading-none">60</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Expiry Alerts (Spans 4 columns) -->
+<div class="md:col-span-4 bg-tertiary-fixed border border-tertiary-fixed-dim rounded-xl p-8 ambient-shadow flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-on-tertiary-fixed">Expiry Alerts</h3>
+<span class="material-symbols-outlined text-tertiary-container icon-filled">warning</span>
+</div>
+<p class="font-body-md text-sm text-on-tertiary-fixed/80 mb-6">Reports requiring immediate renewal or re-evaluation from grading labs.</p>
+<ul class="space-y-4 flex-1">
+<li class="flex justify-between items-center border-b border-tertiary-fixed-dim/50 pb-2">
+<div>
+<p class="font-label-caps text-[10px] text-on-tertiary-fixed font-bold">GIA 73892019</p>
+<p class="text-xs text-on-tertiary-fixed/70 mt-1">3.02ct D Flawless</p>
+</div>
+<span class="text-xs font-semibold text-tertiary-container bg-surface-container-lowest px-2 py-1 rounded">Exp: 2 Days</span>
+</li>
+<li class="flex justify-between items-center border-b border-tertiary-fixed-dim/50 pb-2">
+<div>
+<p class="font-label-caps text-[10px] text-on-tertiary-fixed font-bold">GRS 2021-0819</p>
+<p class="text-xs text-on-tertiary-fixed/70 mt-1">5.14ct Pigeon Blood</p>
+</div>
+<span class="text-xs font-semibold text-tertiary-container bg-surface-container-lowest px-2 py-1 rounded">Exp: 5 Days</span>
+</li>
+<li class="flex justify-between items-center border-b border-tertiary-fixed-dim/50 pb-2">
+<div>
+<p class="font-label-caps text-[10px] text-on-tertiary-fixed font-bold">SSEF 119833</p>
+<p class="text-xs text-on-tertiary-fixed/70 mt-1">Kashmir Sapphire</p>
+</div>
+<span class="text-xs font-semibold text-tertiary-container bg-surface-container-lowest px-2 py-1 rounded">Exp: 14 Days</span>
+</li>
+</ul>
+<button class="w-full mt-6 py-2 border border-tertiary-container text-tertiary-container rounded font-label-caps text-[10px] hover:bg-tertiary-container/10 transition-colors">
+                        View All Alerts
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

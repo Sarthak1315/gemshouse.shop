@@ -1,0 +1,1 @@
+export class InquiryService { static async fetchInquiries() { return []; } }

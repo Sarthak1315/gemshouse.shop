@@ -1,0 +1,1 @@
+export async function createProductAction(data: any) { 'use server'; return { success: true }; }

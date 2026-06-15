@@ -1,0 +1,1 @@
+export class InventoryService { static async fetchInventory() { return []; } }

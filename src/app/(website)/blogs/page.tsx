@@ -1,0 +1,1 @@
+export default function BlogsPage() { return <div>Heritage & Craftsmanship Blog</div>; }

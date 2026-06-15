@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GEMSHOUSE - Collections</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#fcf9f8",
+                      "on-tertiary-fixed": "#3a090f",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#0f5132",
+                      "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                      "on-surface-variant": "#404942",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffdad9",
+                      "surface-container": "#f0eded",
+                      "secondary-container": "#fed65b",
+                      "primary": "#003820",
+                      "on-secondary-fixed-variant": "#574500",
+                      "surface-container-highest": "#e5e2e1",
+                      "outline": "#707971",
+                      "on-surface": "#1c1b1b",
+                      "outline-variant": "#c0c9c0",
+                      "linen-white": "#FDFDFD",
+                      "secondary-fixed-dim": "#e9c349",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary": "#ffffff",
+                      "background": "#fcf9f8",
+                      "on-secondary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#0f5132",
+                      "surface-container-low": "#f6f3f2",
+                      "emerald-deep": "#0F5132",
+                      "champagne-gold": "#D4AF37",
+                      "on-secondary-container": "#745c00",
+                      "surface-dim": "#dcd9d9",
+                      "primary-fixed-dim": "#95d4ac",
+                      "surface-variant": "#e5e2e1",
+                      "surface-tint": "#2d6a48",
+                      "secondary": "#735c00",
+                      "surface": "#fcf9f8",
+                      "on-tertiary-container": "#f29fa1",
+                      "tertiary-container": "#713437",
+                      "surface-muted": "#F6F3F2",
+                      "inverse-primary": "#95d4ac",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-container-high": "#eae7e7",
+                      "inverse-on-surface": "#f3f0ef",
+                      "charcoal": "#1A1A1A",
+                      "on-primary-container": "#84c39b",
+                      "secondary-fixed": "#ffe088",
+                      "on-primary-fixed": "#002111",
+                      "tertiary": "#551e22",
+                      "primary-fixed": "#b0f1c7",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed-dim": "#ffb3b4",
+                      "on-tertiary-fixed-variant": "#713437",
+                      "inverse-surface": "#313030"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-padding": "96px",
+                      "margin-desktop": "80px",
+                      "gutter": "32px",
+                      "unit": "8px",
+                      "margin-mobile": "20px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Montserrat"
+                      ],
+                      "display-lg-mobile": [
+                              "Playfair Display"
+                      ],
+                      "headline-sm": [
+                              "Playfair Display"
+                      ],
+                      "label-caps": [
+                              "Montserrat"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "headline-md": [
+                              "Playfair Display"
+                      ],
+                      "body-md": [
+                              "Montserrat"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.15em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .shimmer-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            transition: all 0.5s ease;
+        }
+        .shimmer-hover:hover::after {
+            left: 150%;
+        }
+        
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface pb-[90px] pt-[64px]">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl flex justify-between items-center px-margin-mobile h-16 w-full">
+<button aria-label="Menu" class="text-emerald-deep scale-95 active:opacity-70 transition-transform flex items-center justify-center p-2 -ml-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-display-lg-mobile text-display-lg-mobile tracking-tighter text-emerald-deep">GEMSHOUSE</h1>
+<button aria-label="Search" class="text-emerald-deep scale-95 active:opacity-70 transition-transform flex items-center justify-center p-2 -mr-2">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</header>
+<!-- Sticky Filter & Sorting Bar -->
+<div class="sticky top-16 z-40 bg-surface/95 backdrop-blur-md border-b border-outline-variant/20 py-3 px-margin-mobile flex justify-between items-center">
+<div class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="tune">tune</span>
+            FILTERS
+        </div>
+<div class="font-label-caps text-label-caps text-emerald-deep flex items-center gap-1 cursor-pointer">
+            SORT BY: NEWEST
+            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Collection Grid -->
+<main class="px-margin-mobile py-6">
+<div class="mb-6">
+<h2 class="font-headline-sm text-headline-sm text-emerald-deep mb-2">Curated Selection</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Investment-grade gemstones sourced ethically for discerning collectors.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Card 1: Royal Blue Sapphire -->
+<article class="flex flex-col group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low overflow-hidden rounded mb-3 border border-outline-variant/10">
+<img alt="Royal Blue Sapphire" class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLsYG6RjbdBOmieyUmbOXXJa7RYkLh_fDxe7ivVtnq-V2saAKERK1h2LP0TBUC9pTzdpPTCwR3zI8-B8Dt1ToZYf3vcB2qRiBLmTC4fWMpZ_lOIefb8GcLMiRRX6H4Y-7HDaOLekFoBhXO3wsji56um9QpmomjW4EdsfZXyGOqOi5De4nhYql0LzEl-UA7BNsOt744b4hKaqnGcF8Vf1JppxJmmGDma4LR-bq8vF4_bbIDZY-GKBLe8tA9sa"/>
+<div class="absolute top-2 left-2 bg-emerald-deep text-champagne-gold font-label-caps text-label-caps px-2 py-1 rounded-sm text-[10px]">
+                        CERTIFIED
+                    </div>
+</div>
+<div class="flex flex-col flex-grow">
+<h3 class="font-headline-sm text-[18px] leading-tight text-on-surface mb-1">Royal Blue Sapphire</h3>
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-2 space-y-1">
+<p>3.12 CARATS</p>
+<p>CEYLON, SRI LANKA</p>
+</div>
+<p class="font-body-md text-body-md font-semibold text-emerald-deep mt-auto">$12,500</p>
+</div>
+</article>
+<!-- Card 2: Muzo Emerald -->
+<article class="flex flex-col group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low overflow-hidden rounded mb-3 border border-outline-variant/10">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A spectacular macro photograph of a rare Muzo emerald resting elegantly on a minimalist white stone surface. The emerald is impeccably cut, radiating intense, deep green hues and subtle inner brilliance. The lighting is soft and diffuse, creating a gallery-modern light mode aesthetic that highlights the gemstone's flawless clarity and ethical provenance. Subtle champagne gold reflections hint at luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOd8jFxMpeBNU8UJiS2G9BrbpDfW51a6fcFwLwDzrp1fN7XqZNB_gH7ItrZ7wrE3LrPGHK-GJAgk_947gea8z3GUs3-N8FCSalTyydjjLqcqlKqTB7y0iffNAJN8kuyjAAq6GVvse-rcIfNdaAxpvWjuPMgbp32ePEQD9jwsFJt21XYN4RoGL8b72twZ3XhTCHeiEokotfb4x1s9wD5APEkwWYnI0zB5umcxyYUZjTANDzGw93mEO_y2jZL5BGEvFApGPBTmxrdxKP"/>
+<div class="absolute top-2 left-2 bg-emerald-deep text-champagne-gold font-label-caps text-label-caps px-2 py-1 rounded-sm text-[10px]">
+                        INVESTMENT
+                    </div>
+</div>
+<div class="flex flex-col flex-grow">
+<h3 class="font-headline-sm text-[18px] leading-tight text-on-surface mb-1">Muzo Emerald</h3>
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-2 space-y-1">
+<p>4.05 CARATS</p>
+<p>MUZO, COLOMBIA</p>
+</div>
+<p class="font-body-md text-body-md font-semibold text-emerald-deep mt-auto">$28,000</p>
+</div>
+</article>
+<!-- Card 3: Pigeon Blood Ruby -->
+<article class="flex flex-col group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low overflow-hidden rounded mb-3 border border-outline-variant/10">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A breathtaking close-up of a pigeon blood ruby set against an expansive, pristine white backdrop. The gemstone is expertly faceted, capturing the light to reveal deep, vibrant crimson tones with a flawless inner glow. The minimalist composition and high-key studio lighting emphasize the ruby's natural beauty and exclusivity. The overall mood is hushed, luxurious, and authoritative, perfectly fitting an elite jewelry catalog." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2QQMll99KqNC9YK_-iR_oO7hDF902Gsg8OrR5G-Cd52nZ37X7U8KLa8DfgEs7o_aU3hOfEmalQCPa7QqXTw1x_PtBkHZ0KwhzsN_6HzPLReV6BYsVN2hI_qWyv7AhWn6UajrsxgLHjKA4OB8X2vAShjwLE4oo_ZPvOCViGNeotEjmGVVhDDpPj03tEvbr6BiRkfBOaEXZzjmYCmdV5R_ABk6UOxlQcb8sBTkT6oWdFkOfZIkKX4m9NOuYKLWCc5NU6tl08-wmlosH"/>
+</div>
+<div class="flex flex-col flex-grow">
+<h3 class="font-headline-sm text-[18px] leading-tight text-on-surface mb-1">Pigeon Blood Ruby</h3>
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-2 space-y-1">
+<p>2.15 CARATS</p>
+<p>MOGOK, MYANMAR</p>
+</div>
+<p class="font-body-md text-body-md font-semibold text-emerald-deep mt-auto">$45,000</p>
+</div>
+</article>
+<!-- Card 4: Fancy Yellow Diamond -->
+<article class="flex flex-col group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low overflow-hidden rounded mb-3 border border-outline-variant/10">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="An exquisite fancy yellow diamond showcased in a macro photography style on a smooth, light grey gradient surface. The diamond's brilliant cut reflects light intensely, showcasing its saturated, sunlit golden hue. The image is clean, bright, and modern, using an airy white-space approach that exudes sophistication. Subtle ambient shadows ground the piece, elevating its status as a high-end investment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf2qC6qTtoyb2T86qA8jFcrZfVlDLwTkOWrNU6FCen8C23xpEksQqixVYI4rNFo3OSlKOumRFqBBsccbx0ab1fWPdr_rjrQQfwVkLzKaI3xUp6vKWYrOjLPY7l_8MxfhyBSWmvJ-mqWyyRDGc499vBUJ932i1jAvMpLNrZ5p_dqsP_eBybWA9MQ-quxhuwtVFyaOFXBCKkDNuZ4-BqE92AWwFmeScv_CELNAHNXAEwCD8AIGLmuoo6FVanmePGgTuuCt8DiSawol1I"/>
+</div>
+<div class="flex flex-col flex-grow">
+<h3 class="font-headline-sm text-[18px] leading-tight text-on-surface mb-1">Fancy Yellow Diamond</h3>
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-2 space-y-1">
+<p>5.20 CARATS</p>
+<p>ZIMBABWE</p>
+</div>
+<p class="font-body-md text-body-md font-semibold text-emerald-deep mt-auto">$82,000</p>
+</div>
+</article>
+</div>
+<div class="mt-12 flex justify-center pb-8">
+<button class="bg-surface-transparent border border-champagne-gold text-emerald-deep font-label-caps text-label-caps px-8 py-4 rounded shimmer-hover transition-colors hover:bg-gold-glimmer/20">
+                LOAD MORE
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-xl border-t border-champagne-gold/20 shadow-sm flex justify-around items-center h-20 pb-safe px-4">
+<!-- Active Tab: Shop -->
+<button class="flex flex-col items-center justify-center text-emerald-deep bg-gold-glimmer rounded-lg px-3 py-1 scale-90 duration-150 transition-transform">
+<span class="material-symbols-outlined text-[24px]" data-icon="shopping_bag" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="font-label-caps text-[10px] mt-1 font-semibold">Shop</span>
+</button>
+<!-- Inactive Tab: Wholesale -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-gold-glimmer/50 transition-all rounded-lg">
+<span class="material-symbols-outlined text-[24px]" data-icon="business_center">business_center</span>
+<span class="font-label-caps text-[10px] mt-1">Wholesale</span>
+</button>
+<!-- Inactive Tab: Wishlist -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-gold-glimmer/50 transition-all rounded-lg">
+<span class="material-symbols-outlined text-[24px]" data-icon="favorite">favorite</span>
+<span class="font-label-caps text-[10px] mt-1">Wishlist</span>
+</button>
+<!-- Inactive Tab: Inquiry -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-gold-glimmer/50 transition-all rounded-lg">
+<span class="material-symbols-outlined text-[24px]" data-icon="mail">mail</span>
+<span class="font-label-caps text-[10px] mt-1">Inquiry</span>
+</button>
+</nav>
+</body></html>

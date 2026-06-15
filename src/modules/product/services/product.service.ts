@@ -1,0 +1,1 @@
+export class ProductService { static async getProducts() { return []; } }

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AESTHETICA Enterprise Suite - Team Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#707971",
+                        "on-tertiary-fixed": "#3a090f",
+                        "on-primary-container": "#84c39b",
+                        "on-primary-fixed-variant": "#0f5132",
+                        "surface-container": "#f0eded",
+                        "primary-fixed-dim": "#95d4ac",
+                        "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                        "tertiary-fixed": "#ffdad9",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "primary-fixed": "#b0f1c7",
+                        "on-primary-fixed": "#002111",
+                        "linen-white": "#FDFDFD",
+                        "primary": "#003820",
+                        "tertiary-container": "#713437",
+                        "tertiary": "#551e22",
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed": "#241a00",
+                        "secondary-container": "#fed65b",
+                        "inverse-primary": "#95d4ac",
+                        "background": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#713437",
+                        "emerald-deep": "#0F5132",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f6f3f2",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#745c00",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "champagne-gold": "#D4AF37",
+                        "secondary-fixed": "#ffe088",
+                        "inverse-surface": "#313030",
+                        "on-surface-variant": "#404942",
+                        "on-surface": "#1c1b1b",
+                        "primary-container": "#0f5132",
+                        "outline-variant": "#c0c9c0",
+                        "on-tertiary-container": "#f29fa1",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-bright": "#fcf9f8",
+                        "surface": "#fcf9f8",
+                        "secondary": "#735c00",
+                        "charcoal": "#1A1A1A",
+                        "surface-muted": "#F6F3F2",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#2d6a48"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "unit": "8px",
+                        "section-padding": "96px",
+                        "gutter": "32px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Montserrat"],
+                        "label-caps": ["Montserrat"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .btn-primary-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(212,175,55,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg) translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary-shimmer:hover::after {
+            transform: rotate(45deg) translateY(100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 py-unit gap-2 bg-surface-container-lowest border-r border-outline-variant/20 z-40">
+<div class="px-6 py-8 flex flex-col gap-2">
+<span class="font-headline-sm text-headline-sm text-emerald-deep">AESTHETICA</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Enterprise Suite</span>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">atm</span>
+<span class="font-label-caps text-label-caps">Inventory</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-caps text-label-caps">Product CMS</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-label-caps text-label-caps">Leads</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-label-caps text-label-caps">Inquiries</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">handshake</span>
+<span class="font-label-caps text-label-caps">Dealers</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label-caps text-label-caps">Certifications</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-label-caps text-label-caps">Orders</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold transition-all duration-200" href="#">
+<span class="material-symbols-outlined icon-fill">group</span>
+<span class="font-label-caps text-label-caps">Team</span>
+</a>
+</div>
+<div class="px-4 py-4 flex flex-col gap-2 mt-auto border-t border-outline-variant/20 pt-4">
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 border border-champagne-gold/50 rounded-lg text-emerald-deep font-label-caps text-label-caps hover:bg-surface-container-low transition-colors duration-200">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+                Concierge Support
+            </button>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-label-caps text-label-caps">Security</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps">Log Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 w-full flex flex-col min-h-screen">
+<!-- TopNavBar (Mobile Only for Nav, Desktop for Header Actions) -->
+<header class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop w-full z-50 bg-linen-white/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0">
+<div class="md:hidden font-headline-sm text-headline-sm text-emerald-deep tracking-widest">
+                AESTHETICA
+            </div>
+<div class="hidden md:flex items-center gap-4 font-headline-md text-headline-md text-emerald-deep">
+                Team Management
+            </div>
+<div class="flex items-center gap-6 text-emerald-deep">
+<span class="material-symbols-outlined cursor-pointer hover:text-champagne-gold transition-colors duration-300">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-champagne-gold transition-colors duration-300">settings</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-champagne-gold transition-colors duration-300">chat_bubble</span>
+<div class="h-10 w-10 rounded-full bg-surface-container-highest border border-outline-variant/30 overflow-hidden ml-2 cursor-pointer">
+<img alt="Executive Profile" class="w-full h-full object-cover" data-alt="A professional headshot of an executive in a well-lit modern office setting. The individual is wearing a tailored suit, conveying authority and luxury. The lighting is soft and flattering, highlighting a clean, high-end corporate aesthetic consistent with a luxury brand. The background is slightly blurred to maintain focus on the subject." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQNTgXYye9fharWOlL8mH4LVoDKBFXFS_WXisisvlSkR_fi7I7ORUsESqwXP7r8WpgCKsKtKDTS_YLITujyThoJmYUH8Jv2R9gSuELqJmvEQMSxji_n6v-1Yh9Dkt2QSv_FBi9VsTxJ_fdhw92CQss2vb1LXOXXHd25kqP9v-t5jlpBU41ixmxdL07olavPg21_aFP74gDVgWHC3JiH_60tZreR7dtlHuXowIvQecrmIaZX5Txu9fdvBDBYeFTRzTZ-yVQxh1LEGrJ"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto bg-surface space-y-12">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-outline-variant/30 pb-6">
+<div class="max-w-2xl">
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Manage personnel, assign roles, and audit system activities across the enterprise suite.</p>
+</div>
+<button class="btn-primary-shimmer bg-emerald-deep text-on-primary font-label-caps text-label-caps px-8 py-4 rounded hover:bg-primary transition-colors flex items-center gap-2 shrink-0">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+                    INVITE MEMBER
+                </button>
+</div>
+<!-- Bento Layout for Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Team Members List (Spans 8 cols on lg) -->
+<section class="lg:col-span-8 space-y-6">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Active Personnel</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-transparent border-b border-outline-variant focus:border-emerald-deep focus:ring-0 outline-none font-body-md text-body-md w-64 transition-colors" placeholder="Search team..." type="text"/>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-muted/50">
+<th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant">Member</th>
+<th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant">Role</th>
+<th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant hidden md:table-cell">Status</th>
+<th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-muted/30 transition-colors group">
+<td class="py-4 px-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-dim overflow-hidden">
+<img alt="Team Member" class="w-full h-full object-cover" data-alt="Professional headshot of a female executive in a modern, brightly lit office environment. She wears a crisp white blouse. The aesthetic is clean, luxurious, and highly professional, fitting for a top-tier jewelry enterprise. Soft, flattering corporate lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoDNqwCE_Bgq9SMyLFqwWG6aiGxMWd-2KYmXVq6lFq_MxspTuqjKbS9-sUrlmh9pgXNBzw0GAdqWmq7s3mVjxUiLRuYy228n01RuM4IrATzLvroeywOTcXHR_SpUqxMvZL3M3nuQ6wPer7G7acnlApmGI3aUufacErvkFhN8LR2nE-Gu637rGziYv7HOe8rBAyBf2cLZcbKIqZyNHW_XLUn8ppvx0lDUCVRKB8YwJyy8MOorGn2iwlRj7TeIytmZIXW-OfiZI7YCSa"/>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Eleanor Vance</p>
+<p class="font-body-md text-[13px] text-outline">e.vance@aesthetica.com</p>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-deep/10 text-emerald-deep font-label-caps text-[10px]">Super Admin</span>
+</td>
+<td class="py-4 px-6 hidden md:table-cell">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div>
+<span class="font-body-md text-[14px] text-on-surface-variant">Active</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-outline-variant hover:text-emerald-deep transition-colors"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-muted/30 transition-colors group">
+<td class="py-4 px-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-dim overflow-hidden">
+<img alt="Team Member" class="w-full h-full object-cover" data-alt="Headshot of a male professional wearing a dark suit jacket, set against a bright, minimalist background. The lighting is sharp yet soft, emphasizing a high-end corporate identity. The overall tone is authoritative and clean, suitable for a luxury brand's administrative portal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChtND6Lzr0HAQhGlZNVMWP0yeXWW4qsD1YEPuFo66tPbY7KrRknYNuPIXGXmTwtPAIIfsNkIMVxtOIz5O3ECZ99pODQ91cz_OM8fhVljh1slFIN6c5FwKchaacpQE22qC4HymOgmHXJPmblW9AXJYiBGwSe5b1aKXVRfIUGpem4SdTtjevTiGs2YKk2eaOrlQeOYjc1RO4drwDmC4XrU-3mxq335z9xu6tnmluGyKdj9Uer-KgLBsFvTORSu0EgiJ6W4Y8sSyglnu0"/>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Marcus Sterling</p>
+<p class="font-body-md text-[13px] text-outline">m.sterling@aesthetica.com</p>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full border border-outline-variant/30 text-on-surface font-label-caps text-[10px]">Inventory Manager</span>
+</td>
+<td class="py-4 px-6 hidden md:table-cell">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div>
+<span class="font-body-md text-[14px] text-on-surface-variant">Active</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-outline-variant hover:text-emerald-deep transition-colors"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Activity Log (Spans 4 cols on lg) -->
+<aside class="lg:col-span-4 space-y-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Audit Trail</h2>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-6 h-[400px] overflow-y-auto">
+<div class="relative border-l border-outline-variant/30 ml-3 space-y-8">
+<div class="relative pl-6">
+<div class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-champagne-gold ring-4 ring-surface-container-lowest"></div>
+<p class="font-label-caps text-[10px] text-outline mb-1">Today, 09:41 AM</p>
+<p class="font-body-md text-[14px] text-on-surface"><span class="font-semibold">Marcus Sterling</span> updated inventory status for <span class="text-emerald-deep">Item #492-B (Sapphire)</span></p>
+</div>
+<div class="relative pl-6">
+<div class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-outline-variant ring-4 ring-surface-container-lowest"></div>
+<p class="font-label-caps text-[10px] text-outline mb-1">Yesterday, 16:30 PM</p>
+<p class="font-body-md text-[14px] text-on-surface"><span class="font-semibold">Eleanor Vance</span> modified permissions for <span class="text-emerald-deep">Sales Tier 2</span></p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</body></html>

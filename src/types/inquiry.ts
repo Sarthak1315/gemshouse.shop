@@ -1,0 +1,1 @@
+export interface Inquiry { id: string; subject: string; status: string; }

@@ -1,0 +1,1 @@
+export class DealerService { static async fetchDealers() { return []; } }

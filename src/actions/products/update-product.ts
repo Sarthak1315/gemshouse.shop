@@ -1,0 +1,1 @@
+export async function updateProduct(id: string, data: any) { 'use server'; return { success: true }; }

@@ -1,0 +1,1 @@
+export default function DiamondsPage() { return <div>Fancy Diamonds</div>; }

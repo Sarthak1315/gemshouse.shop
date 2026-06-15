@@ -1,0 +1,1 @@
+export function useDealer() { return { dealers: [], loading: false }; }

@@ -1,0 +1,1 @@
+export class AnalyticsService { static async getPerformanceMetrics() { return {}; } }

@@ -1,0 +1,1 @@
+export interface Dealer { id: string; companyName: string; verified: boolean; }

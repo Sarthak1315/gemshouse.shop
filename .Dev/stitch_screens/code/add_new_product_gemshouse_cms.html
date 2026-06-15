@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Luxe Gemstone Admin - Product CMS</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "outline": "#707971",
+                            "on-tertiary-fixed": "#3a090f",
+                            "on-primary-container": "#84c39b",
+                            "on-primary-fixed-variant": "#0f5132",
+                            "surface-container": "#f0eded",
+                            "primary-fixed-dim": "#95d4ac",
+                            "gold-glimmer": "rgba(212, 175, 55, 0.2)",
+                            "tertiary-fixed": "#ffdad9",
+                            "tertiary-fixed-dim": "#ffb3b4",
+                            "primary-fixed": "#b0f1c7",
+                            "on-primary-fixed": "#002111",
+                            "linen-white": "#FDFDFD",
+                            "primary": "#003820",
+                            "tertiary-container": "#713437",
+                            "tertiary": "#551e22",
+                            "surface-variant": "#e5e2e1",
+                            "on-secondary-fixed": "#241a00",
+                            "secondary-container": "#fed65b",
+                            "inverse-primary": "#95d4ac",
+                            "background": "#fcf9f8",
+                            "on-background": "#1c1b1b",
+                            "error": "#ba1a1a",
+                            "on-primary": "#ffffff",
+                            "surface-container-highest": "#e5e2e1",
+                            "on-tertiary-fixed-variant": "#713437",
+                            "emerald-deep": "#0F5132",
+                            "inverse-on-surface": "#f3f0ef",
+                            "on-error-container": "#93000a",
+                            "surface-container-low": "#f6f3f2",
+                            "secondary-fixed-dim": "#e9c349",
+                            "on-secondary": "#ffffff",
+                            "on-secondary-container": "#745c00",
+                            "surface-dim": "#dcd9d9",
+                            "surface-container-lowest": "#ffffff",
+                            "surface-container-high": "#eae7e7",
+                            "error-container": "#ffdad6",
+                            "on-tertiary": "#ffffff",
+                            "champagne-gold": "#D4AF37",
+                            "secondary-fixed": "#ffe088",
+                            "inverse-surface": "#313030",
+                            "on-surface-variant": "#404942",
+                            "on-surface": "#1c1b1b",
+                            "primary-container": "#0f5132",
+                            "outline-variant": "#c0c9c0",
+                            "on-tertiary-container": "#f29fa1",
+                            "on-secondary-fixed-variant": "#574500",
+                            "surface-bright": "#fcf9f8",
+                            "surface": "#fcf9f8",
+                            "secondary": "#735c00",
+                            "charcoal": "#1A1A1A",
+                            "surface-muted": "#F6F3F2",
+                            "on-error": "#ffffff",
+                            "surface-tint": "#2d6a48"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "container-max": "1440px",
+                            "margin-mobile": "20px",
+                            "margin-desktop": "80px",
+                            "unit": "8px",
+                            "section-padding": "96px",
+                            "gutter": "32px"
+                    },
+                    "fontFamily": {
+                            "display-lg-mobile": ["Playfair Display"],
+                            "headline-md": ["Playfair Display"],
+                            "body-md": ["Montserrat"],
+                            "label-caps": ["Montserrat"],
+                            "headline-sm": ["Playfair Display"],
+                            "display-lg": ["Playfair Display"],
+                            "body-lg": ["Montserrat"]
+                    },
+                    "fontSize": {
+                            "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                            "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                            "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                            "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                            "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Form Field Bottom Border Animation */
+        .input-luxury {
+            background-color: transparent;
+            border-bottom: 1px solid theme('colors.outline-variant');
+            color: theme('colors.on-surface');
+            transition: border-color 0.3s ease;
+            outline: none;
+            box-shadow: none !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .input-luxury:focus {
+            border-bottom-color: theme('colors.emerald-deep');
+            border-bottom-width: 2px;
+            margin-bottom: -1px; /* prevent layout shift */
+        }
+        
+        /* Shimmer Effect for Primary Button */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: left 0.7s ease-in-out;
+        }
+        .btn-shimmer:hover::after {
+            left: 150%;
+        }
+
+        /* Ambient Drop Shadow for Cards */
+        .shadow-ambient {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-gold-glimmer selection:text-emerald-deep min-h-screen font-body-md flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest dark:bg-charcoal border-r border-outline-variant/20 py-unit gap-2 z-50">
+<!-- Header -->
+<div class="px-6 py-8 mb-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-champagne-gold text-3xl" style="font-variation-settings: 'FILL' 1;">diamond</span>
+<h1 class="font-headline-sm text-headline-sm text-emerald-deep dark:text-champagne-gold">AESTHETICA</h1>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant tracking-widest text-[10px]">Enterprise Suite</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto px-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">atm</span>
+<span class="font-label-caps text-label-caps">Inventory</span>
+</a>
+<!-- Active State Applied Here -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+<span class="font-label-caps text-label-caps">Product CMS</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">person_search</span>
+<span class="font-label-caps text-label-caps">Leads</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">contact_support</span>
+<span class="font-label-caps text-label-caps">Inquiries</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">handshake</span>
+<span class="font-label-caps text-label-caps">Dealers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">verified</span>
+<span class="font-label-caps text-label-caps">Certifications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+<span class="font-label-caps text-label-caps">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">leaderboard</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high dark:hover:bg-surface-variant/10 transition-all duration-200 cursor-pointer active:opacity-70 scale-98 on click" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="font-label-caps text-label-caps">Team</span>
+</a>
+</div>
+<!-- Footer Actions -->
+<div class="px-4 mt-auto mb-4 flex flex-col gap-1 border-t border-outline-variant/20 pt-4">
+<button class="w-full mb-4 bg-transparent border border-champagne-gold text-champagne-gold font-label-caps text-label-caps py-2 rounded-DEFAULT hover:bg-champagne-gold/10 transition-colors">Concierge Support</button>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">shield</span>
+<span class="font-label-caps text-label-caps">Security</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:bg-surface-container-high transition-all duration-200 text-error" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="font-label-caps text-label-caps">Log Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen relative w-full max-w-[100vw]">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center h-20 px-margin-desktop w-full z-40 docked top-0 sticky bg-linen-white/80 dark:bg-charcoal/80 backdrop-blur-xl border-b border-outline-variant/30">
+<!-- Brand Logo Left -->
+<div class="font-display-lg text-headline-sm tracking-widest text-emerald-deep dark:text-primary-fixed-dim uppercase">
+                LUXE GEMSTONE ADMIN
+            </div>
+<!-- Right Actions -->
+<div class="flex items-center gap-6">
+<!-- Search Bar Placeholder -->
+<div class="hidden lg:flex items-center bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant/30 focus-within:border-emerald-deep transition-colors w-64">
+<span class="material-symbols-outlined text-outline text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder-outline font-body-md" placeholder="Search CMS..." type="text"/>
+</div>
+<!-- Icons -->
+<div class="flex items-center gap-4 text-emerald-deep dark:text-primary-fixed-dim">
+<button class="hover:text-emerald-deep transition-colors duration-300 cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">notifications</span>
+</button>
+<button class="hover:text-emerald-deep transition-colors duration-300 cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">settings</span>
+</button>
+<button class="hover:text-emerald-deep transition-colors duration-300 cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">chat_bubble</span>
+</button>
+</div>
+<!-- Profile -->
+<div class="h-10 w-10 rounded-full bg-surface-dim border border-champagne-gold/50 overflow-hidden flex-shrink-0 cursor-pointer ml-2">
+<!-- Placeholder image, generating real alt per instructions -->
+<img alt="Executive Profile" class="w-full h-full object-cover" data-alt="A sophisticated professional portrait of a gallery executive or master jeweler in a minimalist, light-filled studio. The lighting is soft and flattering, emphasizing a modern luxury aesthetic. The background is a clean, hushed white, creating high contrast with the subject's dark, tailored clothing. The mood conveys authority, elegance, and refined taste." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv3AAxVmWVS39sxAtsCIsKYu8ewEysKGsnSIFAQ1XW4vkocKf5YPsQnbRSwhwFtlEMjDHGvMMQJcytuGTUULrPDXtAgdfM_P66tb0XzEqf4Tc4i-1GzCiDc2oNYU-iu89KFoxygVhw8Nd2quVMVmkqvP2t_eOIcNhYCKxa9e3rGSyqBy_h0P6m0tLNATclbrmtyZB5mKBCfJwZZF7Q9VjiwymgPTgnb7LEwMPhZxgu0imFulDIyNUIQUa3aQtpLkt6oYqRYzcghqsY"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 px-margin-mobile md:px-margin-desktop py-12 pb-32 max-w-screen-2xl mx-auto w-full">
+<!-- Page Header -->
+<div class="mb-12">
+<div class="flex items-center text-on-surface-variant font-label-caps text-label-caps gap-2 mb-4">
+<span>Product CMS</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-emerald-deep font-semibold">Add New Gemstone</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-background">Curate New Acquisition</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">Enter the comprehensive details of the gemstone. Accuracy here directly populates the public gallery and investment portfolio view.</p>
+</div>
+<!-- Form Layout (Bento-style Sections) -->
+<form class="flex flex-col gap-16">
+<!-- Section: Basic Info -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-2">Basic Information</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Core identifiers for cataloging and search indexing.</p>
+</div>
+<div class="lg:col-span-8 bg-surface-container-lowest shadow-ambient border border-outline-variant/20 rounded-xl p-8 lg:p-10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Gemstone Name / Title</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="e.g. The Ceylon Royal Sapphire" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">SKU</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="AEST-SAP-001" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Primary Type</label>
+<select class="input-luxury border-0 border-b w-full text-on-surface">
+<option disabled="" selected="" value="">Select Gemstone Family</option>
+<option>Diamond (White)</option>
+<option>Diamond (Colored)</option>
+<option>Sapphire</option>
+<option>Ruby</option>
+<option>Emerald</option>
+<option>Spinels &amp; Other</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<hr class="border-outline-variant/20 w-full"/>
+<!-- Section: Specifications -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-2">Specifications</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Detailed physical attributes crucial for investment-grade verification.</p>
+</div>
+<div class="lg:col-span-8 bg-surface-container-lowest shadow-ambient border border-outline-variant/20 rounded-xl p-8 lg:p-10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Carat Weight</label>
+<div class="relative">
+<input class="input-luxury border-0 border-b w-full pr-10" placeholder="0.00" step="0.01" type="number"/>
+<span class="absolute right-0 bottom-2 text-on-surface-variant font-body-md text-sm">ct</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Cut / Shape</label>
+<select class="input-luxury border-0 border-b w-full">
+<option>Round Brilliant</option>
+<option>Cushion</option>
+<option>Emerald</option>
+<option>Oval</option>
+<option>Pear</option>
+<option>Radiant</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Color Grade</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="e.g. Royal Blue, D, Fancy Intense Pink" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Clarity Grade</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="e.g. VVS1, Flawless" type="text"/>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Dimensions (L x W x D)</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="e.g. 10.50 x 8.20 x 5.40 mm" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Treatment</label>
+<select class="input-luxury border-0 border-b w-full">
+<option>None (Unheated/Untreated)</option>
+<option>Heated</option>
+<option>Minor Oil (Emeralds)</option>
+<option>Other</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Origin / Provenance</label>
+<input class="input-luxury border-0 border-b w-full" placeholder="e.g. Ceylon, Sri Lanka / Muzo, Colombia" type="text"/>
+</div>
+</div>
+</div>
+</section>
+<hr class="border-outline-variant/20 w-full"/>
+<!-- Section: Media & Assets -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-2">Media Canvas</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Upload high-resolution macro photography and 360° videos to capture brilliance.</p>
+</div>
+<div class="lg:col-span-8 space-y-6">
+<!-- Primary Image Dropzone -->
+<div class="bg-surface-container-low border border-dashed border-outline-variant/50 rounded-xl p-12 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-4xl text-champagne-gold mb-4 group-hover:scale-110 transition-transform duration-300" style="font-variation-settings: 'wght' 200;">add_a_photo</span>
+<h4 class="font-headline-sm text-lg text-emerald-deep mb-1">Drag &amp; Drop Hero Imagery</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Supports high-res JPG, PNG, WEBP up to 50MB</p>
+</div>
+<!-- Asset Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Placeholder Upload Spots -->
+<div class="aspect-square bg-surface-container-low border border-dashed border-outline-variant/40 rounded-lg flex items-center justify-center cursor-pointer hover:border-champagne-gold transition-colors">
+<span class="material-symbols-outlined text-outline">add</span>
+</div>
+<div class="aspect-square bg-surface-container-low border border-dashed border-outline-variant/40 rounded-lg flex items-center justify-center cursor-pointer hover:border-champagne-gold transition-colors">
+<span class="material-symbols-outlined text-outline">add</span>
+</div>
+<div class="aspect-square bg-surface-container-low border border-dashed border-outline-variant/40 rounded-lg flex items-center justify-center cursor-pointer hover:border-champagne-gold transition-colors">
+<span class="material-symbols-outlined text-outline">add</span>
+</div>
+<!-- 360 Video Spot -->
+<div class="aspect-square bg-surface-container-low border border-dashed border-outline-variant/40 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-emerald-deep transition-colors bg-gradient-to-br from-surface-container-low to-surface-container-highest">
+<span class="material-symbols-outlined text-emerald-deep mb-1">360</span>
+<span class="font-label-caps text-[10px] text-emerald-deep">Upload 360°</span>
+</div>
+</div>
+</div>
+</section>
+<hr class="border-outline-variant/20 w-full"/>
+<!-- Section: Pricing -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-2">Valuation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Internal costing and public retail figures.</p>
+</div>
+<div class="lg:col-span-8 bg-surface-container-lowest shadow-ambient border border-outline-variant/20 rounded-xl p-8 lg:p-10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-1">
+                                    Acquisition Cost
+                                    <span class="material-symbols-outlined text-[14px] text-outline" title="Internal visibility only">visibility_off</span>
+</label>
+<div class="relative">
+<span class="absolute left-0 bottom-2 text-on-surface-variant font-body-md">$</span>
+<input class="input-luxury border-0 border-b w-full pl-6" placeholder="0.00" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Wholesale Price</label>
+<div class="relative">
+<span class="absolute left-0 bottom-2 text-on-surface-variant font-body-md">$</span>
+<input class="input-luxury border-0 border-b w-full pl-6" placeholder="0.00" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-emerald-deep font-bold">Public Retail Price</label>
+<div class="relative">
+<span class="absolute left-0 bottom-2 text-emerald-deep font-headline-sm">$</span>
+<input class="input-luxury border-0 border-b border-champagne-gold/50 focus:border-champagne-gold w-full pl-6 text-xl font-headline-sm text-emerald-deep" placeholder="0.00" type="text"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</form>
+</main>
+<!-- Sticky Footer Actions -->
+<footer class="fixed bottom-0 right-0 w-full md:w-[calc(100%-16rem)] bg-linen-white/90 dark:bg-charcoal/90 backdrop-blur-xl border-t border-outline-variant/30 py-4 px-margin-mobile md:px-margin-desktop flex justify-between items-center z-40">
+<button class="text-error font-label-caps text-label-caps flex items-center gap-2 hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-sm">delete</span>
+                Discard Draft
+            </button>
+<div class="flex items-center gap-4">
+<button class="bg-transparent border border-champagne-gold text-emerald-deep dark:text-champagne-gold px-6 py-3 font-label-caps text-label-caps rounded-DEFAULT hover:bg-champagne-gold/5 transition-colors">
+                    Save Draft
+                </button>
+<button class="bg-emerald-deep text-on-primary px-8 py-3 font-label-caps text-label-caps rounded-DEFAULT btn-shimmer shadow-ambient flex items-center gap-2">
+                    Publish to Marketplace
+                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+</body></html>

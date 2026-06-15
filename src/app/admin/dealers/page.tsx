@@ -1,0 +1,1 @@
+export default function DealerManagement() { return <div>CRM Partner Leads</div>; }

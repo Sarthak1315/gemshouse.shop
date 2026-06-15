@@ -1,0 +1,1 @@
+export default function UnauthorizedPage() { return <div>Access Denied</div>; }
