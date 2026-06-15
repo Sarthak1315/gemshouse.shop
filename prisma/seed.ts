@@ -55,7 +55,18 @@ async function main() {
     },
   });
 
-  // 3. Import categories and gemstones
+  // 3. Clear existing product-related data to avoid unique constraint conflicts
+  console.log("Cleaning up existing product-related data...");
+  await prisma.inquiryMessage.deleteMany();
+  await prisma.inquiry.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.faq.deleteMany();
+  await prisma.productImage.deleteMany();
+  await prisma.productCollection.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
+
+  // 4. Import categories and gemstones
   console.log("Seeding categories and gemstone products...");
   const createdProducts = [];
   for (const stone of gemstones) {
@@ -81,7 +92,7 @@ async function main() {
 
     // Upsert Product
     const product = await prisma.product.upsert({
-      where: { sku: stone.id },
+      where: { sku: stone.sku },
       update: {
         title: stone.title,
         description: stone.extendedDescription,
@@ -98,7 +109,7 @@ async function main() {
         categoryId: category.id,
       },
       create: {
-        sku: stone.id,
+        sku: stone.sku,
         title: stone.title,
         slug: productSlug,
         description: stone.extendedDescription,

@@ -1,5 +1,6 @@
 export interface GemstoneProduct {
   id: string;
+  sku: string;
   title: string;
   category: string;
   carat: number;
@@ -24,6 +25,7 @@ export interface GemstoneProduct {
 export const gemstones: GemstoneProduct[] = [
   {
     id: "gem-1",
+    sku: "CS-8.42",
     title: "Royal Blue Ceylon Sapphire",
     category: "Sapphire",
     carat: 8.42,
@@ -48,6 +50,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-2",
+    sku: "MR-4.15",
     title: "Mogok Pigeon Blood Ruby",
     category: "Ruby",
     carat: 4.15,
@@ -72,6 +75,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-3",
+    sku: "EM-12.05",
     title: "Vivid Colombian Emerald",
     category: "Emerald",
     carat: 12.05,
@@ -96,6 +100,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-4",
+    sku: "YD-3.20",
     title: "Fancy Intense Yellow Diamond",
     category: "Diamond",
     carat: 3.20,
@@ -120,6 +125,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-5",
+    sku: "MS-5.30",
     title: "Vivid Mahenge Spinel",
     category: "Spinel",
     carat: 5.30,
@@ -144,6 +150,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-6",
+    sku: "KS-5.84",
     title: "Kashmir Blue Sapphire",
     category: "Sapphire",
     carat: 5.84,
@@ -168,6 +175,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-7",
+    sku: "PS-6.12",
     title: "Burmese Pink Sapphire",
     category: "Sapphire",
     carat: 6.12,
@@ -192,6 +200,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-8",
+    sku: "ME-7.45",
     title: "Muzo Emerald Octagon",
     category: "Emerald",
     carat: 7.45,
@@ -216,6 +225,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-9",
+    sku: "OD-2.10",
     title: "Fancy Intense Orange Diamond",
     category: "Diamond",
     carat: 2.10,
@@ -240,6 +250,7 @@ export const gemstones: GemstoneProduct[] = [
   },
   {
     id: "gem-10",
+    sku: "IS-8.90",
     title: "Deep Imperial Spinel",
     category: "Spinel",
     carat: 8.90,
@@ -251,7 +262,7 @@ export const gemstones: GemstoneProduct[] = [
     price: 85000,
     badge: "Vivid Luminescence",
     images: [
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDKhsHXSE1e1-v_t1QXjB33P9bCcmXIcdV-lcfAHQFNyhn9-1xxh5YGSfxW5YDfMn8_tyhzmfOBa_GMT0ZsOq3E7Oly5_hgiex2QW5NCB4Za23TZIufc1M4LTMaynEQ0V0UUaUCyI7xn0juKS1FOJDJd4V7B4Tp7r0W_zkQZlEsfAkHK1CwaCXqC9iQjc5fImy4lmOl1EYVJa_Krofqa1RICx59lOa3aWcj_BW-yz1ZEHG7hEjiRqP3g6C69DXoBpwQGRcfPjcOaS4G",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDKhsHXSE1e1-v_t1QXjB33P9bCcmXIcdV-lcfAHQFNyhn9-1xxh5YGSfxW5YAfMn8_tyhzmfOBa_GMT0ZsOq3E7Oly5_hgiex2QW5NCB4Za23TZIufc1M4LTMaynEQ0V0UUaUCyI7xn0juKS1FOJDJd4V7B4Tp7r0W_zkQZlEsfAkHK1CwaCXqC9iQjc5fImy4lmOl1EYVJa_Krofqa1RICx59lOa3aWcj_BW-yz1ZEHG7hEjiRqP3g6C69DXoBpwQGRcfPjcOaS4G",
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCsIBXog5Vz8Z8GS0xOhDj2rkHSKBB2k3JtBA5OoRjF8qmNtgjwYlQKLr_8tmVFUtMqjI0K4jxIBYAsf1kmLBsbecJtj9Tb2JrQHSI-bkeTHkist9NUYSLAgzZPBYwTYRIGxygZzbhvMLL547VhMKZJLkyJSdGSBzDuZIieLxKXoZaCfy5qSrcIYoHG9OHI6RYNtkqNspK3M5WSllFWLAM_lf61ibO0VWalQ5RmrXhYQxiU9J6D8R_sdRC0u8XuDnkQHkym_QDTf2jH"
     ],
     dimensions: "13.42 x 12.87 x 8.12 mm",

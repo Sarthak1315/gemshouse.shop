@@ -184,7 +184,53 @@ export const validators = {
         phone: body?.phone ? String(body.phone).trim() : null,
         message,
         productId: body?.productId ? String(body.productId).trim() : null,
+        productSkus: body?.productSkus ? String(body.productSkus).trim() : null,
+        inquiryType: body?.inquiryType ? String(body.inquiryType).trim() : "DIRECT",
+        userId: body?.userId ? String(body.userId).trim() : null,
         status: body?.status ? String(body.status).trim() : "PENDING",
+      },
+    };
+  },
+
+  register(body: any): ValidationResult<{ name: string; email: string; passwordHashOrPlain: string; isBusinessUser: boolean }> {
+    const errors: ValidationError[] = [];
+    const name = String(body?.name || "").trim();
+    const email = String(body?.email || "").trim();
+    const password = String(body?.password || "");
+    const isBusinessUser = Boolean(body?.isBusinessUser);
+
+    if (!name) errors.push({ field: "name", message: "Name is required" });
+    if (!email) errors.push({ field: "email", message: "Email is required" });
+    else if (!isEmail(email)) errors.push({ field: "email", message: "Invalid email format" });
+    
+    if (!password) errors.push({ field: "password", message: "Password is required" });
+    else if (password.length < 6) errors.push({ field: "password", message: "Password must be at least 6 characters" });
+
+    if (errors.length > 0) return { success: false, errors };
+    return { success: true, data: { name, email, passwordHashOrPlain: password, isBusinessUser } };
+  },
+
+  inquiryMessage(body: any): ValidationResult<{ inquiryId: string; sender: string; message: string; senderId?: string | null }> {
+    const errors: ValidationError[] = [];
+    const inquiryId = String(body?.inquiryId || "").trim();
+    const sender = String(body?.sender || "").trim();
+    const message = String(body?.message || "").trim();
+
+    if (!inquiryId) errors.push({ field: "inquiryId", message: "Inquiry ID is required" });
+    if (!sender) errors.push({ field: "sender", message: "Sender type is required" });
+    else if (sender !== "CLIENT" && sender !== "ADMIN") {
+      errors.push({ field: "sender", message: "Sender must be 'CLIENT' or 'ADMIN'" });
+    }
+    if (!message) errors.push({ field: "message", message: "Message cannot be empty" });
+
+    if (errors.length > 0) return { success: false, errors };
+    return {
+      success: true,
+      data: {
+        inquiryId,
+        sender,
+        message,
+        senderId: body?.senderId ? String(body.senderId).trim() : null,
       },
     };
   },

@@ -10,6 +10,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") || "";
     const search = searchParams.get("search") || "";
+    const type = searchParams.get("inquiryType") || "";
+    const userId = searchParams.get("userId") || "";
 
     const { limit, skip, page } = parsePagination(request.url);
 
@@ -19,11 +21,20 @@ export async function GET(request: NextRequest) {
       where.status = status;
     }
 
+    if (type) {
+      where.inquiryType = type;
+    }
+
+    if (userId) {
+      where.userId = userId;
+    }
+
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
         { message: { contains: search, mode: "insensitive" } },
+        { productSkus: { contains: search, mode: "insensitive" } },
       ];
     }
 
@@ -40,6 +51,14 @@ export async function GET(request: NextRequest) {
               id: true,
               title: true,
               sku: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              isBusinessUser: true,
             },
           },
         },
@@ -82,6 +101,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Auto-link to existing user if userId is not explicitly provided
+    let targetUserId = data.userId;
+    if (!targetUserId && data.email) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: data.email },
+      });
+      if (existingUser) {
+        targetUserId = existingUser.id;
+      }
+    }
+
     const inquiry = await prisma.inquiry.create({
       data: {
         name: data.name,
@@ -89,6 +119,9 @@ export async function POST(request: NextRequest) {
         phone: data.phone,
         message: data.message,
         productId: data.productId,
+        productSkus: data.productSkus,
+        inquiryType: data.inquiryType,
+        userId: targetUserId,
         status: data.status,
       },
       include: {
@@ -99,6 +132,24 @@ export async function POST(request: NextRequest) {
             sku: true,
           },
         },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            isBusinessUser: true,
+          },
+        },
+      },
+    });
+
+    // Seed initial message into the chat thread
+    await prisma.inquiryMessage.create({
+      data: {
+        inquiryId: inquiry.id,
+        sender: "CLIENT",
+        message: data.message,
+        senderId: targetUserId,
       },
     });
 

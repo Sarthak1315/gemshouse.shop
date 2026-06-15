@@ -54,8 +54,8 @@ export async function middleware(request: NextRequest) {
       );
     }
   } else {
-    // If on main domain and attempting to access admin or login routes, return 404 (pretend they don't exist)
-    if (pathname.startsWith("/admin") || pathname === "/login") {
+    // If on main domain and attempting to access admin routes, return 404 (pretend they don't exist)
+    if (pathname.startsWith("/admin")) {
       return NextResponse.rewrite(new URL("/_not-found", request.url));
     }
   }
@@ -88,12 +88,14 @@ export async function middleware(request: NextRequest) {
     // - POST /api/inquiries (Contact form submission)
     // - POST /api/dealers (Wholesale request submission)
     // - POST /api/reviews (Review submission)
-    const isPublicAuth = pathname === "/api/auth";
+    const isPublicAuth = pathname === "/api/auth" || pathname === "/api/auth/register";
+    const isProfileUpdate = pathname === "/api/profile" && method === "PUT";
+    const isMessageThread = pathname.startsWith("/api/inquiries/") && pathname.endsWith("/messages") && method === "POST";
     const isPublicInquiry = pathname === "/api/inquiries" && method === "POST";
     const isPublicDealer = pathname === "/api/dealers" && method === "POST";
     const isPublicReview = pathname === "/api/reviews" && method === "POST";
 
-    if (isPublicAuth || isPublicInquiry || isPublicDealer || isPublicReview) {
+    if (isPublicAuth || isProfileUpdate || isMessageThread || isPublicInquiry || isPublicDealer || isPublicReview) {
       return NextResponse.next();
     }
 

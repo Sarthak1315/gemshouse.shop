@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
           name: user.name,
           email: user.email,
           role: user.role.name,
+          isBusinessUser: user.isBusinessUser,
         },
       },
       { status: 200 }
@@ -116,6 +117,7 @@ export async function GET(request: NextRequest) {
         name: user.name,
         email: user.email,
         role: user.role.name,
+        isBusinessUser: user.isBusinessUser,
       },
     });
   } catch (e) {

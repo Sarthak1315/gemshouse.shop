@@ -1,30 +1,28 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/website/navbar/Navbar";
 import Footer from "@/components/website/footer/Footer";
 
-function CustomerLoginContent() {
+function RegisterContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isBusinessUser, setIsBusinessUser] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check session
+  // Redirect if already logged in
   useEffect(() => {
     async function checkSession() {
       try {
         const res = await fetch("/api/auth");
         const data = await res.json();
         if (data?.user) {
-          if (data.user.role === "ADMIN") {
-            router.push("/admin/dashboard");
-          } else {
-            router.push("/profile");
-          }
+          router.push("/profile");
         }
       } catch (err) {
         console.error("Session check failed", err);
@@ -35,33 +33,34 @@ function CustomerLoginContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError(null);
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      const res = await fetch("/api/auth", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password, isBusinessUser }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Authentication failed. Please check your credentials.");
+        setError(data.error || "Registration failed. Please try again.");
         setIsLoading(false);
         return;
       }
 
-      // Successful login
-      if (data?.user?.role === "ADMIN") {
-        router.push("/admin/dashboard");
-      } else {
-        const redirectTo = searchParams.get("from") || "/profile";
-        router.push(redirectTo);
-      }
+      // Successful registration & login auto-sign-in
+      router.push("/profile");
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
       setIsLoading(false);
@@ -79,14 +78,14 @@ function CustomerLoginContent() {
               Collector Workspace
             </span>
             <h1 className="font-headline-lg text-2xl md:text-3xl text-emerald-deep tracking-wider font-light uppercase">
-              Client Login
+              Register Account
             </h1>
             <div className="w-12 h-[0.5px] bg-champagne-gold/50 mx-auto mt-4"></div>
           </div>
 
           <div className="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/20 p-8 md:p-10 shadow-2xl relative">
             <h2 className="font-headline-sm text-sm text-on-surface-variant mb-6 text-center font-normal tracking-wide">
-              Access your inquiries and collection settings
+              Create a portal account to track inquiries
             </h2>
 
             {error && (
@@ -96,7 +95,26 @@ function CustomerLoginContent() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="font-label-caps text-[10px] text-on-surface-variant/80 tracking-widest uppercase block mb-2"
+                >
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  disabled={isLoading}
+                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                />
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -112,7 +130,7 @@ function CustomerLoginContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@domain.com"
                   disabled={isLoading}
-                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                 />
               </div>
 
@@ -131,11 +149,48 @@ function CustomerLoginContent() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   disabled={isLoading}
-                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                 />
               </div>
 
-              <div className="pt-2">
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="font-label-caps text-[10px] text-on-surface-variant/80 tracking-widest uppercase block mb-2"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  disabled={isLoading}
+                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                />
+              </div>
+
+              {/* B2B User Checkbox */}
+              <div className="flex items-center gap-3 pt-2">
+                <input
+                  id="isBusinessUser"
+                  type="checkbox"
+                  checked={isBusinessUser}
+                  onChange={(e) => setIsBusinessUser(e.target.checked)}
+                  disabled={isLoading}
+                  className="w-4.5 h-4.5 accent-emerald-deep border-outline-variant focus:ring-0 cursor-pointer"
+                />
+                <label
+                  htmlFor="isBusinessUser"
+                  className="font-body-md text-xs text-on-surface-variant/90 cursor-pointer select-none"
+                >
+                  I am a Business / B2B wholesale client
+                </label>
+              </div>
+
+              <div className="pt-4">
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -162,11 +217,11 @@ function CustomerLoginContent() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Signing In...
+                      Creating Account...
                     </>
                   ) : (
                     <>
-                      Sign In
+                      Create Account
                       <span className="material-symbols-outlined text-xs transition-transform duration-300 group-hover:translate-x-1 select-none">
                         arrow_forward
                       </span>
@@ -178,13 +233,13 @@ function CustomerLoginContent() {
 
             <div className="mt-8 pt-6 border-t border-outline-variant/20 text-center">
               <span className="font-body-sm text-xs text-on-surface-variant/60 block mb-2">
-                New collector?
+                Already have an account?
               </span>
               <a
-                href="/register"
+                href="/login"
                 className="font-label-caps text-xs text-champagne-gold hover:text-emerald-deep tracking-wider uppercase transition-colors"
               >
-                Register a Portal Account
+                Sign In Instead
               </a>
             </div>
           </div>
@@ -196,18 +251,18 @@ function CustomerLoginContent() {
   );
 }
 
-export default function CustomerLoginPage() {
+export default function RegisterPage() {
   return (
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-charcoal">
           <div className="text-champagne-gold font-label-caps text-xs tracking-widest uppercase">
-            Loading portal...
+            Loading registration portal...
           </div>
         </div>
       }
     >
-      <CustomerLoginContent />
+      <RegisterContent />
     </Suspense>
   );
 }
