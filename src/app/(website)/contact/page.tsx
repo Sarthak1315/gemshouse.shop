@@ -32,18 +32,14 @@ export default function ContactPage() {
         const res = await fetch("/api/settings");
         if (res.ok) {
           const data = await res.json();
-          const sMap: any = {};
-          data.forEach((item: any) => {
-            sMap[item.key] = item.value;
-          });
           setSettings((prev) => ({
             ...prev,
-            phone: sMap["CONTACT_PHONE"] || prev.phone,
-            email: sMap["CONTACT_EMAIL"] || prev.email,
-            whatsapp: sMap["WHATSAPP_NUMBER"] || prev.whatsapp,
-            instagram: sMap["INSTAGRAM_URL"] || prev.instagram,
-            facebook: sMap["FACEBOOK_URL"] || prev.facebook,
-            linkedin: sMap["LINKEDIN_URL"] || prev.linkedin,
+            phone: data["CONTACT_PHONE"] || prev.phone,
+            email: data["CONTACT_EMAIL"] || prev.email,
+            whatsapp: data["WHATSAPP_NUMBER"] || prev.whatsapp,
+            instagram: data["INSTAGRAM_URL"] || prev.instagram,
+            facebook: data["FACEBOOK_URL"] || prev.facebook,
+            linkedin: data["LINKEDIN_URL"] || prev.linkedin,
           }));
         }
       } catch (err) {
