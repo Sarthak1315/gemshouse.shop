@@ -8,6 +8,13 @@ interface Product {
   sku: string;
 }
 
+interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  isBusinessUser: boolean;
+}
+
 interface Inquiry {
   id: string;
   name: string;
@@ -15,10 +22,21 @@ interface Inquiry {
   phone: string | null;
   message: string;
   status: string;
+  inquiryType: string;
+  productSkus: string | null;
   createdAt: string;
   updatedAt: string;
   productId: string | null;
   product: Product | null;
+  userId: string | null;
+  user: User | null;
+}
+
+interface Message {
+  id: string;
+  sender: string;
+  message: string;
+  createdAt: string;
 }
 
 const statusOptions = [
@@ -35,12 +53,19 @@ export default function InquiriesPage() {
   // Search & Filters
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [groupByUser, setGroupByUser] = useState(false);
+  const [expandedCustomerEmail, setExpandedCustomerEmail] = useState<string | null>(null);
   
+  // Messaging inside detail drawer
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+
   // Pagination
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const limit = 10;
+  const limit = groupByUser ? 100 : 10; // increase limit when grouping to load wider context
 
   // Alerts
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -75,11 +100,30 @@ export default function InquiriesPage() {
     }
   };
 
+  const loadMessages = async (inquiryId: string) => {
+    try {
+      const res = await fetch(`/api/inquiries/${inquiryId}/messages`);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data.messages || []);
+      }
+    } catch (err) {
+      console.error("Error loading chat messages", err);
+    }
+  };
+
   useEffect(() => {
     loadInquiries();
-  }, [page, selectedStatus]);
+  }, [page, selectedStatus, groupByUser]);
 
-  // Debounced/Triggered search handler
+  useEffect(() => {
+    if (selectedInquiry) {
+      loadMessages(selectedInquiry.id);
+    } else {
+      setMessages([]);
+    }
+  }, [selectedInquiry]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
@@ -115,6 +159,35 @@ export default function InquiriesPage() {
     }
   };
 
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim() || !selectedInquiry) return;
+    setIsSendingMessage(true);
+
+    try {
+      const res = await fetch(`/api/inquiries/${selectedInquiry.id}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: "ADMIN",
+          message: newMessage.trim(),
+        }),
+      });
+
+      if (res.ok) {
+        const msg = await res.json();
+        setMessages((prev) => [...prev, msg]);
+        setNewMessage("");
+      } else {
+        console.error("Failed sending message");
+      }
+    } catch (err) {
+      console.error("Failed sending reply", err);
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
   const handleDelete = async (inquiry: Inquiry) => {
     if (!confirm(`Are you certain you want to delete the inquiry from '${inquiry.name}'?`)) return;
 
@@ -136,6 +209,25 @@ export default function InquiriesPage() {
     }
   };
 
+  // Grouping logic for "Group by User" toggle
+  const groupedCustomers = React.useMemo(() => {
+    const groups: { [email: string]: { name: string; email: string; isBusiness: boolean; phone: string | null; inquiries: Inquiry[] } } = {};
+    inquiries.forEach((inq) => {
+      const email = inq.email.toLowerCase();
+      if (!groups[email]) {
+        groups[email] = {
+          name: inq.name,
+          email: inq.email,
+          isBusiness: inq.user?.isBusinessUser || false,
+          phone: inq.phone,
+          inquiries: [],
+        };
+      }
+      groups[email].inquiries.push(inq);
+    });
+    return Object.values(groups);
+  }, [inquiries]);
+
   return (
     <div className="w-full">
       {/* Header */}
@@ -147,6 +239,21 @@ export default function InquiriesPage() {
           <h1 className="font-headline-sm text-2xl text-emerald-deep font-semibold tracking-wide">
             Inquiry Pipeline
           </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setGroupByUser(!groupByUser);
+              setExpandedCustomerEmail(null);
+            }}
+            className={`px-4 py-2.5 font-label-caps text-[9px] uppercase tracking-wider font-bold transition-all border cursor-pointer ${
+              groupByUser
+                ? "bg-emerald-deep text-linen-white border-champagne-gold/35 shadow"
+                : "border-outline-variant/35 text-on-surface-variant hover:bg-surface-container-low"
+            }`}
+          >
+            {groupByUser ? "Ungroup Inquiries" : "Group by Customer"}
+          </button>
         </div>
       </div>
 
@@ -200,144 +307,294 @@ export default function InquiriesPage() {
         </div>
       </div>
 
-      {/* Inquiries Table */}
-      {isLoading ? (
-        <div className="py-12 text-center text-on-surface-variant/60 font-semibold">
-          Loading client pipeline...
-        </div>
-      ) : inquiries.length > 0 ? (
-        <div className="bg-surface-container-lowest border border-outline-variant/15 shadow-sm overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-outline-variant/20 bg-surface-container-low/10">
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Client Details
-                </th>
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Interested Asset
-                </th>
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Message Excerpt
-                </th>
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Received Date
-                </th>
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Status Pipeline
-                </th>
-                <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-xs font-body-md">
-              {inquiries.map((inq) => {
-                const badge = statusOptions.find((o) => o.value === inq.status);
-                return (
-                  <tr
-                    key={inq.id}
-                    className="border-b border-outline-variant/10 hover:bg-surface-container-low/30 transition-colors"
+      {/* Group by Customer view */}
+      {groupByUser ? (
+        <div className="space-y-4">
+          {isLoading ? (
+            <div className="py-12 text-center text-on-surface-variant/60 font-semibold">
+              Loading grouped client profiles...
+            </div>
+          ) : groupedCustomers.length > 0 ? (
+            groupedCustomers.map((cust) => {
+              const isExpanded = expandedCustomerEmail === cust.email;
+              return (
+                <div
+                  key={cust.email}
+                  className="bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all"
+                >
+                  {/* Customer row summary */}
+                  <div
+                    onClick={() => setExpandedCustomerEmail(isExpanded ? null : cust.email)}
+                    className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-surface-container-low/30 transition-colors"
                   >
-                    <td className="p-4">
-                      <div className="font-semibold text-emerald-deep">{inq.name}</div>
-                      <div className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5">{inq.email}</div>
-                      {inq.phone && (
-                        <div className="text-[10px] text-on-surface-variant/75 mt-0.5">☎ {inq.phone}</div>
-                      )}
-                    </td>
-                    <td className="p-4 font-medium text-on-surface">
-                      {inq.product ? (
-                        <div>
-                          <span className="block text-emerald-deep font-semibold">{inq.product.title}</span>
-                          <span className="text-[9px] font-mono text-on-surface-variant uppercase">
-                            SKU: {inq.product.sku}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-on-surface-variant/65">General Consultation</span>
-                      )}
-                    </td>
-                    <td className="p-4 text-on-surface-variant max-w-[200px] truncate">
-                      {inq.message}
-                    </td>
-                    <td className="p-4 text-on-surface-variant/80 font-mono text-[10px]">
-                      {new Date(inq.createdAt).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td className="p-4">
-                      <select
-                        value={inq.status}
-                        onChange={(e) => handleStatusChange(inq.id, e.target.value)}
-                        className={`text-[9px] font-label-caps uppercase tracking-wider py-1 px-2.5 border rounded-none cursor-pointer focus:outline-none ${
-                          badge?.color || "border-outline text-on-surface-variant bg-surface"
-                        }`}
-                      >
-                        {statusOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value} className="bg-surface-container-lowest text-on-surface text-xs">
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
-                      <button
-                        onClick={() => setSelectedInquiry(inq)}
-                        className="text-on-surface-variant hover:text-emerald-deep p-1.5 cursor-pointer"
-                        title="View Details"
-                      >
-                        <span className="material-symbols-outlined text-base select-none">visibility</span>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(inq)}
-                        className="text-on-surface-variant hover:text-red-600 p-1.5 cursor-pointer"
-                        title="Delete Inquiry"
-                      >
-                        <span className="material-symbols-outlined text-base select-none">delete</span>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-headline-sm text-base text-emerald-deep font-semibold">
+                          {cust.name}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-full border text-[8px] font-label-caps uppercase tracking-wider font-semibold ${
+                          cust.isBusiness
+                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600"
+                            : "bg-surface-container-low border-outline-variant/30 text-on-surface-variant"
+                        }`}>
+                          {cust.isBusiness ? "B2B Client" : "Retail User"}
+                        </span>
+                      </div>
+                      <p className="font-mono text-xs text-on-surface-variant/75 mt-1">{cust.email}</p>
+                      {cust.phone && <p className="text-[10px] text-on-surface-variant/60 mt-0.5">☎ {cust.phone}</p>}
+                    </div>
 
-          {/* Pagination Footer */}
-          {totalPages > 1 && (
-            <div className="px-6 py-4 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container-low/10">
-              <span className="text-[10px] font-label-caps text-on-surface-variant uppercase tracking-wider">
-                Showing page {page} of {totalPages} ({totalItems} total inquiries)
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <span className="font-label-caps text-[10px] text-champagne-gold uppercase tracking-wider font-bold block">
+                          {cust.inquiries.length} {cust.inquiries.length === 1 ? "Inquiry" : "Inquiries"}
+                        </span>
+                        <span className="text-[10px] text-on-surface-variant/65">Click to expand user dossier</span>
+                      </div>
+                      <span className={`material-symbols-outlined text-champagne-gold transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"}`}>
+                        expand_more
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded list of nested inquiries */}
+                  {isExpanded && (
+                    <div className="border-t border-outline-variant/15 bg-surface-container-low/10 p-5 space-y-4">
+                      <h4 className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-bold">
+                        User Inquiry History Log
+                      </h4>
+                      <div className="divide-y divide-outline-variant/10 border border-outline-variant/20 bg-white shadow-inner">
+                        {cust.inquiries.map((inq) => {
+                          const badge = statusOptions.find((o) => o.value === inq.status);
+                          return (
+                            <div
+                              key={inq.id}
+                              className="p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-surface-container-low/20 transition-colors"
+                            >
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-label-caps text-[9px] uppercase tracking-wider font-semibold text-champagne-gold">
+                                    {inq.inquiryType}
+                                  </span>
+                                  {inq.product ? (
+                                    <span className="text-xs text-emerald-deep font-semibold">
+                                      Asset: {inq.product.title} (SKU: {inq.product.sku})
+                                    </span>
+                                  ) : inq.productSkus ? (
+                                    <span className="text-xs text-emerald-deep font-semibold">
+                                      Tray SKUs: {inq.productSkus}
+                                    </span>
+                                  ) : (
+                                    <span className="text-xs text-on-surface-variant italic">
+                                      General Consultation
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-on-surface-variant line-clamp-2 italic pr-4">
+                                  "{inq.message}"
+                                </p>
+                                <p className="text-[10px] text-on-surface-variant/50 font-mono">
+                                  Received: {new Date(inq.createdAt).toLocaleString()}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center gap-4 flex-shrink-0">
+                                <select
+                                  value={inq.status}
+                                  onChange={(e) => handleStatusChange(inq.id, e.target.value)}
+                                  className={`text-[9px] font-label-caps uppercase tracking-wider py-1 px-2.5 border rounded-none cursor-pointer focus:outline-none ${
+                                    badge?.color || "border-outline text-on-surface-variant bg-surface"
+                                  }`}
+                                >
+                                  {statusOptions.map((opt) => (
+                                    <option key={opt.value} value={opt.value} className="bg-surface-container-lowest text-on-surface text-xs">
+                                      {opt.label}
+                                    </option>
+                                  ))}
+                                </select>
+
+                                <div className="flex gap-1.5">
+                                  <button
+                                    onClick={() => setSelectedInquiry(inq)}
+                                    className="text-on-surface-variant hover:text-emerald-deep p-1.5 cursor-pointer"
+                                    title="View Details"
+                                  >
+                                    <span className="material-symbols-outlined text-base select-none">visibility</span>
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(inq)}
+                                    className="text-on-surface-variant hover:text-red-600 p-1.5 cursor-pointer"
+                                    title="Delete Inquiry"
+                                  >
+                                    <span className="material-symbols-outlined text-base select-none">delete</span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-20 border border-dashed border-outline-variant/30 bg-surface-container-lowest">
+              <span className="material-symbols-outlined text-champagne-gold text-4xl mb-3 select-none">
+                group
               </span>
-              <div className="flex gap-2">
-                <button
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="px-3 py-1.5 border border-outline-variant/35 disabled:opacity-40 disabled:cursor-not-allowed text-on-surface hover:bg-surface-container-low font-label-caps text-[9px] uppercase tracking-widest cursor-pointer"
-                >
-                  Previous
-                </button>
-                <button
-                  disabled={page >= totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="px-3 py-1.5 border border-outline-variant/35 disabled:opacity-40 disabled:cursor-not-allowed text-on-surface hover:bg-surface-container-low font-label-caps text-[9px] uppercase tracking-widest cursor-pointer"
-                >
-                  Next
-                </button>
-              </div>
+              <p className="text-on-surface-variant text-sm">No user profiles with active inquiries found.</p>
             </div>
           )}
         </div>
       ) : (
-        <div className="text-center py-20 border border-dashed border-outline-variant/30 bg-surface-container-lowest">
-          <span className="material-symbols-outlined text-champagne-gold text-4xl mb-3 select-none">
-            mail
-          </span>
-          <p className="text-on-surface-variant text-sm">No client inquiries found matching the criteria.</p>
-        </div>
+        /* Standard chronological view */
+        isLoading ? (
+          <div className="py-12 text-center text-on-surface-variant/60 font-semibold">
+            Loading client pipeline...
+          </div>
+        ) : inquiries.length > 0 ? (
+          <div className="bg-surface-container-lowest border border-outline-variant/15 shadow-sm overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-outline-variant/20 bg-surface-container-low/10">
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
+                    Client Details
+                  </th>
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
+                    Interested Asset
+                  </th>
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
+                    Message Excerpt
+                  </th>
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
+                    Received Date
+                  </th>
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
+                    Status Pipeline
+                  </th>
+                  <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-xs font-body-md">
+                {inquiries.map((inq) => {
+                  const badge = statusOptions.find((o) => o.value === inq.status);
+                  return (
+                    <tr
+                      key={inq.id}
+                      className="border-b border-outline-variant/10 hover:bg-surface-container-low/30 transition-colors"
+                    >
+                      <td className="p-4">
+                        <div className="font-semibold text-emerald-deep">{inq.name}</div>
+                        <div className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5">{inq.email}</div>
+                        {inq.phone && (
+                          <div className="text-[10px] text-on-surface-variant/75 mt-0.5">☎ {inq.phone}</div>
+                        )}
+                      </td>
+                      <td className="p-4 font-medium text-on-surface">
+                        {inq.product ? (
+                          <div>
+                            <span className="block text-emerald-deep font-semibold">{inq.product.title}</span>
+                            <span className="text-[9px] font-mono text-on-surface-variant uppercase">
+                              SKU: {inq.product.sku}
+                            </span>
+                          </div>
+                        ) : inq.productSkus ? (
+                          <div>
+                            <span className="block text-emerald-deep font-semibold">Multi-Product Inquiry</span>
+                            <span className="text-[9px] font-mono text-on-surface-variant uppercase">
+                              SKUs: {inq.productSkus}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-on-surface-variant/65">General Consultation</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-on-surface-variant max-w-[200px] truncate">
+                        {inq.message}
+                      </td>
+                      <td className="p-4 text-on-surface-variant/80 font-mono text-[10px]">
+                        {new Date(inq.createdAt).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                      <td className="p-4">
+                        <select
+                          value={inq.status}
+                          onChange={(e) => handleStatusChange(inq.id, e.target.value)}
+                          className={`text-[9px] font-label-caps uppercase tracking-wider py-1 px-2.5 border rounded-none cursor-pointer focus:outline-none ${
+                            badge?.color || "border-outline text-on-surface-variant bg-surface"
+                          }`}
+                        >
+                          {statusOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value} className="bg-surface-container-lowest text-on-surface text-xs">
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
+                        <button
+                          onClick={() => setSelectedInquiry(inq)}
+                          className="text-on-surface-variant hover:text-emerald-deep p-1.5 cursor-pointer"
+                          title="View Details"
+                        >
+                          <span className="material-symbols-outlined text-base select-none">visibility</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(inq)}
+                          className="text-on-surface-variant hover:text-red-600 p-1.5 cursor-pointer"
+                          title="Delete Inquiry"
+                        >
+                          <span className="material-symbols-outlined text-base select-none">delete</span>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* Pagination Footer */}
+            {totalPages > 1 && (
+              <div className="px-6 py-4 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container-low/10">
+                <span className="text-[10px] font-label-caps text-on-surface-variant uppercase tracking-wider">
+                  Showing page {page} of {totalPages} ({totalItems} total inquiries)
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                    className="px-3 py-1.5 border border-outline-variant/35 disabled:opacity-40 disabled:cursor-not-allowed text-on-surface hover:bg-surface-container-low font-label-caps text-[9px] uppercase tracking-widest cursor-pointer"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-3 py-1.5 border border-outline-variant/35 disabled:opacity-40 disabled:cursor-not-allowed text-on-surface hover:bg-surface-container-low font-label-caps text-[9px] uppercase tracking-widest cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-20 border border-dashed border-outline-variant/30 bg-surface-container-lowest">
+            <span className="material-symbols-outlined text-champagne-gold text-4xl mb-3 select-none">
+              mail
+            </span>
+            <p className="text-on-surface-variant text-sm">No client inquiries found matching the criteria.</p>
+          </div>
+        )
       )}
 
       {/* Details Side-Drawer / Modal */}
@@ -412,37 +669,110 @@ export default function InquiriesPage() {
                 </div>
               </div>
 
+              {/* Asset of Interest section with SKU list parser */}
               <div className="border-t border-outline-variant/10 pt-4">
-                <span className="font-label-caps text-[8px] text-on-surface-variant/65 uppercase tracking-wider block mb-2 font-bold">
-                  Asset of Interest
-                </span>
-                {selectedInquiry.product ? (
-                  <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 flex justify-between items-center">
-                    <div>
-                      <p className="font-semibold text-emerald-deep">{selectedInquiry.product.title}</p>
-                      <p className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5 uppercase">
-                        SKU: {selectedInquiry.product.sku}
-                      </p>
+                {selectedInquiry.inquiryType === "MULTI_PRODUCT" && selectedInquiry.productSkus ? (
+                  <div className="space-y-2">
+                    <span className="font-label-caps text-[8px] text-on-surface-variant/65 uppercase tracking-wider block mb-1 font-bold">
+                      Combined Portfolio Assets (Multiple SKUs)
+                    </span>
+                    <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 space-y-2">
+                      {selectedInquiry.productSkus.split(",").map((s) => s.trim()).map((sku) => (
+                        <div key={sku} className="flex justify-between items-center py-1 border-b border-outline-variant/10 last:border-b-0">
+                          <span className="font-mono text-xs text-emerald-deep font-semibold">SKU: {sku}</span>
+                          <a
+                            href={`/admin/inventory?search=${sku}`}
+                            className="px-3 py-1 border border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15 font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold"
+                          >
+                            Inspect
+                          </a>
+                        </div>
+                      ))}
                     </div>
-                    <a
-                      href={`/admin/inventory?search=${selectedInquiry.product.sku}`}
-                      className="px-3 py-1.5 border border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15 font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold"
-                    >
-                      Inspect stone
-                    </a>
                   </div>
                 ) : (
-                  <p className="text-on-surface-variant/75 italic">General Concierge Consult (No specific gemstone linked)</p>
+                  <>
+                    <span className="font-label-caps text-[8px] text-on-surface-variant/65 uppercase tracking-wider block mb-2 font-bold">
+                      Asset of Interest
+                    </span>
+                    {selectedInquiry.product ? (
+                      <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 flex justify-between items-center">
+                        <div>
+                          <p className="font-semibold text-emerald-deep">{selectedInquiry.product.title}</p>
+                          <p className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5 uppercase">
+                            SKU: {selectedInquiry.product.sku}
+                          </p>
+                        </div>
+                        <a
+                          href={`/admin/inventory?search=${selectedInquiry.product.sku}`}
+                          className="px-3 py-1.5 border border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15 font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold"
+                        >
+                          Inspect stone
+                        </a>
+                      </div>
+                    ) : (
+                      <p className="text-on-surface-variant/75 italic">General Concierge Consult (No specific gemstone linked)</p>
+                    )}
+                  </>
                 )}
               </div>
 
-              <div className="border-t border-outline-variant/10 pt-4">
-                <span className="font-label-caps text-[8px] text-on-surface-variant/65 uppercase tracking-wider block mb-2 font-bold">
-                  Client Message
+              {/* Chat Thread reply panel */}
+              <div className="border-t border-outline-variant/10 pt-4 flex flex-col h-[280px] overflow-hidden">
+                <span className="font-label-caps text-[8px] text-on-surface-variant/65 uppercase tracking-wider block mb-2 font-bold flex-shrink-0">
+                  Concierge Live Messaging Channel
                 </span>
-                <div className="p-4 bg-surface-container-low/40 border border-outline-variant/10 text-on-surface leading-relaxed text-xs whitespace-pre-wrap whitespace-pre-line max-h-48 overflow-y-auto">
-                  {selectedInquiry.message}
+                
+                {/* Scrollable messages log */}
+                <div className="flex-grow overflow-y-auto bg-surface-container-low/40 border border-outline-variant/10 p-3.5 space-y-3 scrollbar-none flex flex-col">
+                  {messages.length > 0 ? (
+                    messages.map((msg) => {
+                      const isAdmin = msg.sender === "ADMIN";
+                      return (
+                        <div
+                          key={msg.id}
+                          className={`max-w-[85%] rounded p-2.5 text-xs leading-relaxed ${
+                            isAdmin
+                              ? "bg-emerald-deep text-linen-white self-end"
+                              : "bg-white text-on-surface border border-outline-variant/20 self-start"
+                          }`}
+                        >
+                          <p className="font-semibold text-[8px] uppercase tracking-wide opacity-80 mb-0.5">
+                            {isAdmin ? "You (Concierge)" : selectedInquiry.name}
+                          </p>
+                          <p className="font-normal">{msg.message}</p>
+                          <p className="text-[7px] text-right opacity-60 mt-1">
+                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="flex-grow flex items-center justify-center text-center p-4">
+                      <p className="text-[10px] text-on-surface-variant/65 italic">No message logs recorded.</p>
+                    </div>
+                  )}
                 </div>
+
+                {/* Text input form */}
+                <form onSubmit={handleSendMessage} className="flex gap-2 mt-2 flex-shrink-0">
+                  <input
+                    type="text"
+                    required
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a concierge response..."
+                    disabled={isSendingMessage}
+                    className="flex-grow bg-white border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-xs py-2 px-3 transition-colors rounded-none text-on-surface font-body-md"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSendingMessage || !newMessage.trim()}
+                    className="px-4 py-2 bg-emerald-deep hover:bg-emerald-deep/95 text-linen-white font-label-caps text-[9px] uppercase tracking-wider border border-champagne-gold/25 cursor-pointer disabled:opacity-40 transition-colors"
+                  >
+                    Send
+                  </button>
+                </form>
               </div>
 
               <div className="border-t border-outline-variant/10 pt-4">

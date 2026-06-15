@@ -8,6 +8,59 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const [isTrayOpen, setIsTrayOpen] = useState(false);
+  const [trayItems, setTrayItems] = useState<any[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  
+  const [trayName, setTrayName] = useState("");
+  const [trayEmail, setTrayEmail] = useState("");
+  const [trayPhone, setTrayPhone] = useState("");
+  const [trayMessage, setTrayMessage] = useState("I would like to inquire about the collection of gemstones in my tray.");
+  const [isSubmittingTray, setIsSubmittingTray] = useState(false);
+  const [trayError, setTrayError] = useState<string | null>(null);
+  const [traySuccess, setTraySuccess] = useState(false);
+
+  const loadTray = () => {
+    try {
+      const stored = localStorage.getItem("gemshouse_inquiry_tray");
+      setTrayItems(stored ? JSON.parse(stored) : []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    loadTray();
+    window.addEventListener("inquiry_tray_updated", loadTray);
+    return () => window.removeEventListener("inquiry_tray_updated", loadTray);
+  }, []);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await fetch("/api/auth");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.user) {
+            setCurrentUser(data.user);
+            setTrayName(data.user.name || "");
+            setTrayEmail(data.user.email || "");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadUser();
+  }, []);
+
+  const handleRemoveFromTray = (id: string) => {
+    const updated = trayItems.filter((item) => item.id !== id);
+    setTrayItems(updated);
+    localStorage.setItem("gemshouse_inquiry_tray", JSON.stringify(updated));
+    window.dispatchEvent(new Event("inquiry_tray_updated"));
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -111,17 +164,24 @@ export default function Navbar() {
               <span className="material-symbols-outlined select-none">favorite</span>
             </button>
             <button
-              aria-label="Mail"
-              className="hover:bg-gold-glimmer p-2 rounded-full transition-all duration-300 cursor-pointer animate-pulse-slow hidden xs:inline-block"
+              onClick={() => setIsTrayOpen(true)}
+              aria-label="Inquiry Tray"
+              className="hover:bg-gold-glimmer p-2 rounded-full transition-all duration-300 cursor-pointer relative"
             >
               <span className="material-symbols-outlined select-none">mail</span>
+              {trayItems.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-champagne-gold text-[#fcf9f8] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-[#fcf9f8]">
+                  {trayItems.length}
+                </span>
+              )}
             </button>
-            <button
+            <a
+              href={currentUser ? "/profile" : "/login"}
               aria-label="Person"
-              className="hover:bg-gold-glimmer p-2 rounded-full transition-all duration-300 cursor-pointer"
+              className="hover:bg-gold-glimmer p-2 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center text-emerald-deep"
             >
               <span className="material-symbols-outlined select-none">person</span>
-            </button>
+            </a>
           </div>
         </div>
 
@@ -215,6 +275,218 @@ export default function Navbar() {
           <p className="font-label-caps text-[10px] text-on-surface-variant/60 uppercase tracking-widest leading-relaxed">
             Gemshouse London • New York • Geneva • Surat
           </p>
+        </div>
+      </div>
+
+      {/* Inquiry Tray Side Drawer */}
+      <div
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-500 ${
+          isTrayOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsTrayOpen(false)}
+      />
+
+      <div
+        className={`fixed inset-y-0 right-0 w-full sm:w-[450px] bg-[#fcf9f8] h-full z-[101] p-6 border-l border-champagne-gold/20 shadow-2xl flex flex-col justify-between transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${
+          isTrayOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex flex-col h-full overflow-hidden">
+          {/* Drawer Header */}
+          <div className="flex justify-between items-center pb-5 border-b border-outline-variant/20 mb-5">
+            <div>
+              <span className="font-label-caps text-[9px] tracking-widest text-champagne-gold uppercase block mb-0.5">
+                Acquisition Portfolio
+              </span>
+              <h3 className="font-headline-sm text-base text-emerald-deep font-semibold tracking-wide uppercase">
+                Acquisition Inquiry Tray
+              </h3>
+            </div>
+            <button
+              onClick={() => setIsTrayOpen(false)}
+              className="text-emerald-deep hover:text-champagne-gold p-1 cursor-pointer transition-colors"
+            >
+              <span className="material-symbols-outlined select-none text-xl">close</span>
+            </button>
+          </div>
+
+          {traySuccess ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-4">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/35 flex items-center justify-center text-emerald-600">
+                <span className="material-symbols-outlined text-2xl select-none">check_circle</span>
+              </div>
+              <h4 className="font-headline-sm text-emerald-deep font-semibold text-sm">Portfolio Transmitted</h4>
+              <p className="text-xs text-on-surface-variant/80 max-w-xs leading-relaxed">
+                Your portfolio inquiry has been filed. A concierge agent will email you a combined procurement proposal.
+              </p>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col justify-between overflow-hidden">
+              {/* Items List */}
+              <div className="flex-grow overflow-y-auto scrollbar-none pr-1 space-y-4 pb-4">
+                {trayItems.length > 0 ? (
+                  trayItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex gap-3.5 p-3.5 bg-surface-container-low/35 border border-outline-variant/20 relative group hover:border-champagne-gold/40 transition-colors"
+                    >
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="w-14 h-18 object-cover border border-outline-variant/20 flex-shrink-0"
+                      />
+                      <div className="flex-grow min-w-0 pr-6">
+                        <h4 className="text-xs font-semibold text-emerald-deep truncate leading-tight mb-1">{item.title}</h4>
+                        <p className="text-[10px] text-on-surface-variant/75 font-mono mb-1.5">
+                          {item.carat} • {item.cut} • SKU: {item.sku}
+                        </p>
+                        <p className="text-xs font-semibold text-champagne-gold">
+                          ${item.price ? Number(item.price).toLocaleString() : "P.O.A"}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveFromTray(item.id)}
+                        className="absolute top-2 right-2 text-on-surface-variant hover:text-red-600 p-1 cursor-pointer transition-colors"
+                        title="Remove stone"
+                      >
+                        <span className="material-symbols-outlined text-sm select-none">delete</span>
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-16 text-center">
+                    <span className="material-symbols-outlined text-outline/50 text-4xl mb-2 select-none">
+                      database
+                    </span>
+                    <p className="text-xs text-on-surface-variant/65">
+                      Your inquiry tray is empty. Add rare stones to catalog them for a unified quote.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Form Block (only if tray has items) */}
+              {trayItems.length > 0 && (
+                <div className="border-t border-outline-variant/20 pt-4 bg-[#fcf9f8] space-y-4 flex-shrink-0">
+                  {trayError && (
+                    <div className="bg-red-500/10 border border-red-500/20 text-red-700 font-body-sm text-[11px] p-3 flex items-start gap-2">
+                      <span className="material-symbols-outlined text-xs select-none mt-0.5">error</span>
+                      <span>{trayError}</span>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider block mb-1">
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={trayName}
+                        onChange={(e) => setTrayName(e.target.value)}
+                        placeholder="Jane Doe"
+                        className="w-full bg-white border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-[11px] py-2 px-2.5 transition-colors rounded-none text-on-surface font-body-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider block mb-1">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={trayEmail}
+                        onChange={(e) => setTrayEmail(e.target.value)}
+                        placeholder="jane@example.com"
+                        className="w-full bg-white border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-[11px] py-2 px-2.5 transition-colors rounded-none text-on-surface font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider block mb-1">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={trayPhone}
+                      onChange={(e) => setTrayPhone(e.target.value)}
+                      placeholder="+1 (555) 000-0000"
+                      className="w-full bg-white border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-[11px] py-2 px-2.5 transition-colors rounded-none text-on-surface font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider block mb-1">
+                      Procurement Notes *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={trayMessage}
+                      onChange={(e) => setTrayMessage(e.target.value)}
+                      placeholder="Specify customized settings or delivery parameters..."
+                      className="w-full bg-white border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-[11px] py-2 px-2.5 transition-colors rounded-none text-on-surface font-body-md resize-none"
+                    />
+                  </div>
+
+                  <button
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      if (!trayName || !trayEmail || !trayMessage) {
+                        setTrayError("Please complete all required fields.");
+                        return;
+                      }
+                      setIsSubmittingTray(true);
+                      setTrayError(null);
+                      try {
+                        const res = await fetch("/api/inquiries", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            name: trayName,
+                            email: trayEmail,
+                            phone: trayPhone,
+                            message: trayMessage,
+                            productSkus: trayItems.map((item) => item.sku).join(", "),
+                            inquiryType: "MULTI_PRODUCT",
+                            userId: currentUser?.id || null
+                          })
+                        });
+
+                        if (!res.ok) {
+                          const data = await res.json();
+                          setTrayError(data.error || "Failed to submit inquiry.");
+                          setIsSubmittingTray(false);
+                          return;
+                        }
+
+                        setTraySuccess(true);
+                        localStorage.removeItem("gemshouse_inquiry_tray");
+                        setTrayItems([]);
+                        window.dispatchEvent(new Event("inquiry_tray_updated"));
+                        setTimeout(() => {
+                          setIsTrayOpen(false);
+                          setTraySuccess(false);
+                          setTrayMessage("I would like to inquire about the collection of gemstones in my tray.");
+                        }, 2500);
+                      } catch (err) {
+                        setTrayError("Network issue. Please try again.");
+                      } finally {
+                        setIsSubmittingTray(false);
+                      }
+                    }}
+                    disabled={isSubmittingTray}
+                    className="w-full py-3 bg-emerald-deep text-linen-white hover:bg-emerald-deep/95 font-label-caps text-xs tracking-widest uppercase transition-colors border border-champagne-gold/30 disabled:opacity-50 cursor-pointer text-center flex items-center justify-center"
+                  >
+                    {isSubmittingTray ? "Transmitting Portfolio..." : "Submit Combined Inquiry"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

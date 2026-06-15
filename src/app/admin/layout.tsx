@@ -32,6 +32,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Fetch session user
   useEffect(() => {
+    if (pathname === "/admin/login") return;
+
     async function loadUser() {
       try {
         const res = await fetch("/api/admin/auth");
@@ -47,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }
     }
     loadUser();
-  }, [router]);
+  }, [router, pathname]);
 
   const handleLogout = async () => {
     try {
@@ -69,6 +71,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       : "https://gemshouse.shop";
     window.open(mainUrl, "_blank");
   };
+
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-background text-on-background flex flex-col font-body-md antialiased">

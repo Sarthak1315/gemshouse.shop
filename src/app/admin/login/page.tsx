@@ -181,16 +181,6 @@ function AdminLoginContent() {
             </div>
           </form>
         </div>
-
-        {/* Help links */}
-        <div className="text-center mt-6">
-          <a
-            href="/"
-            className="font-body-sm text-xs text-on-surface-variant/50 hover:text-champagne-gold transition-colors duration-300"
-          >
-            ← Return to storefront
-          </a>
-        </div>
       </div>
     </div>
   );
