@@ -41,7 +41,11 @@ export async function middleware(request: NextRequest) {
 
   // 2. Subdomain Routing & Enforcements
   if (isAdminDomain) {
-    // If on admin subdomain and accessing storefront pages, redirect to main storefront domain
+    // If accessing the root of the admin subdomain, redirect to the admin dashboard
+    if (pathname === "/") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+    // If on admin subdomain and accessing other storefront pages, redirect to main storefront domain
     if (isStorefrontPath) {
       const mainDomain = isLocalhost ? `localhost:${host.split(":")[1] || "3000"}` : "gemshouse.shop";
       const protocol = isLocalhost ? "http" : "https";
