@@ -284,11 +284,9 @@ export const validators = {
     const errors: ValidationError[] = [];
     const name = String(body?.name || "").trim();
     const email = String(body?.email || "").trim();
-    const roleId = String(body?.roleId || "").trim();
 
     if (!email) errors.push({ field: "email", message: "Email is required" });
     else if (!isEmail(email)) errors.push({ field: "email", message: "Invalid email format" });
-    if (!roleId) errors.push({ field: "roleId", message: "Role ID is required" });
 
     if (errors.length > 0) return { success: false, errors };
     return {
@@ -296,7 +294,7 @@ export const validators = {
       data: {
         name: name || null,
         email,
-        roleId,
+        isBusinessUser: body?.isBusinessUser !== undefined ? Boolean(body.isBusinessUser) : undefined,
         password: body?.password ? String(body.password) : undefined,
       },
     };

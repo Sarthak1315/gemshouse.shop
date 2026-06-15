@@ -88,7 +88,7 @@ export async function middleware(request: NextRequest) {
     // - POST /api/inquiries (Contact form submission)
     // - POST /api/dealers (Wholesale request submission)
     // - POST /api/reviews (Review submission)
-    const isPublicAuth = pathname === "/api/auth" || pathname === "/api/auth/register";
+    const isPublicAuth = pathname === "/api/auth" || pathname === "/api/auth/register" || pathname === "/api/admin/auth";
     const isProfileUpdate = pathname === "/api/profile" && method === "PUT";
     const isMessageThread = pathname.startsWith("/api/inquiries/") && pathname.endsWith("/messages") && method === "POST";
     const isPublicInquiry = pathname === "/api/inquiries" && method === "POST";

@@ -2,13 +2,18 @@ import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 import { validators } from "@/lib/validations";
-import { hashPassword, getSessionUser } from "@/lib/auth";
+import { hashPassword, getSessionAdmin } from "@/lib/auth";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const adminSession = await getSessionAdmin(request);
+    if (!adminSession) {
+      return errorResponse("Access denied", 401);
+    }
+
     const { id } = await params;
     const body = await request.json();
 
@@ -23,7 +28,7 @@ export async function PUT(
     const validation = validators.user({
       name: body?.name !== undefined ? body.name : existingUser.name,
       email: body?.email !== undefined ? body.email : existingUser.email,
-      roleId: body?.roleId !== undefined ? body.roleId : existingUser.roleId,
+      isBusinessUser: body?.isBusinessUser !== undefined ? body.isBusinessUser : existingUser.isBusinessUser,
       password: body?.password || undefined,
     });
 
@@ -43,18 +48,10 @@ export async function PUT(
       }
     }
 
-    // Verify role exists
-    const role = await prisma.role.findUnique({
-      where: { id: data.roleId },
-    });
-    if (!role) {
-      return errorResponse("Invalid role ID selected", 400);
-    }
-
     const updateData: any = {
       name: data.name,
       email: data.email,
-      roleId: data.roleId,
+      isBusinessUser: data.isBusinessUser !== undefined ? data.isBusinessUser : existingUser.isBusinessUser,
     };
 
     if (data.password) {
@@ -64,9 +61,6 @@ export async function PUT(
     const updatedUser = await prisma.user.update({
       where: { id },
       data: updateData,
-      include: {
-        role: true,
-      },
     });
 
     const { passwordHash: _, ...safeUser } = updatedUser;
@@ -83,13 +77,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-
-    // Check if user is trying to delete their own account
-    const session = await getSessionUser(request);
-    if (session && session.userId === id) {
-      return errorResponse("Security violation: You cannot delete your own account.", 400);
+    const adminSession = await getSessionAdmin(request);
+    if (!adminSession) {
+      return errorResponse("Access denied", 401);
     }
+
+    const { id } = await params;
 
     const existingUser = await prisma.user.findUnique({
       where: { id },

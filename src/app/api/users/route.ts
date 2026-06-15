@@ -2,21 +2,22 @@ import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 import { validators } from "@/lib/validations";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword, getSessionAdmin } from "@/lib/auth";
 
 export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
+    const adminSession = await getSessionAdmin(request);
+    if (!adminSession) {
+      return errorResponse("Access denied", 401);
+    }
+
     const { searchParams } = new URL(request.url);
-    const roleId = searchParams.get("roleId") || "";
     const search = searchParams.get("search") || "";
+    const isBusinessUserParam = searchParams.get("isBusinessUser");
 
     const where: any = {};
-
-    if (roleId) {
-      where.roleId = roleId;
-    }
 
     if (search) {
       where.OR = [
@@ -25,12 +26,13 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    if (isBusinessUserParam !== null) {
+      where.isBusinessUser = isBusinessUserParam === "true";
+    }
+
     const users = await prisma.user.findMany({
       where,
       orderBy: { createdAt: "desc" },
-      include: {
-        role: true,
-      },
     });
 
     // Strip password hashes from response
@@ -39,12 +41,7 @@ export async function GET(request: NextRequest) {
       return rest;
     });
 
-    // Also load roles for convenience in select dropdowns
-    const roles = await prisma.role.findMany({
-      orderBy: { name: "asc" },
-    });
-
-    return jsonResponse({ users: safeUsers, roles });
+    return jsonResponse({ users: safeUsers, roles: [] });
   } catch (e: any) {
     console.error("GET /api/users error:", e);
     return errorResponse("Internal server error", 500);
@@ -53,6 +50,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const adminSession = await getSessionAdmin(request);
+    if (!adminSession) {
+      return errorResponse("Access denied", 401);
+    }
+
     const body = await request.json();
     const validation = validators.user(body);
 
@@ -71,15 +73,6 @@ export async function POST(request: NextRequest) {
       return errorResponse(`User with email '${data.email}' already exists`, 409);
     }
 
-    // Verify role exists
-    const role = await prisma.role.findUnique({
-      where: { id: data.roleId },
-    });
-
-    if (!role) {
-      return errorResponse("Invalid role ID selected", 400);
-    }
-
     // Validate password is provided for new user
     if (!data.password) {
       return errorResponse("Password is required for new users", 400);
@@ -91,11 +84,8 @@ export async function POST(request: NextRequest) {
       data: {
         name: data.name,
         email: data.email,
-        roleId: data.roleId,
+        isBusinessUser: data.isBusinessUser || false,
         passwordHash,
-      },
-      include: {
-        role: true,
       },
     });
 

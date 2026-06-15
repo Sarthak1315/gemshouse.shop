@@ -17,11 +17,6 @@ export async function GET(request: NextRequest) {
         name: true,
         email: true,
         isBusinessUser: true,
-        role: {
-          select: {
-            name: true,
-          },
-        },
       },
     });
 
@@ -74,11 +69,6 @@ export async function PUT(request: NextRequest) {
         name: true,
         email: true,
         isBusinessUser: true,
-        role: {
-          select: {
-            name: true,
-          },
-        },
       },
     });
 

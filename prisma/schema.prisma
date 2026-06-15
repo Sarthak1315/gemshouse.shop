@@ -20,21 +20,18 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
-  roleId        String
-  role          Role      @relation(fields: [roleId], references: [id])
-  
-  blogs         Blog[]
   inquiries     Inquiry[]
 }
 
-model Role {
-  id          String   @id @default(uuid())
-  name        String   @unique // e.g. "ADMIN", "DEALER", "USER", "STAFF"
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Admin {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   
-  users       User[]
+  blogs         Blog[]
 }
 
 model Category {
@@ -162,7 +159,7 @@ model Blog {
   updatedAt      DateTime     @updatedAt
   
   authorId       String
-  author         User         @relation(fields: [authorId], references: [id])
+  author         Admin        @relation(fields: [authorId], references: [id])
   
   categoryId     String
   category       BlogCategory @relation(fields: [categoryId], references: [id])

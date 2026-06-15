@@ -24,15 +24,6 @@ export async function POST(request: NextRequest) {
       return errorResponse("Email is already registered", 400);
     }
 
-    // Get USER role
-    const userRole = await prisma.role.findUnique({
-      where: { name: "USER" },
-    });
-
-    if (!userRole) {
-      return errorResponse("User role not initialized", 500);
-    }
-
     // Hash password
     const passwordHash = await hashPassword(passwordHashOrPlain);
 
@@ -43,16 +34,14 @@ export async function POST(request: NextRequest) {
         email,
         passwordHash,
         isBusinessUser,
-        roleId: userRole.id,
       },
-      include: { role: true },
     });
 
     // Create JWT
     const token = await createToken({
-      userId: user.id,
+      userIdOrAdminId: user.id,
       email: user.email,
-      role: user.role.name,
+      role: "USER",
     });
 
     // Create response
@@ -62,7 +51,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role.name,
+          role: "USER",
           isBusinessUser: user.isBusinessUser,
         },
       },

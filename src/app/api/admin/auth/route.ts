@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { comparePassword, createToken, getSessionUser } from "@/lib/auth";
+import { comparePassword, createToken, getSessionAdmin } from "@/lib/auth";
 import { validators } from "@/lib/validations";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 
@@ -15,37 +15,36 @@ export async function POST(request: NextRequest) {
 
     const { email, passwordHashOrPlain } = validation.data;
 
-    // Find customer by email
-    const user = await prisma.user.findUnique({
+    // Find admin by email
+    const admin = await prisma.admin.findUnique({
       where: { email },
     });
 
-    if (!user || !user.passwordHash) {
+    if (!admin || !admin.passwordHash) {
       return errorResponse("Invalid email or password", 401);
     }
 
     // Compare passwords
-    const passwordMatch = await comparePassword(passwordHashOrPlain, user.passwordHash);
+    const passwordMatch = await comparePassword(passwordHashOrPlain, admin.passwordHash);
     if (!passwordMatch) {
       return errorResponse("Invalid email or password", 401);
     }
 
     // Create JWT
     const token = await createToken({
-      userIdOrAdminId: user.id,
-      email: user.email,
-      role: "USER",
+      userIdOrAdminId: admin.id,
+      email: admin.email,
+      role: "ADMIN",
     });
 
     // Create response
     const response = NextResponse.json(
       {
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: "USER",
-          isBusinessUser: user.isBusinessUser,
+          id: admin.id,
+          name: admin.name,
+          email: admin.email,
+          role: "ADMIN",
         },
       },
       { status: 200 }
@@ -62,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (e: any) {
-    console.error("Customer Login API Error:", e);
+    console.error("Admin Login API Error:", e);
     return errorResponse("Internal server error", 500);
   }
 }
@@ -91,26 +90,25 @@ export async function DELETE() {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSessionUser(request);
+    const session = await getSessionAdmin(request);
     if (!session) {
       return jsonResponse({ user: null });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: session.userId },
+    const admin = await prisma.admin.findUnique({
+      where: { id: session.adminId },
     });
 
-    if (!user) {
+    if (!admin) {
       return jsonResponse({ user: null });
     }
 
     return jsonResponse({
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: "USER",
-        isBusinessUser: user.isBusinessUser,
+        id: admin.id,
+        name: admin.name,
+        email: admin.email,
+        role: "ADMIN",
       },
     });
   } catch (e) {

@@ -6,34 +6,10 @@ import { gemstones } from "../src/lib/data/gemstones";
 async function main() {
   console.log("Starting database seed...");
 
-  // 1. Create Roles
-  console.log("Upserting user roles...");
-  const adminRole = await prisma.role.upsert({
-    where: { name: "ADMIN" },
-    update: {},
-    create: {
-      name: "ADMIN",
-      description: "System Administrator with full access",
-    },
-  });
-
-  const dealerRole = await prisma.role.upsert({
-    where: { name: "DEALER" },
-    update: {},
-    create: {
-      name: "DEALER",
-      description: "Verified B2B wholesale partner",
-    },
-  });
-
-  const userRole = await prisma.role.upsert({
-    where: { name: "USER" },
-    update: {},
-    create: {
-      name: "USER",
-      description: "Standard registered customer",
-    },
-  });
+  // 1. Clear existing user and admin data to avoid conflicts
+  console.log("Cleaning up existing users/admins...");
+  await prisma.admin.deleteMany();
+  await prisma.user.deleteMany();
 
   // 2. Create Default Admin User
   const adminEmail = "admin@gemshouse.shop";
@@ -41,17 +17,11 @@ async function main() {
   const passwordHash = await bcrypt.hash(adminPassword, 10);
 
   console.log(`Upserting default admin user: ${adminEmail}`);
-  const adminUser = await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {
-      passwordHash,
-      roleId: adminRole.id,
-    },
-    create: {
+  const adminUser = await prisma.admin.create({
+    data: {
       name: "Gemshouse Admin",
       email: adminEmail,
       passwordHash,
-      roleId: adminRole.id,
     },
   });
 

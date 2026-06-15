@@ -10,7 +10,6 @@ interface UserProfile {
   name: string;
   email: string;
   isBusinessUser: boolean;
-  role: { name: string };
 }
 
 interface Message {

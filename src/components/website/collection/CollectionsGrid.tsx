@@ -19,6 +19,7 @@ export default function CollectionsGrid() {
             const primaryImage = dbProduct.images?.find((img: any) => img.isPrimary) || dbProduct.images?.[0];
             return {
               id: dbProduct.id,
+              sku: dbProduct.sku,
               title: dbProduct.title,
               category: dbProduct.category?.name || "Gemstone",
               carat: dbProduct.carat,

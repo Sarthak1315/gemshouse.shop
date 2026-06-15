@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSessionUser } from "@/lib/auth";
+import { getSessionUser, getSessionAdmin } from "@/lib/auth";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 import { validators } from "@/lib/validations";
 
@@ -11,9 +11,10 @@ interface Params {
 export async function GET(request: NextRequest, { params }: Params) {
   try {
     const { id: inquiryId } = await params;
-    const session = await getSessionUser(request);
+    const userSession = await getSessionUser(request);
+    const adminSession = await getSessionAdmin(request);
 
-    if (!session) {
+    if (!userSession && !adminSession) {
       return errorResponse("Authentication required", 401);
     }
 
@@ -27,8 +28,8 @@ export async function GET(request: NextRequest, { params }: Params) {
     }
 
     // Authorization: User must be an admin, or the owner of the inquiry, or have the matching email
-    const isOwner = inquiry.userId === session.userId || inquiry.email.toLowerCase() === session.email.toLowerCase();
-    const isAdmin = session.role === "ADMIN";
+    const isAdmin = !!adminSession;
+    const isOwner = !!userSession && (inquiry.userId === userSession.userId || inquiry.email.toLowerCase() === userSession.email.toLowerCase());
 
     if (!isOwner && !isAdmin) {
       return errorResponse("Access denied", 403);
@@ -50,9 +51,10 @@ export async function GET(request: NextRequest, { params }: Params) {
 export async function POST(request: NextRequest, { params }: Params) {
   try {
     const { id: inquiryId } = await params;
-    const session = await getSessionUser(request);
+    const userSession = await getSessionUser(request);
+    const adminSession = await getSessionAdmin(request);
 
-    if (!session) {
+    if (!userSession && !adminSession) {
       return errorResponse("Authentication required", 401);
     }
 
@@ -79,12 +81,12 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     // Authorization check based on sender type
     if (sender === "ADMIN") {
-      if (session.role !== "ADMIN") {
+      if (!adminSession) {
         return errorResponse("Access restricted to administrators", 403);
       }
     } else {
       // CLIENT sender must own the inquiry or match email
-      const isOwner = inquiry.userId === session.userId || inquiry.email.toLowerCase() === session.email.toLowerCase();
+      const isOwner = !!userSession && (inquiry.userId === userSession.userId || inquiry.email.toLowerCase() === userSession.email.toLowerCase());
       if (!isOwner) {
         return errorResponse("Access denied", 403);
       }
@@ -96,7 +98,7 @@ export async function POST(request: NextRequest, { params }: Params) {
         inquiryId,
         sender,
         message,
-        senderId: session.userId,
+        senderId: adminSession ? adminSession.adminId : userSession?.userId,
       },
     });
 
