@@ -92,10 +92,11 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!user) return;
     const userId = user.id;
+    const userEmail = encodeURIComponent(user.email);
     async function fetchInquiries() {
       setIsLoadingInquiries(true);
       try {
-        const res = await fetch(`/api/inquiries?userId=${userId}&limit=50`);
+        const res = await fetch(`/api/inquiries?userId=${userId}&email=${userEmail}&limit=50`);
         if (res.ok) {
           const data = await res.json();
           setInquiries(data.inquiries || []);
@@ -252,7 +253,7 @@ export default function ProfilePage() {
 
   if (isLoadingUser) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-charcoal">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="relative w-12 h-12 flex items-center justify-center">
           <div className="absolute inset-0 rounded-full border-2 border-champagne-gold/20 animate-ping"></div>
           <div className="absolute w-8 h-8 rounded-full border-2 border-t-emerald-deep border-r-emerald-deep border-b-champagne-gold border-l-champagne-gold animate-spin"></div>
@@ -262,7 +263,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-charcoal bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(15,81,50,0.12),rgba(255,255,255,0))]">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
 
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto">
@@ -472,7 +473,7 @@ export default function ProfilePage() {
                         onChange={(e) => setChatMessage(e.target.value)}
                         placeholder="Type response to Vault Specialist..."
                         disabled={isSendingMessage}
-                        className="flex-grow bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-3 transition-all duration-300 rounded-none placeholder-on-surface-variant/40"
+                        className="flex-grow bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-3 transition-all duration-300 rounded-none placeholder-on-surface-variant/40"
                       />
                       <button
                         type="submit"
@@ -496,14 +497,14 @@ export default function ProfilePage() {
                 </h2>
 
                 {accountError && (
-                  <div className="bg-red-950/20 border border-red-800/40 text-red-400 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
+                  <div className="bg-red-50 border border-red-200 text-red-700 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
                     <span className="material-symbols-outlined text-sm select-none mt-0.5">warning</span>
                     <span>{accountError}</span>
                   </div>
                 )}
 
                 {accountSuccess && (
-                  <div className="bg-emerald-950/20 border border-emerald-800/40 text-emerald-400 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
+                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
                     <span className="material-symbols-outlined text-sm select-none mt-0.5">check_circle</span>
                     <span>{accountSuccess}</span>
                   </div>
@@ -524,7 +525,7 @@ export default function ProfilePage() {
                       value={profileName}
                       onChange={(e) => setProfileName(e.target.value)}
                       disabled={isUpdatingAccount}
-                      className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none"
+                      className="w-full bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none"
                     />
                   </div>
 
@@ -580,7 +581,7 @@ export default function ProfilePage() {
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder="Leave empty to keep current password"
                           disabled={isUpdatingAccount}
-                          className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                          className="w-full bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                         />
                       </div>
 
@@ -598,7 +599,7 @@ export default function ProfilePage() {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="Confirm new security password"
                           disabled={isUpdatingAccount}
-                          className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                          className="w-full bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2 px-1 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                         />
                       </div>
                     </div>

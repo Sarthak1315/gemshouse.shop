@@ -37,6 +37,17 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Auto-link any guest inquiries made with this email before registration
+    await prisma.inquiry.updateMany({
+      where: {
+        email: { equals: email, mode: "insensitive" },
+        userId: null,
+      },
+      data: {
+        userId: user.id,
+      },
+    });
+
     // Create JWT
     const token = await createToken({
       userIdOrAdminId: user.id,

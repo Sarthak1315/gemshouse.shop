@@ -69,7 +69,7 @@ function CustomerLoginContent() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-charcoal bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(15,81,50,0.12),rgba(255,255,255,0))]">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
 
       <main className="flex-grow flex items-center justify-center pt-32 md:pt-40 pb-20 px-margin-mobile">
@@ -84,13 +84,13 @@ function CustomerLoginContent() {
             <div className="w-12 h-[0.5px] bg-champagne-gold/50 mx-auto mt-4"></div>
           </div>
 
-          <div className="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/20 p-8 md:p-10 shadow-2xl relative">
+          <div className="bg-surface-container-lowest border border-outline-variant/20 p-8 md:p-10 shadow-2xl relative">
             <h2 className="font-headline-sm text-sm text-on-surface-variant mb-6 text-center font-normal tracking-wide">
               Access your inquiries and collection settings
             </h2>
 
             {error && (
-              <div className="bg-red-950/20 border border-red-800/40 text-red-400 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
+              <div className="bg-red-50 border border-red-200 text-red-700 font-body-sm text-xs p-3.5 mb-6 flex items-start gap-2.5">
                 <span className="material-symbols-outlined text-sm select-none mt-0.5">warning</span>
                 <span>{error}</span>
               </div>
@@ -112,7 +112,7 @@ function CustomerLoginContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@domain.com"
                   disabled={isLoading}
-                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                  className="w-full bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                 />
               </div>
 
@@ -131,7 +131,7 @@ function CustomerLoginContent() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   disabled={isLoading}
-                  className="w-full bg-charcoal/20 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
+                  className="w-full bg-surface-container-low/50 border-b border-outline-variant/40 focus:border-champagne-gold focus:outline-none text-emerald-deep font-body-md text-sm py-2.5 px-1.5 transition-all duration-300 rounded-none placeholder-on-surface-variant/30"
                 />
               </div>
 
@@ -200,7 +200,7 @@ export default function CustomerLoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-charcoal">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-champagne-gold font-label-caps text-xs tracking-widest uppercase">
             Loading portal...
           </div>

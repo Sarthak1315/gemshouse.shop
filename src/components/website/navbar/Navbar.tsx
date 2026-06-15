@@ -177,10 +177,20 @@ export default function Navbar() {
             </button>
             <a
               href={currentUser ? "/profile" : "/login"}
-              aria-label="Person"
-              className="hover:bg-gold-glimmer p-2 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center text-emerald-deep"
+              aria-label={currentUser ? "Profile" : "Login"}
+              className={`p-2 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center ${
+                currentUser
+                  ? "bg-champagne-gold/20 text-emerald-deep ring-1 ring-champagne-gold/40"
+                  : "hover:bg-gold-glimmer text-emerald-deep"
+              }`}
             >
-              <span className="material-symbols-outlined select-none">person</span>
+              {currentUser ? (
+                <span className="w-5 h-5 rounded-full bg-emerald-deep text-linen-white text-[10px] font-bold flex items-center justify-center select-none">
+                  {(currentUser.name || currentUser.email || "U").charAt(0).toUpperCase()}
+                </span>
+              ) : (
+                <span className="material-symbols-outlined select-none">person</span>
+              )}
             </a>
           </div>
         </div>

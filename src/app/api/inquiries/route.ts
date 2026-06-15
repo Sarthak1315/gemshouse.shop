@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") || "";
     const type = searchParams.get("inquiryType") || "";
     const userId = searchParams.get("userId") || "";
+    const email = searchParams.get("email") || "";
 
     const { limit, skip, page } = parsePagination(request.url);
 
@@ -25,16 +26,29 @@ export async function GET(request: NextRequest) {
       where.inquiryType = type;
     }
 
-    if (userId) {
+    // Support fetching by userId OR email (for guest→registered user matching)
+    if (userId && email) {
+      where.AND = [
+        ...(where.AND || []),
+        { OR: [{ userId }, { email: { equals: email, mode: "insensitive" } }] },
+      ];
+    } else if (userId) {
       where.userId = userId;
+    } else if (email) {
+      where.email = { equals: email, mode: "insensitive" };
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-        { message: { contains: search, mode: "insensitive" } },
-        { productSkus: { contains: search, mode: "insensitive" } },
+      where.AND = [
+        ...(where.AND || []),
+        {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+            { message: { contains: search, mode: "insensitive" } },
+            { productSkus: { contains: search, mode: "insensitive" } },
+          ],
+        },
       ];
     }
 

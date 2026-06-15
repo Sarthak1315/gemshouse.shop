@@ -46,6 +46,22 @@ const statusOptions = [
   { value: "CLOSED_LOST", label: "Closed Lost", color: "text-red-600 bg-red-500/10 border-red-500/20" },
 ];
 
+interface PreviewProduct {
+  id: string;
+  title: string;
+  sku: string;
+  gemType: string;
+  carat: number;
+  color: string | null;
+  clarity: string | null;
+  cut: string | null;
+  origin: string | null;
+  certification: string | null;
+  price: string;
+  inStock: boolean;
+  images: { url: string; isPrimary: boolean }[];
+}
+
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
@@ -61,6 +77,11 @@ export default function InquiriesPage() {
   const [newMessage, setNewMessage] = useState("");
   const [isSendingMessage, setIsSendingMessage] = useState(false);
 
+  // Product quick preview
+  const [previewProduct, setPreviewProduct] = useState<PreviewProduct | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [previewSku, setPreviewSku] = useState<string | null>(null);
+
   // Pagination
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -71,6 +92,33 @@ export default function InquiriesPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleInspectSku = async (sku: string) => {
+    if (previewSku === sku && previewProduct) {
+      // Toggle off if already showing this SKU
+      setPreviewProduct(null);
+      setPreviewSku(null);
+      return;
+    }
+    setPreviewSku(sku);
+    setIsLoadingPreview(true);
+    setPreviewProduct(null);
+    try {
+      const res = await fetch(`/api/products?search=${encodeURIComponent(sku)}&limit=1`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.products && data.products.length > 0) {
+          setPreviewProduct(data.products[0]);
+        } else {
+          setPreviewProduct(null);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch product preview", err);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
 
   const loadInquiries = async () => {
     setIsLoading(true);
@@ -122,6 +170,9 @@ export default function InquiriesPage() {
     } else {
       setMessages([]);
     }
+    // Reset product preview when switching inquiries
+    setPreviewProduct(null);
+    setPreviewSku(null);
   }, [selectedInquiry]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -678,14 +729,70 @@ export default function InquiriesPage() {
                     </span>
                     <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 space-y-2">
                       {selectedInquiry.productSkus.split(",").map((s) => s.trim()).map((sku) => (
-                        <div key={sku} className="flex justify-between items-center py-1 border-b border-outline-variant/10 last:border-b-0">
-                          <span className="font-mono text-xs text-emerald-deep font-semibold">SKU: {sku}</span>
-                          <a
-                            href={`/admin/inventory?search=${sku}`}
-                            className="px-3 py-1 border border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15 font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold"
-                          >
-                            Inspect
-                          </a>
+                        <div key={sku}>
+                          <div className="flex justify-between items-center py-1 border-b border-outline-variant/10 last:border-b-0">
+                            <span className="font-mono text-xs text-emerald-deep font-semibold">SKU: {sku}</span>
+                            <button
+                              onClick={() => handleInspectSku(sku)}
+                              className={`px-3 py-1 border font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold ${
+                                previewSku === sku
+                                  ? "border-emerald-deep bg-emerald-deep text-linen-white"
+                                  : "border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15"
+                              }`}
+                            >
+                              {isLoadingPreview && previewSku === sku ? "Loading..." : previewSku === sku && previewProduct ? "Close" : "Inspect"}
+                            </button>
+                          </div>
+                          {/* Inline product card for this SKU */}
+                          {previewSku === sku && (
+                            <div className="mt-2 mb-1">
+                              {isLoadingPreview ? (
+                                <div className="p-4 text-center text-on-surface-variant/55 text-[10px] font-label-caps uppercase tracking-widest border border-outline-variant/10 bg-white">
+                                  Fetching product data...
+                                </div>
+                              ) : previewProduct ? (
+                                <div className="border border-outline-variant/20 bg-white shadow-md p-4 flex gap-4">
+                                  {previewProduct.images?.length > 0 ? (
+                                    <img
+                                      src={previewProduct.images.find((i) => i.isPrimary)?.url || previewProduct.images[0].url}
+                                      alt={previewProduct.title}
+                                      className="w-20 h-20 object-cover border border-outline-variant/15 flex-shrink-0"
+                                    />
+                                  ) : (
+                                    <div className="w-20 h-20 bg-surface-container-low border border-outline-variant/15 flex items-center justify-center flex-shrink-0">
+                                      <span className="material-symbols-outlined text-on-surface-variant/30 text-2xl select-none">diamond</span>
+                                    </div>
+                                  )}
+                                  <div className="flex-grow space-y-1.5">
+                                    <p className="font-semibold text-emerald-deep text-sm">{previewProduct.title}</p>
+                                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-on-surface-variant">
+                                      <span><b>Type:</b> {previewProduct.gemType}</span>
+                                      <span><b>Carat:</b> {previewProduct.carat}ct</span>
+                                      {previewProduct.color && <span><b>Color:</b> {previewProduct.color}</span>}
+                                      {previewProduct.clarity && <span><b>Clarity:</b> {previewProduct.clarity}</span>}
+                                      {previewProduct.cut && <span><b>Cut:</b> {previewProduct.cut}</span>}
+                                      {previewProduct.origin && <span><b>Origin:</b> {previewProduct.origin}</span>}
+                                      {previewProduct.certification && <span><b>Cert:</b> {previewProduct.certification}</span>}
+                                    </div>
+                                    <div className="flex items-center gap-3 pt-1">
+                                      <span className="font-semibold text-champagne-gold text-sm">${Number(previewProduct.price).toLocaleString()}</span>
+                                      <span className={`text-[8px] font-label-caps uppercase tracking-wider px-2 py-0.5 border ${
+                                        previewProduct.inStock
+                                          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600"
+                                          : "bg-red-500/10 border-red-500/20 text-red-600"
+                                      }`}>
+                                        {previewProduct.inStock ? "In Stock" : "Sold"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="p-3 text-center text-on-surface-variant/55 text-[10px] border border-outline-variant/10 bg-white italic">
+                                  No product found for SKU "{sku}"
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -696,19 +803,75 @@ export default function InquiriesPage() {
                       Asset of Interest
                     </span>
                     {selectedInquiry.product ? (
-                      <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 flex justify-between items-center">
-                        <div>
-                          <p className="font-semibold text-emerald-deep">{selectedInquiry.product.title}</p>
-                          <p className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5 uppercase">
-                            SKU: {selectedInquiry.product.sku}
-                          </p>
+                      <div>
+                        <div className="p-3 bg-surface-container-low/20 border border-outline-variant/15 flex justify-between items-center">
+                          <div>
+                            <p className="font-semibold text-emerald-deep">{selectedInquiry.product.title}</p>
+                            <p className="text-[10px] text-on-surface-variant/70 font-mono mt-0.5 uppercase">
+                              SKU: {selectedInquiry.product.sku}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleInspectSku(selectedInquiry.product!.sku)}
+                            className={`px-3 py-1.5 border font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold ${
+                              previewSku === selectedInquiry.product.sku
+                                ? "border-emerald-deep bg-emerald-deep text-linen-white"
+                                : "border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15"
+                            }`}
+                          >
+                            {isLoadingPreview && previewSku === selectedInquiry.product.sku ? "Loading..." : previewSku === selectedInquiry.product.sku && previewProduct ? "Close" : "Inspect stone"}
+                          </button>
                         </div>
-                        <a
-                          href={`/admin/inventory?search=${selectedInquiry.product.sku}`}
-                          className="px-3 py-1.5 border border-champagne-gold text-emerald-deep hover:bg-champagne-gold/15 font-label-caps text-[8px] uppercase tracking-wider cursor-pointer transition-colors font-semibold"
-                        >
-                          Inspect stone
-                        </a>
+                        {/* Inline product card for single product */}
+                        {previewSku === selectedInquiry.product.sku && (
+                          <div className="mt-2">
+                            {isLoadingPreview ? (
+                              <div className="p-4 text-center text-on-surface-variant/55 text-[10px] font-label-caps uppercase tracking-widest border border-outline-variant/10 bg-white">
+                                Fetching product data...
+                              </div>
+                            ) : previewProduct ? (
+                              <div className="border border-outline-variant/20 bg-white shadow-md p-4 flex gap-4">
+                                {previewProduct.images?.length > 0 ? (
+                                  <img
+                                    src={previewProduct.images.find((i) => i.isPrimary)?.url || previewProduct.images[0].url}
+                                    alt={previewProduct.title}
+                                    className="w-24 h-24 object-cover border border-outline-variant/15 flex-shrink-0"
+                                  />
+                                ) : (
+                                  <div className="w-24 h-24 bg-surface-container-low border border-outline-variant/15 flex items-center justify-center flex-shrink-0">
+                                    <span className="material-symbols-outlined text-on-surface-variant/30 text-3xl select-none">diamond</span>
+                                  </div>
+                                )}
+                                <div className="flex-grow space-y-1.5">
+                                  <p className="font-semibold text-emerald-deep text-sm">{previewProduct.title}</p>
+                                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-on-surface-variant">
+                                    <span><b>Type:</b> {previewProduct.gemType}</span>
+                                    <span><b>Carat:</b> {previewProduct.carat}ct</span>
+                                    {previewProduct.color && <span><b>Color:</b> {previewProduct.color}</span>}
+                                    {previewProduct.clarity && <span><b>Clarity:</b> {previewProduct.clarity}</span>}
+                                    {previewProduct.cut && <span><b>Cut:</b> {previewProduct.cut}</span>}
+                                    {previewProduct.origin && <span><b>Origin:</b> {previewProduct.origin}</span>}
+                                    {previewProduct.certification && <span><b>Cert:</b> {previewProduct.certification}</span>}
+                                  </div>
+                                  <div className="flex items-center gap-3 pt-1">
+                                    <span className="font-semibold text-champagne-gold text-sm">${Number(previewProduct.price).toLocaleString()}</span>
+                                    <span className={`text-[8px] font-label-caps uppercase tracking-wider px-2 py-0.5 border ${
+                                      previewProduct.inStock
+                                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600"
+                                        : "bg-red-500/10 border-red-500/20 text-red-600"
+                                    }`}>
+                                      {previewProduct.inStock ? "In Stock" : "Sold"}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="p-3 text-center text-on-surface-variant/55 text-[10px] border border-outline-variant/10 bg-white italic">
+                                No product found for this SKU
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <p className="text-on-surface-variant/75 italic">General Concierge Consult (No specific gemstone linked)</p>
