@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 interface Product {
   id: string;
+  sku: string;
   title: string;
   category: string;
   carat: string;
@@ -18,6 +19,7 @@ interface Product {
 const initialNewArrivals: Product[] = [
   {
     id: "prod-1",
+    sku: "EM-4.12",
     title: "Vivid Green Muzo Emerald",
     category: "Emerald",
     carat: "4.12 ct",
@@ -25,11 +27,12 @@ const initialNewArrivals: Product[] = [
     origin: "Colombia (Muzo)",
     clarity: "Minor Oil (Insignia Grade)",
     certificate: "GRS Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCRF4Cca5I5N9aNG_CxkpcmRo3xRwGlq5fiEgUG4nf4pNX7DPWg2Nlq1sKSRyVN3HTqvwAJE9bb1vSQhBva_DDuQKclfg_YtTOEKNeAg2mSHH_3La3mApCMLDnmZI4dfPR8kyeItbTY3vWcnMPd2HPrPdEuVzC-Y9008crgF8EjwxhfrkUyj4j2gyQiW2VvCuWGb8HjKuCvbOqb4j1fGkhCvDvBsyDT6vu9onuqKX2riI_2vxQ893ktC8mcEaFgbiTfLbN2x-hYc8--",
+    imageUrl: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
   {
     id: "prod-2",
+    sku: "CS-8.45",
     title: "Royal Blue Ceylon Sapphire",
     category: "Sapphire",
     carat: "8.45 ct",
@@ -37,11 +40,12 @@ const initialNewArrivals: Product[] = [
     origin: "Sri Lanka (Ratnapura)",
     clarity: "No Heat (Pristine)",
     certificate: "SSEF Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCsIBXog5Vz8Z8GS0xOhDj2rkHSKBB2k3JtBA5OoRjF8qmNtgjwYlQKLr_8tmVFUtMqjI0K4jxIBYAsf1kmLBsbecJtj9Tb2JrQHSI-bkeTHkist9NUYSLAgzZPBYwTYRIGxygZzbhvMLL547VhMKZJLkyJSdGSBzDuZIieLxKXoZaCfy5qSrcIYoHG9OHI6RYNtkqNspK3M5WSllFWLAM_lf61ibO0VWalQ5RmrXhYQxiU9J6D8R_sdRC0u8XuDnkQHkym_QDTf2jH",
+    imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
   {
     id: "prod-3",
+    sku: "YD-3.20",
     title: "Fancy Intense Yellow Diamond",
     category: "Diamond",
     carat: "3.20 ct",
@@ -49,11 +53,12 @@ const initialNewArrivals: Product[] = [
     origin: "South Africa",
     clarity: "VVS1 (Ideal Scintillation)",
     certificate: "GIA Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuB3SoUOa3N3pLiBylikbr7TjBlxahWLQvbgIbqvy4gMA7L5igXjYYkFahBoT2O_PTMCBZn_JovsOyNg68iQckfn1M5EyPp1nlwniH7stMC6eLh7FEVv9KC_t1D_jjZgO2NUSBPpZsZraDAJhJb4CaPdduY5PykPFkZSuwpq7iEv7O-B__krjWPYxadiEAjDBj-6b4yuScWv9u3DoajQRl2PEALHaZCQB-SkMLGgEqx3dZEU87k7qlqYJ6xbNMAy18DoXl3b8EPI7Jqs",
+    imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
   {
     id: "prod-4",
+    sku: "RB-2.80",
     title: "Burmese Pigeon Blood Ruby",
     category: "Ruby",
     carat: "2.80 ct",
@@ -61,11 +66,12 @@ const initialNewArrivals: Product[] = [
     origin: "Myanmar (Mogok Valley)",
     clarity: "No Heat (High Fluorescence)",
     certificate: "GRS Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDKhsHXSE1e1-v_t1QXjB33P9bCcmXIcdV-lcfAHQFNyhn9-1xxh5YGSfxW5YDfMn8_tyhzmfOBa_GMT0ZsOq3E7Oly5_hgiex2QW5NCB4Za23TZIufc1M4LTMaynEQ0V0UUaUCyI7xn0juKS1FOJDJd4V7B4Tp7r0W_zkQZlEsfAkHK1CwaCXqC9iQjc5fImy4lmOl1EYVJa_Krofqa1RICx59lOa3aWcj_BW-yz1ZEHG7hEjiRqP3g6C69DXoBpwQGRcfPjcOaS4G",
+    imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
   {
     id: "prod-5",
+    sku: "SP-5.30",
     title: "Vivid Pink Mahenge Spinel",
     category: "Spinel",
     carat: "5.30 ct",
@@ -73,11 +79,12 @@ const initialNewArrivals: Product[] = [
     origin: "Tanzania (Mahenge)",
     clarity: "Eye Clean (Collector's Choice)",
     certificate: "GRS Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDKhsHXSE1e1-v_t1QXjB33P9bCcmXIcdV-lcfAHQFNyhn9-1xxh5YGSfxW5YDfMn8_tyhzmfOBa_GMT0ZsOq3E7Oly5_hgiex2QW5NCB4Za23TZIufc1M4LTMaynEQ0V0UUaUCyI7xn0juKS1FOJDJd4V7B4Tp7r0W_zkQZlEsfAkHK1CwaCXqC9iQjc5fImy4lmOl1EYVJa_Krofqa1RICx59lOa3aWcj_BW-yz1ZEHG7hEjiRqP3g6C69DXoBpwQGRcfPjcOaS4G",
+    imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
   {
     id: "prod-6",
+    sku: "TM-6.15",
     title: "Neon Paraiba Tourmaline",
     category: "Tourmaline",
     carat: "6.15 ct",
@@ -85,7 +92,7 @@ const initialNewArrivals: Product[] = [
     origin: "Brazil (Batalha Mine)",
     clarity: "Vivid Copper Bearing",
     certificate: "SSEF Certified",
-    imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCRF4Cca5I5N9aNG_CxkpcmRo3xRwGlq5fiEgUG4nf4pNX7DPWg2Nlq1sKSRyVN3HTqvwAJE9bb1vSQhBva_DDuQKclfg_YtTOEKNeAg2mSHH_3La3mApCMLDnmZI4dfPR8kyeItbTY3vWcnMPd2HPrPdEuVzC-Y9008crgF8EjwxhfrkUyj4j2gyQiW2VvCuWGb8HjKuCvbOqb4j1fGkhCvDvBsyDT6vu9onuqKX2riI_2vxQ893ktC8mcEaFgbiTfLbN2x-hYc8--",
+    imageUrl: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&q=80&w=800",
     price: "Price on Application",
   },
 ];
@@ -109,6 +116,7 @@ export default function ArrivalsSlider() {
               const primaryImage = dbProduct.images?.find((img: any) => img.isPrimary) || dbProduct.images?.[0];
               return {
                 id: dbProduct.id,
+                sku: dbProduct.sku,
                 title: dbProduct.title,
                 category: dbProduct.category?.name || "Gemstone",
                 carat: `${dbProduct.carat} ct`,
@@ -226,7 +234,7 @@ export default function ArrivalsSlider() {
         {newArrivals.map((product) => (
           <a
             key={product.id}
-            href={`/gemstones/${product.id}`}
+            href={`/gemstones/${product.sku}`}
             className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] max-w-[380px] flex-none snap-start group bg-surface-container-lowest border border-outline-variant/30 transition-all duration-500 hover:border-champagne-gold/60 hover:shadow-xl relative flex flex-col justify-between"
           >
             {/* Image Box */}

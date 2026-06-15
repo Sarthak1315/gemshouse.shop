@@ -188,7 +188,7 @@ export default function ReviewsPage() {
                     <td className="py-4 px-4">
                       {review.product ? (
                         <a
-                          href={`/gemstones/${review.productId}`}
+                          href={`/gemstones/${review.product.sku}`}
                           target="_blank"
                           className="font-semibold text-on-surface hover:text-emerald-deep hover:underline transition-colors block"
                         >

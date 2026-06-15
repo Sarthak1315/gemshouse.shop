@@ -264,7 +264,7 @@ export default function CollectionsGrid() {
                   direction="up"
                   delay={(idx % 3) * 100}
                 >
-                  <a href={`/gemstones/${product.id}`} className="block h-full group">
+                  <a href={`/gemstones/${product.sku}`} className="block h-full group">
                     <article className="flex flex-col bg-surface-container-lowest border border-outline-variant/30 rounded-none overflow-hidden hover:border-champagne-gold/60 hover:shadow-xl transition-all duration-500 relative h-full">
                       {/* Status badge */}
                       <div className="absolute top-4 left-4 z-10 bg-emerald-deep text-linen-white font-label-caps text-[9px] uppercase px-2.5 py-1 tracking-widest border border-champagne-gold/30">
