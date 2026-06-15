@@ -15,7 +15,7 @@ function AdminLoginContent() {
   useEffect(() => {
     async function checkSession() {
       try {
-        const res = await fetch("/api/auth");
+        const res = await fetch("/api/admin/auth");
         const data = await res.json();
         if (data?.user?.role === "ADMIN") {
           const redirectTo = searchParams.get("from") || "/admin/dashboard";
@@ -34,7 +34,7 @@ function AdminLoginContent() {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth", {
+      const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function AdminLoginContent() {
         setError("Access restricted to administrators.");
         setIsLoading(false);
         // Clean up session since they logged in but are not admin
-        await fetch("/api/auth", { method: "DELETE" });
+        await fetch("/api/admin/auth", { method: "DELETE" });
         return;
       }
 

@@ -2,18 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 
-interface Role {
-  id: string;
-  name: string;
-  description: string | null;
-}
-
 interface User {
   id: string;
   name: string | null;
   email: string;
-  roleId: string;
-  role: Role;
+  isBusinessUser: boolean;
   createdAt: string;
 }
 
@@ -26,29 +19,28 @@ interface CurrentUser {
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   // Search & Filter
   const [search, setSearch] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [businessFilter, setBusinessFilter] = useState("all"); // all, standard, business
 
   // Modal / Form state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPassword, setFormPassword] = useState("");
-  const [formRoleId, setFormRoleId] = useState("");
+  const [formIsBusinessUser, setFormIsBusinessUser] = useState(false);
 
   // Alerts
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load Session User (to prevent self-deletion)
+  // Load Session User (Admin User checking administrative session)
   const loadCurrentUser = async () => {
     try {
-      const res = await fetch("/api/auth");
+      const res = await fetch("/api/admin/auth");
       if (res.ok) {
         const data = await res.json();
         if (data?.user) {
@@ -60,22 +52,26 @@ export default function UsersPage() {
     }
   };
 
-  const loadUsersAndRoles = async () => {
+  const loadUsers = async () => {
     setIsLoading(true);
     setErrorMsg(null);
     try {
       const queryParams = new URLSearchParams({
         search,
-        roleId: selectedRole,
       });
+
+      if (businessFilter === "business") {
+        queryParams.append("isBusinessUser", "true");
+      } else if (businessFilter === "standard") {
+        queryParams.append("isBusinessUser", "false");
+      }
 
       const res = await fetch(`/api/users?${queryParams}`);
       if (res.ok) {
         const data = await res.json();
         setUsers(data.users || []);
-        setRoles(data.roles || []);
       } else {
-        setErrorMsg("Failed to load user list");
+        setErrorMsg("Failed to load storefront user list");
       }
     } catch (err) {
       console.error("Error loading users", err);
@@ -87,19 +83,19 @@ export default function UsersPage() {
 
   useEffect(() => {
     loadCurrentUser();
-    loadUsersAndRoles();
-  }, [selectedRole]);
+    loadUsers();
+  }, [businessFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loadUsersAndRoles();
+    loadUsers();
   };
 
   const openCreateModal = () => {
     setFormName("");
     setFormEmail("");
     setFormPassword("");
-    setFormRoleId(roles[0]?.id || "");
+    setFormIsBusinessUser(false);
     setErrorMsg(null);
     setIsModalOpen(true);
   };
@@ -112,7 +108,7 @@ export default function UsersPage() {
       name: formName,
       email: formEmail,
       password: formPassword,
-      roleId: formRoleId,
+      isBusinessUser: formIsBusinessUser,
     };
 
     try {
@@ -130,45 +126,40 @@ export default function UsersPage() {
 
       setSuccessMsg("User account created successfully!");
       setIsModalOpen(false);
-      loadUsersAndRoles();
+      loadUsers();
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err) {
       setErrorMsg("Failed to create user account");
     }
   };
 
-  const handleRoleChange = async (userId: string, newRoleId: string) => {
+  const handleBusinessToggle = async (userId: string, currentVal: boolean) => {
     setErrorMsg(null);
     try {
       const res = await fetch(`/api/users/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roleId: newRoleId }),
+        body: JSON.stringify({ isBusinessUser: !currentVal }),
       });
 
       if (!res.ok) {
         const data = await res.json();
-        setErrorMsg(data.error || "Failed to update role");
+        setErrorMsg(data.error || "Failed to update business status");
         return;
       }
 
       const updated = await res.json();
       setUsers((prev) => prev.map((u) => (u.id === userId ? updated : u)));
       
-      setSuccessMsg("User role updated successfully!");
+      setSuccessMsg("User business status updated successfully!");
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err) {
-      setErrorMsg("Failed to modify user role");
+      setErrorMsg("Failed to modify user status");
     }
   };
 
   const handleDelete = async (user: User) => {
-    if (currentUser && currentUser.id === user.id) {
-      alert("Security Block: You cannot delete your own account while logged in.");
-      return;
-    }
-
-    if (!confirm(`Are you certain you want to revoke database credentials and delete user '${user.name || user.email}'?`)) return;
+    if (!confirm(`Are you certain you want to revoke credentials and delete storefront user '${user.name || user.email}'?`)) return;
 
     setErrorMsg(null);
     try {
@@ -180,7 +171,7 @@ export default function UsersPage() {
       }
 
       setSuccessMsg("User credentials revoked and deleted successfully!");
-      loadUsersAndRoles();
+      loadUsers();
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err) {
       setErrorMsg("Failed to delete user");
@@ -196,7 +187,7 @@ export default function UsersPage() {
             Access Control
           </span>
           <h1 className="font-headline-sm text-2xl text-emerald-deep font-semibold tracking-wide">
-            Console Users
+            Storefront Customers
           </h1>
         </div>
         <div>
@@ -205,7 +196,7 @@ export default function UsersPage() {
             className="px-5 py-3 bg-emerald-deep text-linen-white hover:bg-emerald-deep/90 font-label-caps text-[10px] uppercase tracking-widest border border-champagne-gold/30 flex items-center gap-2 cursor-pointer transition-colors shadow"
           >
             <span className="material-symbols-outlined text-base select-none">person_add</span>
-            Create User Account
+            Create Storefront User
           </button>
         </div>
       </div>
@@ -243,18 +234,13 @@ export default function UsersPage() {
 
         <div className="flex gap-3 w-full md:w-auto justify-end">
           <select
-            value={selectedRole}
-            onChange={(e) => {
-              setSelectedRole(e.target.value);
-            }}
+            value={businessFilter}
+            onChange={(e) => setBusinessFilter(e.target.value)}
             className="bg-surface-container-low/40 border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-xs py-2 px-3 transition-colors rounded-none text-on-surface font-body-md cursor-pointer"
           >
-            <option value="">All Roles</option>
-            {roles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-              </option>
-            ))}
+            <option value="all">All Clients</option>
+            <option value="standard">Standard Retail Users</option>
+            <option value="business">B2B Business Clients</option>
           </select>
         </div>
       </div>
@@ -270,7 +256,7 @@ export default function UsersPage() {
             <thead>
               <tr className="border-b border-outline-variant/20 bg-surface-container-low/10">
                 <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  User Name
+                  Customer Name
                 </th>
                 <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
                   Email Credentials
@@ -279,7 +265,7 @@ export default function UsersPage() {
                   Registered Date
                 </th>
                 <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
-                  Privilege Level Role
+                  Client Type
                 </th>
                 <th className="p-4 font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold text-right">
                   Actions
@@ -288,19 +274,13 @@ export default function UsersPage() {
             </thead>
             <tbody className="text-xs font-body-md">
               {users.map((user) => {
-                const isSelf = currentUser && currentUser.id === user.id;
                 return (
                   <tr
                     key={user.id}
                     className="border-b border-outline-variant/10 hover:bg-surface-container-low/30 transition-colors"
                   >
-                    <td className="p-4 font-semibold text-emerald-deep flex items-center gap-2">
-                      {user.name || "Unnamed Officer"}
-                      {isSelf && (
-                        <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[8px] font-label-caps tracking-widest px-1.5 py-0.5 rounded-none font-bold">
-                          You
-                        </span>
-                      )}
+                    <td className="p-4 font-semibold text-emerald-deep">
+                      {user.name || "Unnamed Customer"}
                     </td>
                     <td className="p-4 font-mono text-on-surface">
                       {user.email}
@@ -313,32 +293,22 @@ export default function UsersPage() {
                       })}
                     </td>
                     <td className="p-4">
-                      {isSelf ? (
-                        <span className="inline-flex px-2 py-1 text-[9px] font-label-caps bg-emerald-deep text-linen-white uppercase tracking-wider font-semibold border border-champagne-gold/25">
-                          {user.role.name}
-                        </span>
-                      ) : (
-                        <select
-                          value={user.roleId}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                          className="text-[9px] font-label-caps uppercase tracking-wider py-1 px-2.5 border border-outline-variant bg-surface text-on-surface rounded-none cursor-pointer focus:outline-none focus:border-emerald-deep"
-                        >
-                          {roles.map((r) => (
-                            <option key={r.id} value={r.id}>
-                              {r.name}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      <button
+                        onClick={() => handleBusinessToggle(user.id, user.isBusinessUser)}
+                        className={`px-2.5 py-1 text-[8px] font-label-caps uppercase tracking-wider font-semibold border transition-all cursor-pointer ${
+                          user.isBusinessUser
+                            ? "bg-emerald-deep text-linen-white border-champagne-gold/25"
+                            : "bg-surface-container-low text-on-surface-variant border-outline-variant/30 hover:border-emerald-deep"
+                        }`}
+                      >
+                        {user.isBusinessUser ? "B2B Business" : "Retail User"}
+                      </button>
                     </td>
                     <td className="p-4 text-right">
                       <button
                         onClick={() => handleDelete(user)}
-                        disabled={isSelf ?? false}
-                        className={`text-on-surface-variant hover:text-red-600 p-1.5 cursor-pointer transition-colors ${
-                          isSelf ? "opacity-30 cursor-not-allowed hover:text-on-surface-variant" : ""
-                        }`}
-                        title={isSelf ? "Cannot delete self" : "Revoke Access"}
+                        className="text-on-surface-variant hover:text-red-600 p-1.5 cursor-pointer transition-colors"
+                        title="Delete User"
                       >
                         <span className="material-symbols-outlined text-base select-none">person_remove</span>
                       </button>
@@ -354,7 +324,7 @@ export default function UsersPage() {
           <span className="material-symbols-outlined text-champagne-gold text-4xl mb-3 select-none">
             group
           </span>
-          <p className="text-on-surface-variant text-sm">No console users found.</p>
+          <p className="text-on-surface-variant text-sm">No storefront users found.</p>
         </div>
       )}
 
@@ -364,7 +334,7 @@ export default function UsersPage() {
           <div className="bg-surface-container-lowest border border-outline-variant/30 w-full max-w-md shadow-2xl">
             <div className="px-6 py-4 border-b border-outline-variant/15 flex justify-between items-center bg-surface-container-low/30">
               <h3 className="font-headline-sm text-base text-emerald-deep font-semibold tracking-wide uppercase">
-                Register Platform Credentials
+                Register Storefront Credentials
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -383,7 +353,7 @@ export default function UsersPage() {
                   type="text"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  placeholder="e.g. Sarthak Patel"
+                  placeholder="e.g. Jane Doe"
                   className="w-full bg-surface-container-low/40 border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-xs py-2 px-3 transition-colors rounded-none text-on-surface font-body-md"
                 />
               </div>
@@ -397,7 +367,7 @@ export default function UsersPage() {
                   required
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder="e.g. partner@gemshouse.shop"
+                  placeholder="e.g. client@gemshouse.shop"
                   className="w-full bg-surface-container-low/40 border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-xs py-2 px-3 transition-colors rounded-none text-on-surface font-mono"
                 />
               </div>
@@ -416,22 +386,20 @@ export default function UsersPage() {
                 />
               </div>
 
-              <div>
-                <label className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider block mb-1.5">
-                  Privilege Role *
-                </label>
-                <select
-                  required
-                  value={formRoleId}
-                  onChange={(e) => setFormRoleId(e.target.value)}
-                  className="w-full bg-surface-container-low/40 border border-outline-variant/35 focus:border-emerald-deep focus:outline-none text-xs py-2 px-3 transition-colors rounded-none text-on-surface font-body-md cursor-pointer"
+              <div className="flex items-center gap-3 py-1">
+                <input
+                  type="checkbox"
+                  id="formIsBusinessUser"
+                  checked={formIsBusinessUser}
+                  onChange={(e) => setFormIsBusinessUser(e.target.checked)}
+                  className="w-4 h-4 border border-outline-variant rounded-none text-emerald-deep focus:ring-0 focus:ring-offset-0 accent-emerald-deep cursor-pointer"
+                />
+                <label
+                  htmlFor="formIsBusinessUser"
+                  className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider select-none cursor-pointer"
                 >
-                  {roles.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.name} - {r.description || "No description"}
-                    </option>
-                  ))}
-                </select>
+                  Verify as B2B Business Client / Wholesale Buyer
+                </label>
               </div>
 
               <div className="border-t border-outline-variant/15 pt-5 flex justify-end gap-3 bg-surface-container-low/10 px-6 py-4 -mx-6 -mb-6">

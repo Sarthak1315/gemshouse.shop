@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       where: { email },
     });
 
-    if (!admin || !admin.passwordHash) {
+    if (!admin) {
       return errorResponse("Invalid email or password", 401);
     }
 

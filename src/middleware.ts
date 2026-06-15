@@ -65,7 +65,7 @@ export async function middleware(request: NextRequest) {
     const adminUser = await getAdminUser(request);
     if (!adminUser) {
       // Redirect to login page
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/admin/login", request.url);
       // Keep track of redirect URL
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);

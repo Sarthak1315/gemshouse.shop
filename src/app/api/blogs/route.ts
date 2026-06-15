@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 import { validators } from "@/lib/validations";
-import { getSessionUser } from "@/lib/auth";
+import { getSessionAdmin } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -50,8 +50,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Auth check: get session user
-    const adminUser = await getSessionUser(request);
+    // Auth check: get session admin
+    const adminUser = await getSessionAdmin(request);
     if (!adminUser) {
       return errorResponse("Unauthorized access", 401);
     }
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         featuredImage,
         published,
         publishedAt: published ? new Date() : null,
-        authorId: adminUser.userId,
+        authorId: adminUser.adminId,
         categoryId,
       },
     });

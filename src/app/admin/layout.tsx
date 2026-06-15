@@ -34,13 +34,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     async function loadUser() {
       try {
-        const res = await fetch("/api/auth");
+        const res = await fetch("/api/admin/auth");
         const data = await res.json();
         if (data?.user) {
           setAdminUser(data.user);
         } else {
           // Fallback redirect if session died
-          router.push("/login");
+          router.push("/admin/login");
         }
       } catch (err) {
         console.error("Failed loading session user", err);
@@ -51,11 +51,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("/api/auth", {
+      const res = await fetch("/api/admin/auth", {
         method: "DELETE",
       });
       if (res.ok) {
-        router.push("/login");
+        router.push("/admin/login");
       }
     } catch (err) {
       console.error("Logout failed", err);
