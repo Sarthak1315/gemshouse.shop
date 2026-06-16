@@ -10,20 +10,50 @@ interface AdminUser {
   role: string;
 }
 
-const menuItems = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
-  { label: "Inventory", href: "/admin/inventory", icon: "inventory_2" },
-  { label: "Collections", href: "/admin/collections", icon: "folder_open" },
-  { label: "Menu Management", href: "/admin/menus", icon: "schema" },
-  { label: "Reviews", href: "/admin/reviews", icon: "star" },
-  { label: "FAQs", href: "/admin/faqs", icon: "quiz" },
-  { label: "Ateliers Network", href: "/admin/ateliers", icon: "public" },
-  { label: "Blogs", href: "/admin/blogs", icon: "article" },
-  { label: "Inquiries", href: "/admin/inquiries", icon: "mail" },
-  { label: "Dealers", href: "/admin/dealers", icon: "handshake" },
-  { label: "Users", href: "/admin/users", icon: "group" },
-  { label: "Subscribers", href: "/admin/subscribers", icon: "subscriptions" },
-  { label: "Settings", href: "/admin/settings", icon: "settings" },
+interface MenuItem {
+  label: string;
+  href: string;
+  icon: string;
+}
+
+interface MenuGroup {
+  title?: string;
+  items: MenuItem[];
+}
+
+const menuGroups: MenuGroup[] = [
+  {
+    title: "Overview",
+    items: [
+      { label: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
+      { label: "Inquiries", href: "/admin/inquiries", icon: "mail" },
+      { label: "Subscribers", href: "/admin/subscribers", icon: "subscriptions" },
+      { label: "Dealers", href: "/admin/dealers", icon: "handshake" },
+      { label: "Ateliers Network", href: "/admin/ateliers", icon: "public" },
+    ],
+  },
+  {
+    items: [
+      { label: "Inventory", href: "/admin/inventory", icon: "inventory_2" },
+      { label: "Collections", href: "/admin/collections", icon: "folder_open" },
+    ],
+  },
+  {
+    title: "Storefront",
+    items: [
+      { label: "Menu Management", href: "/admin/menus", icon: "schema" },
+      { label: "Reviews", href: "/admin/reviews", icon: "star" },
+      { label: "FAQs", href: "/admin/faqs", icon: "quiz" },
+      { label: "Blogs", href: "/admin/blogs", icon: "article" },
+    ],
+  },
+  {
+    title: "Settings",
+    items: [
+      { label: "Users", href: "/admin/users", icon: "group" },
+      { label: "Settings", href: "/admin/settings", icon: "settings" },
+    ],
+  },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -98,32 +128,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto px-4 space-y-1 scrollbar-none">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`flex items-center px-4 py-3 rounded transition-all duration-200 group cursor-pointer ${
-                  isActive
-                    ? "bg-emerald-deep text-linen-white"
-                    : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
-                }`}
-              >
-                <span
-                  className={`material-symbols-outlined mr-3 text-lg select-none ${
-                    isActive ? "text-champagne-gold" : "group-hover:text-champagne-gold transition-colors"
-                  }`}
-                >
-                  {item.icon}
-                </span>
-                <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
-                  {item.label}
-                </span>
-              </a>
-            );
-          })}
+        <nav className="flex-1 overflow-y-auto px-4 space-y-4 scrollbar-none">
+          {menuGroups.map((group, groupIdx) => (
+            <div key={groupIdx} className="space-y-1">
+              {group.title && (
+                <div className="font-label-caps text-[9px] text-on-surface-variant/40 dark:text-linen-white/30 uppercase tracking-widest px-4 pt-2 pb-1 select-none font-semibold">
+                  {group.title}
+                </div>
+              )}
+              {group.items.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center px-4 py-2.5 rounded transition-all duration-200 group cursor-pointer ${
+                      isActive
+                        ? "bg-emerald-deep text-linen-white"
+                        : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined mr-3 text-lg select-none ${
+                        isActive ? "text-champagne-gold" : "group-hover:text-champagne-gold transition-colors"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
+                      {item.label}
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* Footer */}
@@ -159,55 +198,62 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         onClick={() => setIsMobileOpen(false)}
       >
         <div
-          className={`w-[260px] h-full bg-surface-container-lowest dark:bg-charcoal flex flex-col justify-between p-4 shadow-2xl transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${
+          className={`w-[260px] h-full bg-surface-container-lowest dark:bg-charcoal flex flex-col p-4 shadow-2xl transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${
             isMobileOpen ? "translate-x-0" : "-translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div>
-            <div className="flex justify-between items-center mb-6 pb-2 border-b border-outline-variant/20">
-              <span className="font-headline-sm text-base text-emerald-deep dark:text-linen-white tracking-wider">
-                GEMSHOUSE
-              </span>
-              <button
-                onClick={() => setIsMobileOpen(false)}
-                className="text-on-surface-variant hover:text-emerald-deep dark:hover:text-champagne-gold p-1 cursor-pointer"
-              >
-                <span className="material-symbols-outlined select-none">close</span>
-              </button>
-            </div>
-
-            <nav className="space-y-1">
-              {menuItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileOpen(false)}
-                    className={`flex items-center px-4 py-2.5 rounded transition-all duration-200 group cursor-pointer ${
-                      isActive
-                        ? "bg-emerald-deep text-linen-white"
-                        : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
-                    }`}
-                  >
-                    <span
-                      className={`material-symbols-outlined mr-3 text-lg select-none ${
-                        isActive ? "text-champagne-gold" : "group-hover:text-champagne-gold"
-                      }`}
-                    >
-                      {item.icon}
-                    </span>
-                    <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
-                      {item.label}
-                    </span>
-                  </a>
-                );
-              })}
-            </nav>
+          <div className="flex justify-between items-center mb-6 pb-2 border-b border-outline-variant/20 flex-shrink-0">
+            <span className="font-headline-sm text-base text-emerald-deep dark:text-linen-white tracking-wider">
+              GEMSHOUSE
+            </span>
+            <button
+              onClick={() => setIsMobileOpen(false)}
+              className="text-on-surface-variant hover:text-emerald-deep dark:hover:text-champagne-gold p-1 cursor-pointer"
+            >
+              <span className="material-symbols-outlined select-none">close</span>
+            </button>
           </div>
 
-          <div className="pt-4 border-t border-outline-variant/20 space-y-2">
+          <nav className="flex-1 overflow-y-auto space-y-4 scrollbar-none pr-1 mb-4">
+            {menuGroups.map((group, groupIdx) => (
+              <div key={groupIdx} className="space-y-1">
+                {group.title && (
+                  <div className="font-label-caps text-[9px] text-on-surface-variant/40 dark:text-linen-white/30 uppercase tracking-widest px-4 pt-2 pb-1 select-none font-semibold">
+                    {group.title}
+                  </div>
+                )}
+                {group.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileOpen(false)}
+                      className={`flex items-center px-4 py-2.5 rounded transition-all duration-200 group cursor-pointer ${
+                        isActive
+                          ? "bg-emerald-deep text-linen-white"
+                          : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
+                      }`}
+                    >
+                      <span
+                        className={`material-symbols-outlined mr-3 text-lg select-none ${
+                          isActive ? "text-champagne-gold" : "group-hover:text-champagne-gold"
+                        }`}
+                      >
+                        {item.icon}
+                      </span>
+                      <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
+                        {item.label}
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
+            ))}
+          </nav>
+
+          <div className="pt-4 border-t border-outline-variant/20 space-y-2 flex-shrink-0">
             <button
               onClick={() => {
                 setIsMobileOpen(false);
