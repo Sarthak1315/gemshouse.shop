@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Normal Admin Protection for /admin/*
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const adminUser = await getAdminUser(request);
     if (!adminUser) {
       // Redirect to login page
