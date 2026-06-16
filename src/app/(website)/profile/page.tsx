@@ -253,11 +253,56 @@ export default function ProfilePage() {
 
   if (isLoadingUser) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="relative w-12 h-12 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-2 border-champagne-gold/20 animate-ping"></div>
-          <div className="absolute w-8 h-8 rounded-full border-2 border-t-emerald-deep border-r-emerald-deep border-b-champagne-gold border-l-champagne-gold animate-spin"></div>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto animate-pulse">
+          {/* Welcome Section Skeleton */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-outline-variant/20 pb-8">
+            <div className="space-y-3 w-full max-w-md">
+              <div className="h-3 w-40 bg-[#c4a482]/20 rounded-sm" />
+              <div className="h-8 w-3/4 bg-emerald-deep/10 rounded-sm" />
+              <div className="h-4.5 w-1/2 bg-on-surface-variant/10 rounded-sm" />
+            </div>
+            <div className="w-28 h-10 border border-outline-variant/20 bg-on-surface-variant/5 rounded-none" />
+          </div>
+
+          {/* Grid Layout Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Navigation Sidebar Skeleton */}
+            <div className="lg:col-span-3 flex flex-col gap-3">
+              {[1, 2].map((i) => (
+                <div key={i} className="w-full h-14 bg-surface-container-lowest border border-outline-variant/10 rounded-none flex items-center justify-between px-6">
+                  <div className="h-3.5 w-28 bg-on-surface-variant/10 rounded-sm" />
+                  <div className="h-4 w-4 bg-on-surface-variant/10 rounded-sm" />
+                </div>
+              ))}
+            </div>
+
+            {/* Main Workspace Skeleton */}
+            <div className="lg:col-span-9">
+              <div className="bg-surface-container-lowest/80 border border-outline-variant/20 p-6 md:p-8 shadow-xl">
+                <div className="h-5 w-48 bg-emerald-deep/10 rounded-sm mb-6" />
+                
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="p-5 border border-outline-variant/15 bg-charcoal/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <div className="space-y-2.5 w-full">
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-32 bg-emerald-deep/10 rounded-sm" />
+                          <div className="h-4 w-16 bg-[#c4a482]/20 rounded-sm" />
+                        </div>
+                        <div className="h-3.5 w-5/6 bg-on-surface-variant/10 rounded-sm" />
+                        <div className="h-2.5 w-24 bg-on-surface-variant/10 rounded-sm" />
+                      </div>
+                      <div className="h-4 w-20 bg-[#c4a482]/25 rounded-sm self-end md:self-auto" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -339,8 +384,23 @@ export default function ProfilePage() {
                     </h2>
 
                     {isLoadingInquiries ? (
-                      <div className="py-12 text-center text-on-surface-variant/55 text-xs font-label-caps tracking-widest uppercase">
-                        Fetching vault transactions...
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={`shimmer-inquiry-${i}`}
+                            className="p-5 border border-outline-variant/15 bg-charcoal/5 animate-pulse flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+                          >
+                            <div className="space-y-2.5 w-full">
+                              <div className="flex items-center gap-2">
+                                <div className="h-4 w-32 bg-emerald-deep/10 rounded-sm" />
+                                <div className="h-4 w-16 bg-[#c4a482]/20 rounded-sm" />
+                              </div>
+                              <div className="h-3.5 w-5/6 bg-on-surface-variant/10 rounded-sm" />
+                              <div className="h-2.5 w-24 bg-on-surface-variant/10 rounded-sm" />
+                            </div>
+                            <div className="h-4 w-20 bg-[#c4a482]/25 rounded-sm self-end md:self-auto" />
+                          </div>
+                        ))}
                       </div>
                     ) : inquiries.length === 0 ? (
                       <div className="py-12 text-center text-on-surface-variant/45 text-xs">
@@ -425,8 +485,19 @@ export default function ProfilePage() {
                     {/* Messages Body */}
                     <div className="flex-grow p-6 overflow-y-auto space-y-4">
                       {isLoadingMessages ? (
-                        <div className="py-12 text-center text-on-surface-variant/55 text-xs font-label-caps tracking-widest uppercase">
-                          Decrypting discussion logs...
+                        <div className="space-y-4 animate-pulse">
+                          {[1, 2, 3].map((i) => {
+                            const isAdmin = i % 2 === 0;
+                            return (
+                              <div key={`shimmer-message-${i}`} className={`flex ${isAdmin ? "justify-start" : "justify-end"}`}>
+                                <div className="max-w-[70%] w-64 p-4 border bg-on-surface-variant/5 border-outline-variant/20 rounded-none space-y-2">
+                                  <div className="h-2.5 w-16 bg-[#c4a482]/20 rounded-sm" />
+                                  <div className="h-3.5 w-full bg-emerald-deep/10 rounded-sm" />
+                                  <div className="h-3.5 w-3/4 bg-emerald-deep/10 rounded-sm" />
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       ) : messages.length === 0 ? (
                         <div className="py-12 text-center text-on-surface-variant/40 text-xs">

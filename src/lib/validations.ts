@@ -320,6 +320,52 @@ export const validators = {
       },
     };
   },
+
+  atelier(body: any): ValidationResult<any> {
+    const errors: ValidationError[] = [];
+    const city = String(body?.city || "").trim();
+    const name = String(body?.name || "").trim();
+    const role = String(body?.role || "").trim();
+    const phone = String(body?.phone || "").trim();
+    const address = String(body?.address || "").trim();
+    const description = String(body?.description || "").trim();
+    const mapCoords = String(body?.mapCoords || "").trim();
+    const order = body?.order !== undefined ? parseInt(body.order, 10) : 0;
+
+    let services: string[] = [];
+    if (Array.isArray(body?.services)) {
+      services = body.services.map((s: any) => String(s || "").trim()).filter(Boolean);
+    } else if (typeof body?.services === "string") {
+      services = body.services.split("\n").map((s: string) => s.trim()).filter(Boolean);
+    }
+
+    if (!city) errors.push({ field: "city", message: "City is required" });
+    if (!name) errors.push({ field: "name", message: "Name is required" });
+    if (!role) errors.push({ field: "role", message: "Role is required" });
+    if (!phone) errors.push({ field: "phone", message: "Phone is required" });
+    if (!address) errors.push({ field: "address", message: "Address is required" });
+    if (!description) errors.push({ field: "description", message: "Description is required" });
+    if (!mapCoords) errors.push({ field: "mapCoords", message: "Map coordinates are required" });
+    if (services.length === 0) {
+      errors.push({ field: "services", message: "At least one service is required" });
+    }
+
+    if (errors.length > 0) return { success: false, errors };
+    return {
+      success: true,
+      data: {
+        city,
+        name,
+        role,
+        phone,
+        address,
+        services,
+        description,
+        mapCoords,
+        order: isNaN(order) ? 0 : order,
+      },
+    };
+  },
 };
 
 export const schemas = {};

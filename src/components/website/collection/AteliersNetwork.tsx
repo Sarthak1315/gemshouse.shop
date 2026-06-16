@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Atelier {
   id: string;
@@ -11,10 +11,10 @@ interface Atelier {
   address: string;
   services: string[];
   description: string;
-  mapCoords: string; // for display
+  mapCoords: string;
 }
 
-const ateliers: Atelier[] = [
+const fallbackAteliers: Atelier[] = [
   {
     id: "london",
     city: "London",
@@ -78,9 +78,97 @@ const ateliers: Atelier[] = [
 ];
 
 export default function AteliersNetwork() {
-  const [activeAtelier, setActiveAtelier] = useState<string>("london");
+  const [ateliers, setAteliers] = useState<Atelier[]>([]);
+  const [activeAtelier, setActiveAtelier] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadAteliers() {
+      try {
+        const res = await fetch("/api/ateliers");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setAteliers(data);
+            setActiveAtelier(data[0].id);
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Failed loading ateliers, falling back to static", err);
+      }
+      setAteliers(fallbackAteliers);
+      setActiveAtelier(fallbackAteliers[0].id);
+      setIsLoading(false);
+    }
+
+    loadAteliers();
+  }, []);
 
   const currentAtelier = ateliers.find((a) => a.id === activeAtelier) || ateliers[0];
+
+  if (isLoading) {
+    return (
+      <div className="bg-charcoal text-surface-variant p-8 md:p-12 relative overflow-hidden flex flex-col justify-between min-h-[450px] border border-outline/10 group">
+        <div className="absolute inset-0 bg-gold-glimmer/[0.03] pointer-events-none z-0"></div>
+        <div className="absolute -right-24 -top-24 w-96 h-96 bg-champagne-gold/5 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+        <div className="relative z-10 w-full">
+          {/* Title skeleton */}
+          <div className="flex items-center gap-3 mb-8 animate-pulse">
+            <div className="w-8 h-8 rounded-full bg-surface-variant/20"></div>
+            <div className="space-y-1.5">
+              <div className="h-2 w-20 bg-champagne-gold/30 rounded-sm"></div>
+              <div className="h-4.5 w-36 bg-linen-white/20 rounded-sm"></div>
+            </div>
+          </div>
+
+          {/* Tab buttons skeleton */}
+          <div className="flex gap-2 border-b border-surface-variant/10 pb-4 mb-6 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-8 w-20 bg-surface-variant/15 border border-surface-variant/10 rounded-none"
+              ></div>
+            ))}
+          </div>
+
+          {/* Active Atelier Content skeleton */}
+          <div className="min-h-[180px] flex flex-col justify-between gap-4 animate-pulse">
+            <div className="space-y-3">
+              <div className="flex justify-between items-start gap-2">
+                <div className="h-5 w-44 bg-linen-white/20 rounded-sm"></div>
+                <div className="h-3 w-28 bg-champagne-gold/30 rounded-sm"></div>
+              </div>
+              <div className="h-3 w-32 bg-surface-variant/15 rounded-sm"></div>
+              <div className="space-y-2 mt-4">
+                <div className="h-3 w-full bg-surface-variant/20 rounded-sm"></div>
+                <div className="h-3 w-5/6 bg-surface-variant/20 rounded-sm"></div>
+              </div>
+              <div className="flex flex-col gap-2 mt-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="w-3.5 h-3.5 rounded-full bg-champagne-gold/20"></div>
+                    <div className="h-3 w-40 bg-surface-variant/15 rounded-sm"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Contact details skeleton */}
+        <div className="relative z-10 border-t border-surface-variant/10 pt-4 mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-pulse">
+          <div className="space-y-1.5">
+            <div className="h-2 w-24 bg-surface-variant/10 rounded-sm"></div>
+            <div className="h-4.5 w-60 bg-linen-white/15 rounded-sm"></div>
+          </div>
+          <div className="h-9 w-36 bg-emerald-deep/20 rounded-none border border-champagne-gold/10"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-charcoal text-surface-variant p-8 md:p-12 relative overflow-hidden flex flex-col justify-between min-h-[450px] border border-outline/10 group">
@@ -105,14 +193,14 @@ export default function AteliersNetwork() {
         </div>
 
         {/* Tab buttons */}
-        <div className="flex gap-2 border-b border-surface-variant/10 pb-4 mb-6">
+        <div className="flex gap-2 border-b border-surface-variant/10 pb-4 mb-6 overflow-x-auto scrollbar-none">
           {ateliers.map((atelier) => {
             const isActive = activeAtelier === atelier.id;
             return (
               <button
                 key={atelier.id}
                 onClick={() => setActiveAtelier(atelier.id)}
-                className={`px-4 py-2 font-label-caps text-[10px] md:text-xs tracking-wider uppercase border transition-all duration-300 cursor-pointer ${
+                className={`px-4 py-2 font-label-caps text-[10px] md:text-xs tracking-wider uppercase border transition-all duration-300 cursor-pointer shrink-0 ${
                   isActive
                     ? "bg-champagne-gold text-charcoal border-champagne-gold font-bold shadow-md"
                     : "bg-transparent text-surface-variant/70 border-surface-variant/20 hover:border-champagne-gold/40 hover:text-linen-white"
@@ -125,55 +213,59 @@ export default function AteliersNetwork() {
         </div>
 
         {/* Active Atelier Content */}
-        <div className="transition-all duration-500 min-h-[180px] flex flex-col justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
-              <h4 className="font-headline-sm text-base text-linen-white tracking-wide">
-                {currentAtelier.name}
-              </h4>
-              <span className="font-body-md text-[10px] text-champagne-gold opacity-80 font-mono">
-                {currentAtelier.mapCoords}
-              </span>
-            </div>
-            
-            <span className="font-label-caps text-[10px] text-surface-variant/50 uppercase block mb-3">
-              {currentAtelier.role}
-            </span>
-            
-            <p className="font-body-md text-xs md:text-sm text-surface-variant/80 leading-relaxed max-w-xl mb-4">
-              {currentAtelier.description}
-            </p>
+        {currentAtelier && (
+          <div className="transition-all duration-500 min-h-[180px] flex flex-col justify-between gap-4">
+            <div>
+              <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
+                <h4 className="font-headline-sm text-base text-linen-white tracking-wide">
+                  {currentAtelier.name}
+                </h4>
+                <span className="font-body-md text-[10px] text-champagne-gold opacity-80 font-mono">
+                  {currentAtelier.mapCoords}
+                </span>
+              </div>
 
-            {/* Local Services */}
-            <div className="flex flex-col gap-2 mt-2">
-              {currentAtelier.services.map((service, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-surface-variant/90">
-                  <span className="material-symbols-outlined text-champagne-gold text-sm select-none">
-                    circle_notifications
-                  </span>
-                  <span>{service}</span>
-                </div>
-              ))}
+              <span className="font-label-caps text-[10px] text-surface-variant/50 uppercase block mb-3">
+                {currentAtelier.role}
+              </span>
+
+              <p className="font-body-md text-xs md:text-sm text-surface-variant/80 leading-relaxed max-w-xl mb-4">
+                {currentAtelier.description}
+              </p>
+
+              {/* Local Services */}
+              <div className="flex flex-col gap-2 mt-2">
+                {currentAtelier.services.map((service, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-xs text-surface-variant/90">
+                    <span className="material-symbols-outlined text-champagne-gold text-sm select-none">
+                      circle_notifications
+                    </span>
+                    <span>{service}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Footer Contact details */}
-      <div className="relative z-10 border-t border-surface-variant/10 pt-4 mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs">
-        <div>
-          <span className="text-[10px] text-surface-variant/40 block uppercase">Atelier Address</span>
-          <span className="text-linen-white font-semibold">{currentAtelier.address}</span>
+      {currentAtelier && (
+        <div className="relative z-10 border-t border-surface-variant/10 pt-4 mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs">
+          <div>
+            <span className="text-[10px] text-surface-variant/40 block uppercase">Atelier Address</span>
+            <span className="text-linen-white font-semibold">{currentAtelier.address}</span>
+          </div>
+
+          <a
+            href={`tel:${currentAtelier.phone.replace(/[^0-9+]/g, "")}`}
+            className="flex items-center gap-2 bg-emerald-deep text-linen-white px-4 py-2 hover:bg-emerald-deep/90 transition-all duration-300"
+          >
+            <span className="material-symbols-outlined text-sm select-none">phone</span>
+            <span>{currentAtelier.phone}</span>
+          </a>
         </div>
-        
-        <a
-          href={`tel:${currentAtelier.phone.replace(/[^0-9+]/g, "")}`}
-          className="flex items-center gap-2 bg-emerald-deep text-linen-white px-4 py-2 hover:bg-emerald-deep/90 transition-all duration-300"
-        >
-          <span className="material-symbols-outlined text-sm select-none">phone</span>
-          <span>{currentAtelier.phone}</span>
-        </a>
-      </div>
+      )}
     </div>
   );
 }

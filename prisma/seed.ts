@@ -6,10 +6,20 @@ import { gemstones } from "../src/lib/data/gemstones";
 async function main() {
   console.log("Starting database seed...");
 
-  // 1. Clear existing user and admin data to avoid conflicts
-  console.log("Cleaning up existing users/admins...");
-  await prisma.admin.deleteMany();
-  await prisma.user.deleteMany();
+  // 1. Clear existing database tables in dependency order
+  console.log("Cleaning up existing database tables...");
+  await prisma.blog.deleteMany({});
+  await prisma.blogCategory.deleteMany({});
+  await prisma.admin.deleteMany({});
+  await prisma.inquiryMessage.deleteMany({});
+  await prisma.inquiry.deleteMany({});
+  await prisma.review.deleteMany({});
+  await prisma.faq.deleteMany({});
+  await prisma.productImage.deleteMany({});
+  await prisma.productCollection.deleteMany({});
+  await prisma.product.deleteMany({});
+  await prisma.category.deleteMany({});
+  await prisma.user.deleteMany({});
 
   // 2. Create Default Admin User
   const adminEmail = "admin@gemshouse.shop";
@@ -25,16 +35,7 @@ async function main() {
     },
   });
 
-  // 3. Clear existing product-related data to avoid unique constraint conflicts
-  console.log("Cleaning up existing product-related data...");
-  await prisma.inquiryMessage.deleteMany();
-  await prisma.inquiry.deleteMany();
-  await prisma.review.deleteMany();
-  await prisma.faq.deleteMany();
-  await prisma.productImage.deleteMany();
-  await prisma.productCollection.deleteMany();
-  await prisma.product.deleteMany();
-  await prisma.category.deleteMany();
+
 
   // 4. Import categories and gemstones
   console.log("Seeding categories and gemstone products...");
@@ -210,8 +211,6 @@ async function main() {
 
   // 6. Create Blog Categories & Blog Posts
   console.log("Seeding Blogs...");
-  await prisma.blog.deleteMany({});
-  await prisma.blogCategory.deleteMany({});
 
   const catEducation = await prisma.blogCategory.create({
     data: { name: "Gemology & Education", slug: "gemology-education" },
@@ -353,6 +352,79 @@ async function main() {
   for (const setting of settingsData) {
     await prisma.setting.create({
       data: setting,
+    });
+  }
+
+  // 10. Create Ateliers
+  console.log("Seeding Ateliers...");
+  await prisma.atelier.deleteMany({});
+
+  const defaultAteliers = [
+    {
+      city: "London",
+      name: "Mayfair Concierge",
+      role: "Headquarters & Private Sourcing",
+      phone: "+44 (0) 20 7946 0192",
+      address: "Bruton Place, Mayfair, London W1J",
+      services: [
+        "Bespoke Sourcing Consultations",
+        "Wholesale Inventory Inspections",
+        "HNW Private Sales Suite",
+      ],
+      description: "Located in the heart of Mayfair, our London headquarters manages all global logistics and houses our primary private client concierge team.",
+      mapCoords: "51.5074° N, 0.1278° W",
+      order: 1,
+    },
+    {
+      city: "New York",
+      name: "Fifth Avenue Atelier",
+      role: "Custom Fine Jewelry Design",
+      phone: "+1 (212) 555-0143",
+      address: "Fifth Avenue, Midtown Manhattan, NY 10019",
+      services: [
+        "Custom Fine Jewelry Crafting",
+        "3D Model & Gemstone Fitting",
+        "Certified Appraisals & Insurances",
+      ],
+      description: "Our New York atelier features master designers who specialize in setting our loose sapphires, rubies, and diamonds into custom-crafted jewelry masterpieces.",
+      mapCoords: "40.7128° N, 74.0060° W",
+      order: 2,
+    },
+    {
+      city: "Geneva",
+      name: "Swiss Vaults & Logistics",
+      role: "Secure Depository & Trading",
+      phone: "+41 (0) 22 731 8290",
+      address: "Route de Meyrin, Geneva Airport Free-port",
+      services: [
+        "Swiss Free-port Vault Storage",
+        "International Duties Handling",
+        "GIA/SSEF Certification Escrow",
+      ],
+      description: "Partnered with Geneva's highest-security depositories, our Swiss branch manages high-value shipping logistics and secure storage for collectors worldwide.",
+      mapCoords: "46.2044° N, 6.1432° E",
+      order: 3,
+    },
+    {
+      city: "Surat",
+      name: "Surat Cutting & Polishing Center",
+      role: "Diamond Cutting, Polishing & Custom Crafting",
+      phone: "+91 261 555 0192",
+      address: "Surat Diamond Bourse, Khajod, Surat, Gujarat 395007, India",
+      services: [
+        "Master Diamond Cutting & Faceting",
+        "GIA Laboratory Export Preparations",
+        "Secure Indian Custody Vaults",
+      ],
+      description: "Located inside the world-class Surat Diamond Bourse, our state-of-the-art Surat atelier manages precision diamond cutting, lapidary shaping, and security logistics for our Southeast Asian partners.",
+      mapCoords: "21.1702° N, 72.8311° E",
+      order: 4,
+    },
+  ];
+
+  for (const atelier of defaultAteliers) {
+    await prisma.atelier.create({
+      data: atelier,
     });
   }
 

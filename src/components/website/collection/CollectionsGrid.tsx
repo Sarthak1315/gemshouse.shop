@@ -277,14 +277,55 @@ export default function CollectionsGrid() {
 
           {/* Catalog Cards Grid */}
           {isLoading ? (
-            <div className="py-24 text-center">
-              <div className="relative w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full border-2 border-champagne-gold/20 animate-ping"></div>
-                <div className="absolute w-8 h-8 rounded-full border-2 border-t-emerald-deep border-r-emerald-deep border-b-champagne-gold border-l-champagne-gold animate-spin"></div>
-              </div>
-              <p className="font-label-caps text-xs text-champagne-gold tracking-widest uppercase">
-                Opening secure vault
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={`shimmer-grid-${index}`}
+                  className="flex flex-col bg-surface-container-lowest border border-outline-variant/30 rounded-none overflow-hidden relative h-full"
+                >
+                  {/* Status badge skeleton */}
+                  <div className="absolute top-4 left-4 z-10 h-5 w-24 bg-emerald-deep/15 border border-champagne-gold/20 animate-pulse" />
+
+                  {/* Image viewport skeleton */}
+                  <div className="relative aspect-[4/5] bg-outline-variant/10 animate-pulse" />
+
+                  {/* Details section skeleton */}
+                  <div className="p-5 flex-grow flex flex-col justify-between gap-4">
+                    <div>
+                      <div className="h-3 w-16 bg-[#c4a482]/20 rounded-sm animate-pulse mb-2.5" />
+                      <div className="h-5 w-11/12 bg-emerald-deep/10 rounded-sm animate-pulse mb-3" />
+                      
+                      <hr className="border-champagne-gold/20 mb-4 w-10" />
+
+                      {/* Specs Grid skeleton */}
+                      <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                        <div>
+                          <div className="h-2.5 w-10 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                          <div className="h-3.5 w-14 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                        </div>
+                        <div>
+                          <div className="h-2.5 w-10 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                          <div className="h-3.5 w-16 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                        </div>
+                        <div>
+                          <div className="h-2.5 w-14 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                          <div className="h-3.5 w-12 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                        </div>
+                        <div>
+                          <div className="h-2.5 w-10 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                          <div className="h-3.5 w-14 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card Price / Inquiry action skeleton */}
+                    <div className="flex justify-between items-center pt-3 border-t border-outline-variant/20 mt-auto">
+                      <div className="h-4.5 w-16 bg-emerald-deep/15 rounded-sm animate-pulse" />
+                      <div className="h-3.5 w-16 bg-[#c4a482]/25 rounded-sm animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : paginatedProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">

@@ -99,7 +99,8 @@ const initialNewArrivals: Product[] = [
 
 export default function ArrivalsSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [newArrivals, setNewArrivals] = useState<Product[]>(initialNewArrivals);
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
@@ -129,10 +130,17 @@ export default function ArrivalsSlider() {
               };
             });
             setNewArrivals(mapped);
+            setIsLoading(false);
+            return;
           }
         }
+        // Fallback
+        setNewArrivals(initialNewArrivals);
+        setIsLoading(false);
       } catch (err) {
-        console.error("Failed to load arrivals from API", err);
+        console.error("Failed to load arrivals from API, using fallback", err);
+        setNewArrivals(initialNewArrivals);
+        setIsLoading(false);
       }
     }
     loadArrivals();
@@ -231,75 +239,125 @@ export default function ArrivalsSlider() {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {newArrivals.map((product) => (
-          <a
-            key={product.id}
-            href={`/gemstones/${product.sku}`}
-            className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] max-w-[380px] flex-none snap-start group bg-surface-container-lowest border border-outline-variant/30 transition-all duration-500 hover:border-champagne-gold/60 hover:shadow-xl relative flex flex-col justify-between"
-          >
-            {/* Image Box */}
-            <div className="aspect-[4/3] w-full overflow-hidden bg-charcoal relative">
-              <img
-                alt={product.title}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src={product.imageUrl}
-              />
-              <div className="absolute top-4 left-4">
-                <span className="bg-charcoal/80 backdrop-blur-md text-linen-white font-label-caps text-[9px] tracking-wider px-2.5 py-1 border border-outline-variant/20 uppercase select-none">
-                  {product.origin.split(" ")[0]}
-                </span>
-              </div>
-            </div>
-
-            {/* Info details */}
-            <div className="p-6 flex flex-col flex-grow justify-between gap-6">
-              <div>
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-label-caps text-[10px] tracking-widest text-champagne-gold uppercase">
-                    {product.category}
-                  </span>
-                  <span className="font-label-caps text-[10px] tracking-wider text-emerald-deep font-semibold">
-                    {product.certificate}
-                  </span>
-                </div>
-                <h4 className="font-headline-sm text-base md:text-lg text-emerald-deep group-hover:text-champagne-gold transition-colors duration-300 tracking-wide mb-3">
-                  {product.title}
-                </h4>
-                
-                {/* Highlights Table */}
-                <div className="grid grid-cols-2 gap-y-2 border-t border-outline-variant/20 pt-4 text-xs font-body-md text-on-surface-variant">
-                  <div>
-                    <span className="text-[10px] uppercase text-on-surface-variant/40 block">Carat Weight</span>
-                    <strong className="text-emerald-deep font-semibold">{product.carat}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase text-on-surface-variant/40 block">Cut Shape</span>
-                    <strong className="text-emerald-deep font-semibold">{product.cut}</strong>
-                  </div>
-                  <div className="col-span-2 mt-1">
-                    <span className="text-[10px] uppercase text-on-surface-variant/40 block">Clarity &amp; Treatment</span>
-                    <strong className="text-emerald-deep font-semibold truncate block">{product.clarity}</strong>
-                  </div>
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={`shimmer-${index}`}
+              className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] max-w-[380px] flex-none snap-start bg-surface-container-lowest border border-outline-variant/30 relative flex flex-col justify-between"
+            >
+              {/* Image Box Skeleton */}
+              <div className="aspect-[4/3] w-full bg-outline-variant/10 animate-pulse relative">
+                <div className="absolute top-4 left-4">
+                  <div className="h-5 w-16 bg-[#c4a482]/20 rounded-sm animate-pulse" />
                 </div>
               </div>
 
-              {/* Action row */}
-              <div className="border-t border-outline-variant/20 pt-4 flex justify-between items-center mt-2">
-                <span className="font-label-caps text-xs tracking-wider text-emerald-deep uppercase font-bold">
-                  {product.price}
-                </span>
-                
-                <button
-                  aria-label="Inquire"
-                  className="w-10 h-10 border border-emerald-deep flex items-center justify-center text-emerald-deep hover:bg-emerald-deep hover:text-linen-white transition-all duration-300 cursor-pointer"
-                >
-                  <span className="material-symbols-outlined select-none text-base">forward_to_inbox</span>
-                </button>
+              {/* Info details Skeleton */}
+              <div className="p-6 flex flex-col flex-grow justify-between gap-6">
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="h-3.5 w-16 bg-[#c4a482]/20 rounded-sm animate-pulse" />
+                    <div className="h-3.5 w-20 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                  </div>
+                  <div className="h-6 w-3/4 bg-emerald-deep/10 rounded-sm animate-pulse mb-3" />
+                  <div className="h-6 w-1/2 bg-emerald-deep/10 rounded-sm animate-pulse mb-4" />
+                  
+                  {/* Highlights Table Skeleton */}
+                  <div className="grid grid-cols-2 gap-y-3 border-t border-outline-variant/20 pt-4">
+                    <div>
+                      <div className="h-2.5 w-16 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                      <div className="h-3.5 w-12 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                    </div>
+                    <div>
+                      <div className="h-2.5 w-16 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                      <div className="h-3.5 w-12 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                    </div>
+                    <div className="col-span-2 mt-1">
+                      <div className="h-2.5 w-24 bg-on-surface-variant/10 rounded-sm animate-pulse mb-1.5" />
+                      <div className="h-3.5 w-32 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action row Skeleton */}
+                <div className="border-t border-outline-variant/20 pt-4 flex justify-between items-center mt-2">
+                  <div className="h-5 w-28 bg-[#c4a482]/25 rounded-sm animate-pulse" />
+                  <div className="w-10 h-10 border border-outline-variant/20 bg-[#c4a482]/5 rounded-none animate-pulse" />
+                </div>
               </div>
             </div>
-          </a>
-        ))}
+          ))
+        ) : (
+          newArrivals.map((product) => (
+            <a
+              key={product.id}
+              href={`/gemstones/${product.sku}`}
+              className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] max-w-[380px] flex-none snap-start group bg-surface-container-lowest border border-outline-variant/30 transition-all duration-500 hover:border-champagne-gold/60 hover:shadow-xl relative flex flex-col justify-between"
+            >
+              {/* Image Box */}
+              <div className="aspect-[4/3] w-full overflow-hidden bg-charcoal relative">
+                <img
+                  alt={product.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={product.imageUrl}
+                />
+                <div className="absolute top-4 left-4">
+                  <span className="bg-charcoal/80 backdrop-blur-md text-linen-white font-label-caps text-[9px] tracking-wider px-2.5 py-1 border border-outline-variant/20 uppercase select-none">
+                    {product.origin.split(" ")[0]}
+                  </span>
+                </div>
+              </div>
+
+              {/* Info details */}
+              <div className="p-6 flex flex-col flex-grow justify-between gap-6">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-label-caps text-[10px] tracking-widest text-champagne-gold uppercase">
+                      {product.category}
+                    </span>
+                    <span className="font-label-caps text-[10px] tracking-wider text-emerald-deep font-semibold">
+                      {product.certificate}
+                    </span>
+                  </div>
+                  <h4 className="font-headline-sm text-base md:text-lg text-emerald-deep group-hover:text-champagne-gold transition-colors duration-300 tracking-wide mb-3">
+                    {product.title}
+                  </h4>
+                  
+                  {/* Highlights Table */}
+                  <div className="grid grid-cols-2 gap-y-2 border-t border-outline-variant/20 pt-4 text-xs font-body-md text-on-surface-variant">
+                    <div>
+                      <span className="text-[10px] uppercase text-on-surface-variant/40 block">Carat Weight</span>
+                      <strong className="text-emerald-deep font-semibold">{product.carat}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase text-on-surface-variant/40 block">Cut Shape</span>
+                      <strong className="text-emerald-deep font-semibold">{product.cut}</strong>
+                    </div>
+                    <div className="col-span-2 mt-1">
+                      <span className="text-[10px] uppercase text-on-surface-variant/40 block">Clarity &amp; Treatment</span>
+                      <strong className="text-emerald-deep font-semibold truncate block">{product.clarity}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action row */}
+                <div className="border-t border-outline-variant/20 pt-4 flex justify-between items-center mt-2">
+                  <span className="font-label-caps text-xs tracking-wider text-emerald-deep uppercase font-bold">
+                    {product.price}
+                  </span>
+                  
+                  <button
+                    aria-label="Inquire"
+                    className="w-10 h-10 border border-emerald-deep flex items-center justify-center text-emerald-deep hover:bg-emerald-deep hover:text-linen-white transition-all duration-300 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined select-none text-base">forward_to_inbox</span>
+                  </button>
+                </div>
+              </div>
+            </a>
+          ))
+        )}
       </div>
 
       {/* Progress tracking line */}

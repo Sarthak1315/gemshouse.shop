@@ -17,6 +17,7 @@ const menuItems = [
   { label: "Menu Management", href: "/admin/menus", icon: "schema" },
   { label: "Reviews", href: "/admin/reviews", icon: "star" },
   { label: "FAQs", href: "/admin/faqs", icon: "quiz" },
+  { label: "Ateliers Network", href: "/admin/ateliers", icon: "public" },
   { label: "Blogs", href: "/admin/blogs", icon: "article" },
   { label: "Inquiries", href: "/admin/inquiries", icon: "mail" },
   { label: "Dealers", href: "/admin/dealers", icon: "handshake" },

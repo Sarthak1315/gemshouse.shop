@@ -32,7 +32,8 @@ const aboutFaqs: FAQItem[] = [
 
 export default function AboutPage() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [faqs, setFaqs] = useState<FAQItem[]>(aboutFaqs);
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadFaqs() {
@@ -47,10 +48,17 @@ export default function AboutPage() {
                 answer: item.answer,
               }))
             );
+            setIsLoading(false);
+            return;
           }
         }
+        // Fallback
+        setFaqs(aboutFaqs);
+        setIsLoading(false);
       } catch (err) {
-        console.error("Failed to load FAQs", err);
+        console.error("Failed to load FAQs, using fallback", err);
+        setFaqs(aboutFaqs);
+        setIsLoading(false);
       }
     }
     loadFaqs();
@@ -345,37 +353,52 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:w-2/3 flex flex-col border-t border-outline-variant/30">
-              {faqs.map((faq, idx) => {
-                const isOpen = openFaqIndex === idx;
-                return (
-                  <div key={idx} className="border-b border-outline-variant/30">
-                    <button
-                      onClick={() => toggleFaq(idx)}
-                      className="w-full py-5 flex justify-between items-center text-left group cursor-pointer"
-                    >
-                      <span className="font-body-lg text-sm md:text-base text-emerald-deep font-semibold tracking-wide">
-                        {faq.question}
-                      </span>
-                      <span
-                        className={`material-symbols-outlined text-champagne-gold select-none text-base transition-transform duration-300 ${
-                          isOpen ? "rotate-180" : "rotate-0"
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, idx) => (
+                  <div
+                    key={`shimmer-faq-${idx}`}
+                    className="border-b border-outline-variant/30 py-6 flex justify-between items-center"
+                  >
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4.5 w-3/4 bg-emerald-deep/10 rounded-sm animate-pulse" />
+                      <div className="h-3.5 w-1/2 bg-[#c4a482]/10 rounded-sm animate-pulse" />
+                    </div>
+                    <div className="h-4 w-4 bg-[#c4a482]/20 rounded-sm animate-pulse ml-4 flex-none" />
+                  </div>
+                ))
+              ) : (
+                faqs.map((faq, idx) => {
+                  const isOpen = openFaqIndex === idx;
+                  return (
+                    <div key={idx} className="border-b border-outline-variant/30">
+                      <button
+                        onClick={() => toggleFaq(idx)}
+                        className="w-full py-5 flex justify-between items-center text-left group cursor-pointer"
+                      >
+                        <span className="font-body-lg text-sm md:text-base text-emerald-deep font-semibold tracking-wide">
+                          {faq.question}
+                        </span>
+                        <span
+                          className={`material-symbols-outlined text-champagne-gold select-none text-base transition-transform duration-300 ${
+                            isOpen ? "rotate-180" : "rotate-0"
+                          }`}
+                        >
+                          expand_more
+                        </span>
+                      </button>
+                      <div
+                        className={`transition-all duration-300 ease-out overflow-hidden font-body-md text-xs md:text-sm text-on-surface-variant ${
+                          isOpen ? "max-h-[150px] pb-5 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
                         }`}
                       >
-                        expand_more
-                      </span>
-                    </button>
-                    <div
-                      className={`transition-all duration-300 ease-out overflow-hidden font-body-md text-xs md:text-sm text-on-surface-variant ${
-                        isOpen ? "max-h-[150px] pb-5 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-                      }`}
-                    >
-                      <p className="leading-relaxed text-on-surface-variant/80">
-                        {faq.answer}
-                      </p>
+                        <p className="leading-relaxed text-on-surface-variant/80">
+                          {faq.answer}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
         </section>
