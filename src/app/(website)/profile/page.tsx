@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/website/navbar/Navbar";
-import Footer from "@/components/website/footer/Footer";
 
 interface UserProfile {
   id: string;
@@ -253,8 +251,7 @@ export default function ProfilePage() {
 
   if (isLoadingUser) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
+      <>
         <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto animate-pulse">
           {/* Welcome Section Skeleton */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-outline-variant/20 pb-8">
@@ -302,15 +299,12 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
-        <Footer />
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-
+    <>
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto">
         {/* Welcome Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-outline-variant/20 pb-8">
@@ -693,8 +687,6 @@ export default function ProfilePage() {
 
         </div>
       </main>
-
-      <Footer />
-    </div>
+    </>
   );
 }

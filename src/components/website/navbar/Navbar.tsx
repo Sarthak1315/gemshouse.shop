@@ -26,6 +26,11 @@ export default function Navbar() {
   const [trayError, setTrayError] = useState<string | null>(null);
   const [traySuccess, setTraySuccess] = useState(false);
 
+  const [logoType, setLogoType] = useState<string>("text");
+  const [logoText, setLogoText] = useState("Gemshouse");
+  const [logoImage, setLogoImage] = useState("");
+  const [phone, setPhone] = useState("+1 (800) GEM-LINE");
+
   const loadTray = () => {
     try {
       const stored = localStorage.getItem("gemshouse_inquiry_tray");
@@ -58,6 +63,24 @@ export default function Navbar() {
       }
     }
     loadUser();
+  }, []);
+
+  useEffect(() => {
+    async function loadLogoSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const settings = await res.json();
+          if (settings.NAV_LOGO_TYPE) setLogoType(settings.NAV_LOGO_TYPE);
+          if (settings.NAV_LOGO_TEXT) setLogoText(settings.NAV_LOGO_TEXT);
+          if (settings.NAV_LOGO_IMAGE) setLogoImage(settings.NAV_LOGO_IMAGE);
+          if (settings.CONTACT_PHONE) setPhone(settings.CONTACT_PHONE);
+        }
+      } catch (err) {
+        console.error("Failed to load settings in Navbar:", err);
+      }
+    }
+    loadLogoSettings();
   }, []);
 
   const handleRemoveFromTray = (id: string) => {
@@ -169,10 +192,18 @@ export default function Navbar() {
 
           {/* Brand Logo - Centered absolutely with optimized mobile spacing */}
           <a
-            className="font-headline-md text-lg sm:text-xl md:text-headline-sm lg:text-headline-md tracking-wider md:tracking-widest text-emerald-deep uppercase absolute left-1/2 -translate-x-1/2 hover:opacity-80 transition-all duration-300"
+            className="font-headline-md text-lg sm:text-xl md:text-headline-sm lg:text-headline-md tracking-wider md:tracking-widest text-emerald-deep uppercase absolute left-1/2 -translate-x-1/2 hover:opacity-80 transition-all duration-300 flex items-center justify-center h-12"
             href="/"
           >
-            Gemshouse
+            {logoType === "image" && logoImage ? (
+              <img
+                src={logoImage}
+                alt={logoText}
+                className="max-h-8 sm:max-h-10 w-auto object-contain"
+              />
+            ) : (
+              logoText
+            )}
           </a>
 
           {/* Right Icons */}
@@ -303,9 +334,21 @@ export default function Navbar() {
       >
         {/* Drawer Header */}
         <div className="flex justify-between items-center pb-6 border-b border-outline-variant/20">
-          <span className="font-headline-md text-lg tracking-widest text-emerald-deep uppercase">
-            Gemshouse
-          </span>
+          <a
+            className="font-headline-md text-lg tracking-widest text-emerald-deep uppercase flex items-center h-10 hover:opacity-80 transition-opacity"
+            href="/"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            {logoType === "image" && logoImage ? (
+              <img
+                src={logoImage}
+                alt={logoText}
+                className="max-h-8 w-auto object-contain"
+              />
+            ) : (
+              logoText
+            )}
+          </a>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
             aria-label="Close Menu"
@@ -394,7 +437,7 @@ export default function Navbar() {
         <div className="mt-12 pt-8 border-t border-outline-variant/30 flex flex-col gap-4">
           <div className="flex items-center gap-3 text-emerald-deep opacity-80">
             <span className="material-symbols-outlined select-none text-xl">phone_in_talk</span>
-            <span className="font-body-md text-xs">+1 (800) GEM-LINE</span>
+            <span className="font-body-md text-xs">{phone}</span>
           </div>
           <p className="font-label-caps text-[10px] text-on-surface-variant/60 uppercase tracking-widest leading-relaxed">
             Gemshouse London • New York • Geneva • Surat

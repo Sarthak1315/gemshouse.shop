@@ -227,3 +227,10 @@ model Atelier {
   updatedAt   DateTime @updatedAt
 }
 
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+

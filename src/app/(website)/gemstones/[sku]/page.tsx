@@ -1,12 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/website/navbar/Navbar";
 import GemstoneDetailPanel from "@/components/website/product/GemstoneDetailPanel";
 import ProductReviews from "@/components/website/product/ProductReviews";
 import ProductFAQ from "@/components/website/product/ProductFAQ";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import Footer from "@/components/website/footer/Footer";
 import prisma from "@/lib/prisma";
 
 interface Props {
@@ -113,9 +111,7 @@ export default async function GemstoneDetailsPage({ params }: Props) {
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navbar */}
-      <Navbar />
+    <>
 
       {/* Main Canvas Area */}
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto mt-2">
@@ -211,8 +207,6 @@ export default async function GemstoneDetailsPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Editorial Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

@@ -22,6 +22,7 @@ const menuItems = [
   { label: "Inquiries", href: "/admin/inquiries", icon: "mail" },
   { label: "Dealers", href: "/admin/dealers", icon: "handshake" },
   { label: "Users", href: "/admin/users", icon: "group" },
+  { label: "Subscribers", href: "/admin/subscribers", icon: "subscriptions" },
   { label: "Settings", href: "/admin/settings", icon: "settings" },
 ];
 

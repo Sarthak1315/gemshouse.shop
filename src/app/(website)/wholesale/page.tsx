@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Navbar from "@/components/website/navbar/Navbar";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import Footer from "@/components/website/footer/Footer";
 
 export default function WholesalePage() {
   const [formState, setFormState] = useState<"idle" | "submitting" | "success">("idle");
@@ -57,9 +55,7 @@ export default function WholesalePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navbar */}
-      <Navbar />
+    <>
 
       {/* Main Canvas */}
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto mt-2 grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
@@ -260,9 +256,6 @@ export default function WholesalePage() {
         </div>
 
       </main>
-
-      {/* Editorial Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

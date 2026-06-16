@@ -1,17 +1,12 @@
 import React from "react";
-import Navbar from "@/components/website/navbar/Navbar";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ArrivalsSlider from "@/components/website/collection/ArrivalsSlider";
 import GemstoneExplorer from "@/components/website/collection/GemstoneExplorer";
 import ProvenanceTimeline from "@/components/website/collection/ProvenanceTimeline";
 import AteliersNetwork from "@/components/website/collection/AteliersNetwork";
-import Footer from "@/components/website/footer/Footer";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navigation Bar */}
-      <Navbar />
 
       <main className="pt-16 md:pt-28">
         {/* Hero Section (Aesthetic Fade and Scale on Load) */}
@@ -187,9 +182,5 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-
-      {/* Editorial Footer */}
-      <Footer />
-    </div>
   );
 }

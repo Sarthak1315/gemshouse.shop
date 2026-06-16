@@ -1,7 +1,5 @@
 import React from "react";
 import prisma from "@/lib/prisma";
-import Navbar from "@/components/website/navbar/Navbar";
-import Footer from "@/components/website/footer/Footer";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 
 export const revalidate = 60; // Revalidate every minute
@@ -24,9 +22,7 @@ export default async function BlogsPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navbar */}
-      <Navbar />
+    <>
 
       {/* Main Canvas */}
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto mt-2">
@@ -131,9 +127,6 @@ export default async function BlogsPage() {
           </div>
         )}
       </main>
-
-      {/* Editorial Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

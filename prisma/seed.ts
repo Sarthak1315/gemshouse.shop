@@ -20,6 +20,7 @@ async function main() {
   await prisma.product.deleteMany({});
   await prisma.category.deleteMany({});
   await prisma.user.deleteMany({});
+  await prisma.newsletterSubscriber.deleteMany({});
 
   // 2. Create Default Admin User
   const adminEmail = "admin@gemshouse.shop";
@@ -347,6 +348,37 @@ async function main() {
     { key: "FACEBOOK_URL", value: "https://facebook.com/gemshouse" },
     { key: "LINKEDIN_URL", value: "https://linkedin.com/company/gemshouse" },
     { key: "COMPANY_ADDRESS", value: "Surat Diamond Bourse, Surat, Gujarat, India" },
+    { key: "NAV_LOGO_TYPE", value: "text" },
+    { key: "NAV_LOGO_TEXT", value: "GEMSHOUSE" },
+    { key: "NAV_LOGO_IMAGE", value: "" },
+    { key: "COMPANY_GST", value: "24AAAAG1234A1Z1" },
+    { key: "FOOTER_ABOUT_TEXT", value: "Purveyors of fine natural gemstones and investment-grade diamonds. Trusted by jewelers, wholesalers, and collectors worldwide." },
+    { key: "LEGAL_PRIVACY_POLICY", value: `# Privacy Policy
+
+**Last Updated: June 16, 2026**
+
+At Gemshouse, we value your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your personal information when you visit our website or make an inquiry.
+
+## 1. Information We Collect
+We collect information you provide directly to us, such as when you fill out contact forms, submit inquiry portfolios, or request wholesale registration:
+- Name, email address, phone number.
+- Product preferences and interest parameters.
+
+## 2. Secure Operations
+All transactions and logistics details are managed under strict security protocols. We do not disclose HNW client listings or private vault arrangements.
+` },
+    { key: "LEGAL_TERMS_OF_SERVICE", value: `# Terms of Service
+
+**Last Updated: June 16, 2026**
+
+Welcome to Gemshouse. By accessing or utilizing our platform, you agree to comply with and be bound by the following terms and conditions.
+
+## 1. Gemological Certifications
+Every investment-grade stone is sold with its verified certification report (GIA, SSEF, GRS, or Gübelin). Spec descriptions on our site represent the official grading logs.
+
+## 2. Acquisition Protocols
+Due to the high-value asset class, viewings must be scheduled at least 48 hours in advance at our secure depositories.
+` }
   ];
 
   for (const setting of settingsData) {

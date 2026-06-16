@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/website/navbar/Navbar";
-import Footer from "@/components/website/footer/Footer";
 
 function RegisterContent() {
   const router = useRouter();
@@ -68,9 +66,7 @@ function RegisterContent() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-
+    <>
       <main className="flex-grow flex items-center justify-center pt-32 md:pt-40 pb-20 px-margin-mobile">
         <div className="w-full max-w-md z-10">
           <div className="text-center mb-8">
@@ -245,9 +241,7 @@ function RegisterContent() {
           </div>
         </div>
       </main>
-
-      <Footer />
-    </div>
+    </>
   );
 }
 

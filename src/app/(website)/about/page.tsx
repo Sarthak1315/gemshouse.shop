@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Navbar from "@/components/website/navbar/Navbar";
 import AteliersNetwork from "@/components/website/collection/AteliersNetwork";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import Footer from "@/components/website/footer/Footer";
 
 interface FAQItem {
   question: string;
@@ -69,7 +67,7 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       {/* Custom Keyframe and Utility Styles */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes customSpin {
@@ -93,9 +91,6 @@ export default function AboutPage() {
           border: 0.5px solid rgba(212, 175, 55, 0.3);
         }
       `}} />
-
-      {/* Top Navbar */}
-      <Navbar />
 
       {/* Main Content */}
       <main className="flex-grow pt-20">
@@ -404,9 +399,6 @@ export default function AboutPage() {
         </section>
 
       </main>
-
-      {/* Editorial Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

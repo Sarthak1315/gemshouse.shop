@@ -366,6 +366,17 @@ export const validators = {
       },
     };
   },
+
+  subscriber(body: any): ValidationResult<any> {
+    const errors: ValidationError[] = [];
+    const email = String(body?.email || "").trim();
+
+    if (!email) errors.push({ field: "email", message: "Email is required" });
+    else if (!isEmail(email)) errors.push({ field: "email", message: "Invalid email format" });
+
+    if (errors.length > 0) return { success: false, errors };
+    return { success: true, data: { email } };
+  },
 };
 
 export const schemas = {};

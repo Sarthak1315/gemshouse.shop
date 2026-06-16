@@ -94,8 +94,9 @@ export async function middleware(request: NextRequest) {
     const isPublicInquiry = pathname === "/api/inquiries" && method === "POST";
     const isPublicDealer = pathname === "/api/dealers" && method === "POST";
     const isPublicReview = pathname === "/api/reviews" && method === "POST";
+    const isPublicSubscribe = pathname === "/api/subscribers" && method === "POST";
 
-    if (isPublicAuth || isProfileUpdate || isMessageThread || isPublicInquiry || isPublicDealer || isPublicReview) {
+    if (isPublicAuth || isProfileUpdate || isMessageThread || isPublicInquiry || isPublicDealer || isPublicReview || isPublicSubscribe) {
       return NextResponse.next();
     }
 
