@@ -60,6 +60,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
 
   // Fetch session user
@@ -111,30 +112,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-background text-on-background flex flex-col font-body-md antialiased">
       {/* SideNavbar for Desktop */}
-      <aside className="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest dark:bg-charcoal border-r border-outline-variant/20 z-40 py-4 gap-2">
+      <aside
+        className={`hidden md:flex flex-col h-screen fixed left-0 top-0 bg-surface-container-lowest dark:bg-charcoal border-r border-outline-variant/20 z-40 py-4 gap-2 transition-all duration-300 ease-in-out ${
+          isCollapsed ? "w-[68px]" : "w-64"
+        }`}
+      >
         {/* Header */}
-        <div className="px-6 py-6 flex flex-col items-center border-b border-outline-variant/10 mb-4">
-          <div className="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center mb-3 border border-champagne-gold/30">
-            <span className="material-symbols-outlined text-2xl text-emerald-deep dark:text-champagne-gold select-none">
+        <div className={`flex flex-col items-center border-b border-outline-variant/10 mb-4 transition-all duration-300 ${isCollapsed ? "px-2 py-4" : "px-6 py-6"}`}>
+          <div className={`rounded-full bg-surface-container-low flex items-center justify-center border border-champagne-gold/30 transition-all duration-300 ${isCollapsed ? "w-10 h-10 mb-0" : "w-14 h-14 mb-3"}`}>
+            <span className={`material-symbols-outlined text-emerald-deep dark:text-champagne-gold select-none transition-all duration-300 ${isCollapsed ? "text-xl" : "text-2xl"}`}>
               diamond
             </span>
           </div>
-          <h1 className="font-headline-sm text-lg text-emerald-deep dark:text-linen-white tracking-wider uppercase">
-            GEMSHOUSE
-          </h1>
-          <p className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest mt-1">
-            Console Suite
-          </p>
+          {!isCollapsed && (
+            <>
+              <h1 className="font-headline-sm text-lg text-emerald-deep dark:text-linen-white tracking-wider uppercase">
+                GEMSHOUSE
+              </h1>
+              <p className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest mt-1">
+                Console Suite
+              </p>
+            </>
+          )}
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto px-4 space-y-4 scrollbar-none">
+        <nav className={`flex-1 overflow-y-auto space-y-4 scrollbar-none transition-all duration-300 ${isCollapsed ? "px-1.5" : "px-4"}`}>
           {menuGroups.map((group, groupIdx) => (
             <div key={groupIdx} className="space-y-1">
-              {group.title && (
+              {group.title && !isCollapsed && (
                 <div className="font-label-caps text-[9px] text-on-surface-variant/40 dark:text-linen-white/30 uppercase tracking-widest px-4 pt-2 pb-1 select-none font-semibold">
                   {group.title}
                 </div>
+              )}
+              {group.title && isCollapsed && (
+                <div className="h-[1px] bg-outline-variant/15 mx-2 my-2" />
               )}
               {group.items.map((item) => {
                 const isActive = pathname === item.href;
@@ -142,22 +154,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <a
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center px-4 py-2.5 rounded transition-all duration-200 group cursor-pointer ${
+                    title={isCollapsed ? item.label : undefined}
+                    className={`flex items-center rounded transition-all duration-200 group cursor-pointer ${
+                      isCollapsed
+                        ? "justify-center px-0 py-2.5"
+                        : "px-4 py-2.5"
+                    } ${
                       isActive
                         ? "bg-emerald-deep text-linen-white"
                         : "text-on-surface-variant hover:bg-surface-container-low hover:text-emerald-deep dark:hover:text-champagne-gold"
                     }`}
                   >
                     <span
-                      className={`material-symbols-outlined mr-3 text-lg select-none ${
+                      className={`material-symbols-outlined text-lg select-none ${
+                        isCollapsed ? "" : "mr-3"
+                      } ${
                         isActive ? "text-champagne-gold" : "group-hover:text-champagne-gold transition-colors"
                       }`}
                     >
                       {item.icon}
                     </span>
-                    <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
-                      {item.label}
-                    </span>
+                    {!isCollapsed && (
+                      <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    )}
                   </a>
                 );
               })}
@@ -166,27 +187,70 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer */}
-        <div className="px-4 pb-4 pt-4 border-t border-outline-variant/10">
-          <button
-            onClick={handleViewStorefront}
-            className="w-full mb-3 bg-emerald-deep text-linen-white font-label-caps text-[10px] uppercase tracking-widest py-3 hover:bg-emerald-deep/90 transition-colors flex items-center justify-center gap-2 rounded-none border border-champagne-gold/30 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm select-none">open_in_new</span>
-            View Storefront
-          </button>
-          <div className="space-y-0.5">
+        <div className={`pb-4 pt-4 border-t border-outline-variant/10 transition-all duration-300 ${isCollapsed ? "px-1.5" : "px-4"}`}>
+          {/* View Storefront */}
+          {isCollapsed ? (
             <button
-              onClick={handleLogout}
-              className="w-full flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-red-950/10 hover:text-red-600 rounded transition-all duration-200 group cursor-pointer text-left"
+              onClick={handleViewStorefront}
+              title="View Storefront"
+              className="w-full mb-2 bg-emerald-deep text-linen-white py-2.5 hover:bg-emerald-deep/90 transition-colors flex items-center justify-center rounded-none border border-champagne-gold/30 cursor-pointer"
             >
-              <span className="material-symbols-outlined mr-3 text-base group-hover:text-red-500 transition-colors select-none">
-                logout
-              </span>
-              <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
-                Log Out
-              </span>
+              <span className="material-symbols-outlined text-sm select-none">open_in_new</span>
             </button>
+          ) : (
+            <button
+              onClick={handleViewStorefront}
+              className="w-full mb-3 bg-emerald-deep text-linen-white font-label-caps text-[10px] uppercase tracking-widest py-3 hover:bg-emerald-deep/90 transition-colors flex items-center justify-center gap-2 rounded-none border border-champagne-gold/30 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm select-none">open_in_new</span>
+              View Storefront
+            </button>
+          )}
+
+          {/* Logout */}
+          <div className="space-y-0.5">
+            {isCollapsed ? (
+              <button
+                onClick={handleLogout}
+                title="Log Out"
+                className="w-full flex items-center justify-center py-2.5 text-on-surface-variant hover:bg-red-950/10 hover:text-red-600 rounded transition-all duration-200 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-base group-hover:text-red-500 transition-colors select-none">
+                  logout
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-red-950/10 hover:text-red-600 rounded transition-all duration-200 group cursor-pointer text-left"
+              >
+                <span className="material-symbols-outlined mr-3 text-base group-hover:text-red-500 transition-colors select-none">
+                  logout
+                </span>
+                <span className="font-label-caps text-[10px] uppercase tracking-wider font-semibold">
+                  Log Out
+                </span>
+              </button>
+            )}
           </div>
+
+          {/* Collapse Toggle */}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className={`w-full flex items-center mt-2 py-2 text-on-surface-variant/50 hover:text-champagne-gold hover:bg-surface-container-low rounded transition-all duration-200 cursor-pointer ${
+              isCollapsed ? "justify-center px-0" : "px-4"
+            }`}
+          >
+            <span className={`material-symbols-outlined text-base select-none transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`}>
+              left_panel_close
+            </span>
+            {!isCollapsed && (
+              <span className="font-label-caps text-[9px] uppercase tracking-wider ml-3 font-semibold">
+                Collapse
+              </span>
+            )}
+          </button>
         </div>
       </aside>
 
@@ -281,7 +345,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Main Canvas Area */}
-      <div className="flex-1 ml-0 md:ml-64 flex flex-col min-h-screen relative">
+      <div className={`flex-1 flex flex-col min-h-screen relative transition-all duration-300 ml-0 ${isCollapsed ? "md:ml-[68px]" : "md:ml-64"}`}>
         {/* TopNavBar */}
         <header className="flex justify-between items-center h-20 px-6 md:px-10 w-full z-30 bg-linen-white/80 dark:bg-charcoal/80 backdrop-blur-xl border-b border-outline-variant/20 sticky top-0">
           {/* Mobile hamburger */}
