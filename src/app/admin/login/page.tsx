@@ -18,7 +18,10 @@ function AdminLoginContent() {
         const res = await fetch("/api/admin/auth");
         const data = await res.json();
         if (data?.user?.role === "ADMIN") {
-          const redirectTo = searchParams.get("from") || "/admin/dashboard";
+          let redirectTo = searchParams.get("from") || "/admin/dashboard";
+          if (redirectTo.includes("/admin/login")) {
+            redirectTo = "/admin/dashboard";
+          }
           router.push(redirectTo);
         }
       } catch (err) {
@@ -60,7 +63,10 @@ function AdminLoginContent() {
       }
 
       // Success, redirect to the target page or dashboard
-      const redirectTo = searchParams.get("from") || "/admin/dashboard";
+      let redirectTo = searchParams.get("from") || "/admin/dashboard";
+      if (redirectTo.includes("/admin/login")) {
+        redirectTo = "/admin/dashboard";
+      }
       router.push(redirectTo);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");

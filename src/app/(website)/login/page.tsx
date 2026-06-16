@@ -22,7 +22,11 @@ function CustomerLoginContent() {
           if (data.user.role === "ADMIN") {
             router.push("/admin/dashboard");
           } else {
-            router.push("/profile");
+            let redirectTo = searchParams.get("from") || "/profile";
+            if (redirectTo.includes("/login")) {
+              redirectTo = "/profile";
+            }
+            router.push(redirectTo);
           }
         }
       } catch (err) {
@@ -30,7 +34,7 @@ function CustomerLoginContent() {
       }
     }
     checkSession();
-  }, [router]);
+  }, [router, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +62,10 @@ function CustomerLoginContent() {
       if (data?.user?.role === "ADMIN") {
         router.push("/admin/dashboard");
       } else {
-        const redirectTo = searchParams.get("from") || "/profile";
+        let redirectTo = searchParams.get("from") || "/profile";
+        if (redirectTo.includes("/login")) {
+          redirectTo = "/profile";
+        }
         router.push(redirectTo);
       }
     } catch (err) {
