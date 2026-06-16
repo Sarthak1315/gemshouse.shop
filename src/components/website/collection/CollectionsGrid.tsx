@@ -1,17 +1,23 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 
 const ITEMS_PER_PAGE = 6;
 
 export default function CollectionsGrid() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlGemType = searchParams.get("gemType") || "";
+
   const [productsList, setProductsList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProducts() {
       try {
+        // Fetch all products (no gemType filter on API — we filter client-side)
         const res = await fetch("/api/products?limit=100");
         if (res.ok) {
           const data = await res.json();
@@ -22,6 +28,7 @@ export default function CollectionsGrid() {
               sku: dbProduct.sku,
               title: dbProduct.title,
               category: dbProduct.category?.name || "Gemstone",
+              gemType: dbProduct.gemType || "Gemstone",
               carat: dbProduct.carat,
               cut: dbProduct.cut || "N/A",
               origin: dbProduct.origin || "Unknown",
@@ -51,17 +58,18 @@ export default function CollectionsGrid() {
     fetchProducts();
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState<string>(" sapphire"); // Default search to Ceylon Sapphire for initial visual impact
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
+  const [selectedGemType, setSelectedGemType] = useState<string>(urlGemType);
   const [sortBy, setSortBy] = useState<string>("newest");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
 
-  // Clear query on mount so it shows all cards by default, but defaults to all
+  // Sync gemType filter from URL changes
   useEffect(() => {
-    setSearchQuery("");
-  }, []);
+    setSelectedGemType(urlGemType);
+  }, [urlGemType]);
 
   const categoriesList = ["Ruby", "Sapphire", "Emerald", "Diamond", "Spinel"];
   const originsList = [
@@ -75,7 +83,7 @@ export default function CollectionsGrid() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategories, selectedOrigins, sortBy]);
+  }, [searchQuery, selectedCategories, selectedOrigins, selectedGemType, sortBy]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -92,9 +100,12 @@ export default function CollectionsGrid() {
   const clearAllFilters = () => {
     setSelectedCategories([]);
     setSelectedOrigins([]);
+    setSelectedGemType("");
     setSearchQuery("");
     setSortBy("newest");
     setCurrentPage(1);
+    // Clear URL query params so /collections shows all products
+    router.replace("/collections", { scroll: false });
   };
 
   // Filtered and Sorted Products
@@ -103,8 +114,13 @@ export default function CollectionsGrid() {
       .filter((product) => {
         // Search filter
         const matchesSearch =
+          !searchQuery ||
           product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           product.origin.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // Gem type filter (from URL param like ?gemType=Diamond)
+        const matchesGemType =
+          !selectedGemType || product.gemType === selectedGemType;
 
         // Category filter
         const matchesCategory =
@@ -114,7 +130,7 @@ export default function CollectionsGrid() {
         const matchesOrigin =
           selectedOrigins.length === 0 || selectedOrigins.includes(product.origin);
 
-        return matchesSearch && matchesCategory && matchesOrigin;
+        return matchesSearch && matchesGemType && matchesCategory && matchesOrigin;
       })
       .sort((a, b) => {
         // Sort filters
@@ -123,7 +139,7 @@ export default function CollectionsGrid() {
         if (sortBy === "carat-high") return b.carat - a.carat;
         return b.id.localeCompare(a.id); // 'newest' default
       });
-  }, [searchQuery, selectedCategories, selectedOrigins, sortBy]);
+  }, [productsList, searchQuery, selectedCategories, selectedOrigins, selectedGemType, sortBy]);
 
   // Paginated Results
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -137,9 +153,23 @@ export default function CollectionsGrid() {
       {/* Search & Header Sorting bar */}
       <header className="flex flex-col md:flex-row justify-between items-stretch md:items-end gap-6 mb-12 border-b-[0.5px] border-champagne-gold/30 pb-6">
         <div className="flex-1 max-w-xl">
-          <h1 className="font-headline-md text-2xl md:text-headline-md text-emerald-deep mb-4">
-            Curated Gemstones
+          <h1 className="font-headline-md text-2xl md:text-headline-md text-emerald-deep mb-2">
+            {selectedGemType === "Diamond" ? "Loose Diamonds" : selectedGemType === "Gemstone" ? "Curated Gemstones" : "Curated Gemstones"}
           </h1>
+          {selectedGemType && (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-deep/10 border border-emerald-deep/20 text-emerald-deep font-label-caps text-[10px] uppercase tracking-wider px-3 py-1">
+                {selectedGemType === "Diamond" ? "Diamonds" : "Gemstones"}
+                <button
+                  onClick={clearAllFilters}
+                  className="ml-1 hover:text-red-600 transition-colors cursor-pointer"
+                  title="Remove filter"
+                >
+                  <span className="material-symbols-outlined text-xs select-none">close</span>
+                </button>
+              </span>
+            </div>
+          )}
           {/* Search bar input */}
           <div className="relative w-full max-w-md mt-2">
             <input
