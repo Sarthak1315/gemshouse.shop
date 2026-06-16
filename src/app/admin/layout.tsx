@@ -60,8 +60,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("admin-sidebar-collapsed") === "true";
+    }
+    return false;
+  });
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
+
+  // Persist collapsed state to localStorage
+  useEffect(() => {
+    localStorage.setItem("admin-sidebar-collapsed", String(isCollapsed));
+  }, [isCollapsed]);
 
   // Fetch session user
   useEffect(() => {
