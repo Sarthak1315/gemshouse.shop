@@ -1,12 +1,73 @@
 import React from "react";
+import type { Metadata } from "next";
+import prisma from "@/lib/prisma";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ArrivalsSlider from "@/components/website/collection/ArrivalsSlider";
 import GemstoneExplorer from "@/components/website/collection/GemstoneExplorer";
 import ProvenanceTimeline from "@/components/website/collection/ProvenanceTimeline";
 import AteliersNetwork from "@/components/website/collection/AteliersNetwork";
 
-export default function HomePage() {
+export const metadata: Metadata = {
+  title: "Gemshouse | Natural Gemstones & Investment-Grade Diamonds",
+  description: "Exquisite selection of natural Ceylon Sapphires, Colombian Emeralds, Burmese Rubies, and GIA-certified diamonds sourced from ethical mines worldwide.",
+};
+
+export default async function HomePage() {
+  const settingsArray = await prisma.setting.findMany();
+  const settings = settingsArray.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+
+  const phone = settings.CONTACT_PHONE || "+91 261 400 9000";
+  const email = settings.CONTACT_EMAIL || "concierge@gemshouse.shop";
+  const address = settings.COMPANY_ADDRESS || "Surat Diamond Bourse, Surat, Gujarat, India";
+
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Gemshouse Sourcing",
+    "url": "https://gemshouse.shop",
+    "logo": "https://gemshouse.shop/images/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": phone,
+      "contactType": "customer service",
+      "email": email
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": address
+    },
+    "sameAs": [
+      settings.INSTAGRAM_URL,
+      settings.FACEBOOK_URL,
+      settings.LINKEDIN_URL
+    ].filter(Boolean)
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Gemshouse Sourcing",
+    "url": "https://gemshouse.shop",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://gemshouse.shop/collections?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
 
       <main className="pt-16 md:pt-28">
         {/* Hero Section (Aesthetic Fade and Scale on Load) */}
@@ -182,5 +243,6 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+    </>
   );
 }

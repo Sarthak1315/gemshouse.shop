@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface NavLink {
   label: string;
@@ -191,7 +192,7 @@ export default function Navbar() {
           </div>
 
           {/* Brand Logo - Centered absolutely with optimized mobile spacing */}
-          <a
+          <Link
             className="font-headline-md text-lg sm:text-xl md:text-headline-sm lg:text-headline-md tracking-wider md:tracking-widest text-emerald-deep uppercase absolute left-1/2 -translate-x-1/2 hover:opacity-80 transition-all duration-300 flex items-center justify-center h-12"
             href="/"
           >
@@ -204,7 +205,7 @@ export default function Navbar() {
             ) : (
               logoText
             )}
-          </a>
+          </Link>
 
           {/* Right Icons */}
           <div className="flex items-center gap-2 md:gap-4 text-emerald-deep">
@@ -226,7 +227,7 @@ export default function Navbar() {
                 </span>
               )}
             </button>
-            <a
+            <Link
               href={currentUser ? "/profile" : "/login"}
               aria-label={currentUser ? "Profile" : "Login"}
               className={`p-2 rounded-full transition-all duration-300 cursor-pointer flex items-center justify-center ${
@@ -242,7 +243,7 @@ export default function Navbar() {
               ) : (
                 <span className="material-symbols-outlined select-none">person</span>
               )}
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -268,7 +269,7 @@ export default function Navbar() {
                 onMouseEnter={() => hasSubmenus && setOpenDropdown(link.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <a
+                <Link
                   className={`font-label-caps text-xs tracking-wider transition-colors duration-300 relative pb-1 flex items-center gap-1 ${
                     active
                       ? "text-champagne-gold font-semibold"
@@ -288,7 +289,7 @@ export default function Navbar() {
                       active ? "w-full" : "w-0"
                     }`}
                   />
-                </a>
+                </Link>
 
                 {/* Dropdown submenu */}
                 {hasSubmenus && (
@@ -301,13 +302,13 @@ export default function Navbar() {
                   >
                     <div className="bg-surface-container-lowest border border-champagne-gold/20 shadow-xl min-w-[200px] py-2">
                       {link.submenus!.map((sub) => (
-                        <a
+                        <Link
                           key={sub.label}
                           href={sub.href}
                           className="block px-5 py-2.5 font-label-caps text-[11px] tracking-wider text-on-surface-variant hover:text-emerald-deep hover:bg-gold-glimmer/30 transition-colors duration-200"
                         >
                           {sub.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -334,7 +335,7 @@ export default function Navbar() {
       >
         {/* Drawer Header */}
         <div className="flex justify-between items-center pb-6 border-b border-outline-variant/20">
-          <a
+          <Link
             className="font-headline-md text-lg tracking-widest text-emerald-deep uppercase flex items-center h-10 hover:opacity-80 transition-opacity"
             href="/"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -348,7 +349,7 @@ export default function Navbar() {
             ) : (
               logoText
             )}
-          </a>
+          </Link>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
             aria-label="Close Menu"
@@ -385,7 +386,7 @@ export default function Navbar() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`font-label-caps text-sm uppercase tracking-wider py-2 transition-all duration-300 block flex-grow ${
@@ -395,7 +396,7 @@ export default function Navbar() {
                     }`}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                   {hasSubmenus && (
                     <button
                       onClick={() => setExpandedMobile(isMobileExpanded ? null : link.label)}
@@ -415,14 +416,14 @@ export default function Navbar() {
                   }`}>
                     <div className="pl-6 pt-1 pb-2 space-y-1">
                       {link.submenus!.map((sub) => (
-                        <a
+                        <Link
                           key={sub.label}
                           href={sub.href}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="block font-label-caps text-xs uppercase tracking-wider py-1.5 text-on-surface-variant hover:text-champagne-gold transition-colors duration-200"
                         >
                           {sub.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>

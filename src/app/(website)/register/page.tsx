@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function RegisterContent() {
   const router = useRouter();
@@ -231,12 +232,12 @@ function RegisterContent() {
               <span className="font-body-sm text-xs text-on-surface-variant/60 block mb-2">
                 Already have an account?
               </span>
-              <a
+              <Link
                 href="/login"
                 className="font-label-caps text-xs text-champagne-gold hover:text-emerald-deep tracking-wider uppercase transition-colors"
               >
                 Sign In Instead
-              </a>
+              </Link>
             </div>
           </div>
         </div>

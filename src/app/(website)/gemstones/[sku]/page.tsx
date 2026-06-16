@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import GemstoneDetailPanel from "@/components/website/product/GemstoneDetailPanel";
 import ProductReviews from "@/components/website/product/ProductReviews";
 import ProductFAQ from "@/components/website/product/ProductFAQ";
@@ -110,8 +111,61 @@ export default async function GemstoneDetailsPage({ params }: Props) {
     };
   });
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": stone.title,
+    "image": stone.images.length > 0 ? stone.images : [stone.imageUrl],
+    "description": stone.extendedDescription,
+    "sku": stone.sku,
+    "offers": {
+      "@type": "Offer",
+      "url": `https://gemshouse.shop/gemstones/${stone.sku}`,
+      "priceCurrency": "USD",
+      "price": stone.price,
+      "availability": stone.badge === "In Stock" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "priceValidUntil": "2030-12-31"
+    },
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Carat Weight",
+        "value": `${stone.carat} ct`
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Cut Shape",
+        "value": stone.cut
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Origin",
+        "value": stone.origin
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Clarity",
+        "value": stone.clarity
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Certification Agency",
+        "value": stone.certificate
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Certificate Number",
+        "value": stone.reportNumber
+      }
+    ]
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
 
       {/* Main Canvas Area */}
       <main className="flex-grow pt-32 md:pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max w-full mx-auto mt-2">
@@ -129,12 +183,12 @@ export default async function GemstoneDetailsPage({ params }: Props) {
               <ProductFAQ />
             </ScrollReveal>
           </div>
-            {/* Reviews (right column) */}
-            <div className="lg:col-span-6">
-              <ScrollReveal direction="up" delay={150}>
-                <ProductReviews category={stone.category} productId={stone.id} />
-              </ScrollReveal>
-            </div>
+          {/* Reviews (right column) */}
+          <div className="lg:col-span-6">
+            <ScrollReveal direction="up" delay={150}>
+              <ProductReviews category={stone.category} productId={stone.id} />
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
@@ -152,13 +206,13 @@ export default async function GemstoneDetailsPage({ params }: Props) {
                 </h2>
               </div>
               
-              <a
+              <Link
                 className="font-label-caps text-[10px] md:text-xs uppercase text-champagne-gold hover:text-emerald-deep transition-colors flex items-center gap-2 border-b border-transparent hover:border-emerald-deep pb-1 tracking-widest"
                 href="/collections"
               >
                 View Complete Inventory
                 <span className="material-symbols-outlined text-sm select-none">arrow_forward</span>
-              </a>
+              </Link>
             </div>
           </ScrollReveal>
 
@@ -170,7 +224,7 @@ export default async function GemstoneDetailsPage({ params }: Props) {
                 direction="up"
                 delay={idx * 100}
               >
-                <a href={`/gemstones/${alt.sku}`} className="group flex flex-col h-full bg-surface-container-lowest border border-outline-variant/20 overflow-hidden hover:border-champagne-gold/40 hover:shadow-lg transition-all duration-300">
+                <Link href={`/gemstones/${alt.sku}`} className="group flex flex-col h-full bg-surface-container-lowest border border-outline-variant/20 overflow-hidden hover:border-champagne-gold/40 hover:shadow-lg transition-all duration-300">
                   <div className="aspect-[4/5] bg-charcoal overflow-hidden relative">
                     <img
                       alt={alt.title}
@@ -200,13 +254,12 @@ export default async function GemstoneDetailsPage({ params }: Props) {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
-
     </>
   );
 }
