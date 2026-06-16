@@ -5,27 +5,34 @@ import { validators } from "@/lib/validations";
 import { errorResponse, jsonResponse } from "@/lib/api-helpers";
 
 export async function POST(request: NextRequest) {
+  console.log("[API/Admin/Auth] POST request received");
   try {
     const body = await request.json();
+    console.log("[API/Admin/Auth] Parsed body:", { email: body?.email });
     const validation = validators.login(body);
 
     if (!validation.success) {
+      console.log("[API/Admin/Auth] Validation failed:", validation.errors);
       return errorResponse("Invalid input data", 400);
     }
 
     const { email, passwordHashOrPlain } = validation.data;
+    console.log("[API/Admin/Auth] Querying database for admin:", email);
 
     // Find admin by email
     const admin = await prisma.admin.findUnique({
       where: { email },
     });
+    console.log("[API/Admin/Auth] Database query result. Found admin:", !!admin);
 
     if (!admin) {
       return errorResponse("Invalid email or password", 401);
     }
 
     // Compare passwords
+    console.log("[API/Admin/Auth] Comparing password hashes...");
     const passwordMatch = await comparePassword(passwordHashOrPlain, admin.passwordHash);
+    console.log("[API/Admin/Auth] Password comparison result:", passwordMatch);
     if (!passwordMatch) {
       return errorResponse("Invalid email or password", 401);
     }
